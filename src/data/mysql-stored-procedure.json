@@ -1,0 +1,51 @@
+{
+  "id": "mysql-stored-procedure",
+  "title": "Stored Procedures",
+  "description": "Membuat dan mengelola stored procedure di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE PROCEDURE",
+      "title": "Membuat Procedure",
+      "description": "Membuat stored procedure — blok kode SQL yang bisa dipanggil berulang.",
+      "syntax": "DELIMITER //\nCREATE PROCEDURE nama_proc ([param_mode] param tipe, ...)\nBEGIN\n  -- SQL statements\nEND //\nDELIMITER ;",
+      "options": [
+        { "option": "IN", "description": "Parameter input (default)" },
+        { "option": "OUT", "description": "Parameter output" },
+        { "option": "INOUT", "description": "Parameter input dan output" }
+      ],
+      "examples": "DELIMITER //\nCREATE PROCEDURE GetUserOrders(IN userId INT)\nBEGIN\n  SELECT o.id, o.total, o.status, o.created_at\n  FROM orders o\n  WHERE o.user_id = userId\n  ORDER BY o.created_at DESC;\nEND //\nDELIMITER ;\n\n-- Procedure dengan OUT parameter\nDELIMITER //\nCREATE PROCEDURE CountUserOrders(IN userId INT, OUT orderCount INT)\nBEGIN\n  SELECT COUNT(*) INTO orderCount\n  FROM orders WHERE user_id = userId;\nEND //\nDELIMITER ;",
+      "notes": "DELIMITER diperlukan agar MySQL tidak menginterpretasi ; di dalam procedure sebagai akhir statement."
+    },
+    {
+      "name": "CALL",
+      "title": "Memanggil Procedure",
+      "description": "Menjalankan stored procedure.",
+      "syntax": "CALL nama_proc(parameter1, parameter2);",
+      "options": [],
+      "examples": "CALL GetUserOrders(1);\n\n-- Dengan OUT parameter\nCALL CountUserOrders(1, @count);\nSELECT @count;"
+    },
+    {
+      "name": "PROCEDURE-FLOW",
+      "title": "Flow Control",
+      "description": "Kontrol alur dalam stored procedure.",
+      "syntax": "IF / CASE / WHILE / LOOP / REPEAT",
+      "options": [
+        { "option": "IF...THEN...ELSEIF...ELSE...END IF", "description": "Kondisi" },
+        { "option": "CASE...WHEN...THEN...END CASE", "description": "Switch" },
+        { "option": "WHILE...DO...END WHILE", "description": "Loop while" },
+        { "option": "LOOP...END LOOP", "description": "Loop infinite (gunakan LEAVE)" },
+        { "option": "DECLARE", "description": "Deklarasi variabel" }
+      ],
+      "examples": "DELIMITER //\nCREATE PROCEDURE UpdateOrderStatus(IN orderId INT, IN newStatus VARCHAR(20))\nBEGIN\n  DECLARE currentStatus VARCHAR(20);\n  SELECT status INTO currentStatus FROM orders WHERE id = orderId;\n  \n  IF currentStatus = 'cancelled' THEN\n    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot update cancelled order';\n  ELSEIF newStatus = 'shipped' AND currentStatus != 'paid' THEN\n    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Order must be paid first';\n  ELSE\n    UPDATE orders SET status = newStatus WHERE id = orderId;\n  END IF;\nEND //\nDELIMITER ;"
+    },
+    {
+      "name": "DROP PROCEDURE",
+      "title": "Menghapus Procedure",
+      "description": "Menghapus stored procedure.",
+      "syntax": "DROP PROCEDURE [IF EXISTS] nama_proc;",
+      "options": [],
+      "examples": "DROP PROCEDURE GetUserOrders;\nDROP PROCEDURE IF EXISTS OldProcedure;\nSHOW PROCEDURE STATUS WHERE Db = 'myapp';"
+    }
+  ]
+}

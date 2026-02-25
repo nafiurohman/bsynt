@@ -1,0 +1,95 @@
+{
+  "id": "mac-text-processing",
+  "title": "Text Processing",
+  "description": "Perintah untuk memproses dan memanipulasi teks di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "grep",
+      "title": "Grep",
+      "description": "Mencari pattern/teks dalam file.",
+      "syntax": "grep [opsi] pattern [file...]",
+      "options": [
+        { "option": "-E", "description": "Extended regex (egrep)" },
+        { "option": "-i", "description": "Case-insensitive" },
+        { "option": "-r", "description": "Rekursif" },
+        { "option": "-n", "description": "Tampilkan nomor baris" },
+        { "option": "-w", "description": "Cocokkan kata utuh" },
+        { "option": "-A [n]", "description": "Tampilkan n baris setelah match" },
+        { "option": "-B [n]", "description": "Tampilkan n baris sebelum match" }
+      ],
+      "examples": "grep -rn 'func' *.swift\ngrep -E 'error|warning' log.txt\ngrep -i 'hello' file.txt\ngrep -w 'main' *.c",
+      "notes": "macOS menggunakan BSD grep. Install GNU grep via `brew install grep` (as ggrep)."
+    },
+    {
+      "name": "sed",
+      "title": "Stream Editor",
+      "description": "Editor teks berbasis stream untuk substitusi dan transformasi.",
+      "syntax": "sed [opsi] 'perintah' file",
+      "options": [
+        { "option": "-i ''", "description": "Edit file in-place (macOS perlu '' setelah -i)" },
+        { "option": "-n", "description": "Suppress default output" },
+        { "option": "-E", "description": "Extended regex" }
+      ],
+      "examples": "sed 's/old/new/g' file.txt\nsed -i '' 's/foo/bar/g' file.txt\nsed -n '10,20p' file.txt\nsed '/^#/d' config.conf",
+      "warning": "Di macOS, `sed -i` HARUS diikuti '' (string kosong). Beda dengan Linux yang cukup `sed -i`."
+    },
+    {
+      "name": "awk",
+      "title": "AWK",
+      "description": "Bahasa pemrograman untuk pemrosesan teks berbasis kolom.",
+      "syntax": "awk 'pattern {action}' file",
+      "options": [
+        { "option": "-F [sep]", "description": "Set field separator" },
+        { "option": "-v var=val", "description": "Set variabel" }
+      ],
+      "examples": "awk '{print $1}' file.txt\nawk -F: '{print $1, $3}' /etc/passwd\nawk '$3 > 100 {print $1, $3}' data.txt\nawk 'NR==5,NR==10' file.txt"
+    },
+    {
+      "name": "sort",
+      "title": "Sort",
+      "description": "Mengurutkan baris teks.",
+      "syntax": "sort [opsi] file",
+      "options": [
+        { "option": "-n", "description": "Urutkan numerik" },
+        { "option": "-r", "description": "Urutkan terbalik" },
+        { "option": "-k [n]", "description": "Urutkan berdasarkan kolom ke-n" },
+        { "option": "-u", "description": "Unik (hapus duplikat)" },
+        { "option": "-t [sep]", "description": "Set delimiter" }
+      ],
+      "examples": "sort names.txt\nsort -nr numbers.txt\nsort -t',' -k2 data.csv\nsort -u wordlist.txt"
+    },
+    {
+      "name": "cut",
+      "title": "Cut",
+      "description": "Mengekstrak kolom/bagian dari tiap baris.",
+      "syntax": "cut [opsi] file",
+      "options": [
+        { "option": "-d [delim]", "description": "Set delimiter" },
+        { "option": "-f [n]", "description": "Pilih field/kolom" },
+        { "option": "-c [n]", "description": "Pilih karakter" }
+      ],
+      "examples": "cut -d',' -f1,3 data.csv\ncut -c1-10 file.txt\necho $PATH | tr ':' '\\n' | cut -d'/' -f1-3"
+    },
+    {
+      "name": "tr",
+      "title": "Translate",
+      "description": "Mengubah atau menghapus karakter.",
+      "syntax": "tr [opsi] set1 [set2]",
+      "options": [
+        { "option": "-d", "description": "Hapus karakter di set1" },
+        { "option": "-s", "description": "Squeeze karakter berulang" }
+      ],
+      "examples": "echo 'hello' | tr 'a-z' 'A-Z'\ncat file.txt | tr -d '\\r'\necho 'aabbcc' | tr -s 'a-z'"
+    },
+    {
+      "name": "pbcopy-pbpaste",
+      "title": "Clipboard (macOS)",
+      "description": "Copy/paste dari/ke clipboard macOS via terminal.",
+      "syntax": "pbcopy / pbpaste",
+      "options": [],
+      "examples": "echo 'Hello' | pbcopy\npbpaste\ncat file.txt | pbcopy\npbpaste > output.txt",
+      "notes": "Fitur khas macOS. Di Linux gunakan xclip atau xsel."
+    }
+  ]
+}

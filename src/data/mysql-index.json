@@ -1,0 +1,68 @@
+{
+  "id": "mysql-index",
+  "title": "Index",
+  "description": "Membuat dan mengelola index untuk optimasi query di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE INDEX",
+      "title": "Membuat Index",
+      "description": "Membuat index pada kolom untuk mempercepat query.",
+      "syntax": "CREATE [UNIQUE|FULLTEXT|SPATIAL] INDEX nama_index ON tabel (kolom1, kolom2, ...);",
+      "options": [
+        { "option": "UNIQUE", "description": "Index unik (tidak ada duplikat)" },
+        { "option": "FULLTEXT", "description": "Index untuk pencarian teks" },
+        { "option": "SPATIAL", "description": "Index untuk data geometri" },
+        { "option": "USING BTREE", "description": "B-Tree index (default)" },
+        { "option": "USING HASH", "description": "Hash index (Memory engine)" }
+      ],
+      "examples": "CREATE INDEX idx_email ON users (email);\nCREATE UNIQUE INDEX idx_username ON users (username);\nCREATE INDEX idx_name_city ON users (last_name, city);\nCREATE FULLTEXT INDEX idx_content ON articles (title, body);\nCREATE INDEX idx_price ON products (price DESC);",
+      "notes": "Index mempercepat SELECT tapi memperlambat INSERT/UPDATE. Jangan over-index."
+    },
+    {
+      "name": "DROP INDEX",
+      "title": "Menghapus Index",
+      "description": "Menghapus index dari tabel.",
+      "syntax": "DROP INDEX nama_index ON tabel;\nALTER TABLE tabel DROP INDEX nama_index;",
+      "options": [],
+      "examples": "DROP INDEX idx_email ON users;\nALTER TABLE users DROP INDEX idx_email;"
+    },
+    {
+      "name": "SHOW INDEX",
+      "title": "Tampilkan Index",
+      "description": "Menampilkan semua index pada tabel.",
+      "syntax": "SHOW INDEX FROM tabel;",
+      "options": [],
+      "examples": "SHOW INDEX FROM users;\nSHOW INDEX FROM orders;"
+    },
+    {
+      "name": "EXPLAIN",
+      "title": "Explain Query Plan",
+      "description": "Menganalisis bagaimana MySQL mengeksekusi query.",
+      "syntax": "EXPLAIN [FORMAT=JSON|TREE] SELECT ...;",
+      "options": [
+        { "option": "type", "description": "Tipe akses (ALL, index, range, ref, const)" },
+        { "option": "key", "description": "Index yang digunakan" },
+        { "option": "rows", "description": "Estimasi baris yang di-scan" },
+        { "option": "Extra", "description": "Info tambahan (Using index, Using filesort)" },
+        { "option": "FORMAT=JSON", "description": "Output format JSON (detail)" },
+        { "option": "FORMAT=TREE", "description": "Output format tree (8.0+)" }
+      ],
+      "examples": "EXPLAIN SELECT * FROM users WHERE email = 'john@mail.com';\nEXPLAIN FORMAT=JSON SELECT * FROM orders JOIN users ON orders.user_id = users.id;\nEXPLAIN ANALYZE SELECT * FROM products WHERE price > 100;",
+      "notes": "type dari terbaik ke terburuk: system > const > eq_ref > ref > range > index > ALL."
+    },
+    {
+      "name": "FULLTEXT SEARCH",
+      "title": "Full-Text Search",
+      "description": "Pencarian teks menggunakan fulltext index.",
+      "syntax": "SELECT ... WHERE MATCH(kolom) AGAINST('teks' [mode]);",
+      "options": [
+        { "option": "IN NATURAL LANGUAGE MODE", "description": "Mode default, relevance-based" },
+        { "option": "IN BOOLEAN MODE", "description": "Operator +, -, *, ~" },
+        { "option": "WITH QUERY EXPANSION", "description": "Ekspansi query otomatis" }
+      ],
+      "examples": "-- Buat fulltext index dulu\nALTER TABLE articles ADD FULLTEXT idx_ft (title, body);\n\n-- Natural language search\nSELECT *, MATCH(title, body) AGAINST('mysql performance') AS score\nFROM articles\nWHERE MATCH(title, body) AGAINST('mysql performance')\nORDER BY score DESC;\n\n-- Boolean mode\nSELECT * FROM articles\nWHERE MATCH(title, body) AGAINST('+mysql -oracle' IN BOOLEAN MODE);",
+      "notes": "Fulltext search jauh lebih efisien daripada LIKE '%kata%' untuk pencarian teks."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "git-branching",
+  "title": "Branching",
+  "description": "Membuat, berpindah, dan mengelola branch di Git.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git branch",
+      "title": "Melihat & Membuat Branch",
+      "description": "Menampilkan daftar branch atau membuat branch baru.",
+      "syntax": "git branch [opsi] [nama-branch]",
+      "options": [
+        { "option": "(tanpa argumen)", "description": "Tampilkan branch lokal" },
+        { "option": "-a / --all", "description": "Tampilkan branch lokal dan remote" },
+        { "option": "-r / --remotes", "description": "Tampilkan branch remote saja" },
+        { "option": "-v / --verbose", "description": "Tampilkan last commit" },
+        { "option": "-d nama", "description": "Hapus branch (sudah merged)" },
+        { "option": "-D nama", "description": "Hapus branch paksa" },
+        { "option": "-m old new", "description": "Rename branch" },
+        { "option": "--merged", "description": "Branch yang sudah merged ke current" },
+        { "option": "--no-merged", "description": "Branch yang belum merged" }
+      ],
+      "examples": "git branch\ngit branch -a\ngit branch -v\ngit branch feature/login\ngit branch -d feature/old\ngit branch -D feature/failed\ngit branch -m old-name new-name\ngit branch --merged\ngit branch --no-merged",
+      "notes": "Branch di Git sangat ringan — buat sebanyak yang diperlukan."
+    },
+    {
+      "name": "git switch",
+      "title": "Berpindah Branch (Modern)",
+      "description": "Berpindah ke branch lain. Diperkenalkan di Git 2.23 sebagai pengganti checkout.",
+      "syntax": "git switch <branch> [opsi]",
+      "options": [
+        { "option": "-c / --create", "description": "Buat branch baru dan pindah ke sana" },
+        { "option": "-C", "description": "Buat/reset branch dan pindah" },
+        { "option": "-d / --detach", "description": "Pindah ke detached HEAD" },
+        { "option": "--discard-changes", "description": "Buang perubahan lokal" }
+      ],
+      "examples": "git switch main\ngit switch develop\ngit switch -c feature/new-login\ngit switch -c hotfix/bug-123\ngit switch -  # kembali ke branch sebelumnya",
+      "notes": "git switch lebih aman dari git checkout karena hanya untuk branch switching."
+    },
+    {
+      "name": "git checkout",
+      "title": "Berpindah Branch (Classic)",
+      "description": "Perintah klasik untuk berpindah branch atau mengembalikan file.",
+      "syntax": "git checkout <branch|commit|file>",
+      "options": [
+        { "option": "-b nama", "description": "Buat branch baru dan pindah" },
+        { "option": "-B nama", "description": "Buat/reset branch dan pindah" },
+        { "option": "--orphan", "description": "Buat branch tanpa history" },
+        { "option": "-- file", "description": "Restore file ke versi branch/commit" }
+      ],
+      "examples": "git checkout main\ngit checkout -b feature/new\ngit checkout -  # branch sebelumnya\ngit checkout HEAD -- file.txt  # restore file",
+      "notes": "Di Git modern, lebih baik gunakan git switch (branch) dan git restore (file)."
+    }
+  ]
+}

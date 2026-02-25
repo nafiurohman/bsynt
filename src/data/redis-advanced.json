@@ -1,0 +1,83 @@
+{
+  "id": "redis-advanced",
+  "title": "Advanced Features",
+  "description": "Fitur lanjutan Redis: Pub/Sub, Transactions, Lua Scripting, Streams, dan Persistence.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "SUBSCRIBE / PUBLISH",
+      "title": "Pub/Sub Messaging",
+      "description": "Sistem messaging publish/subscribe untuk real-time communication.",
+      "syntax": "SUBSCRIBE channel [channel ...]\nPUBLISH channel message\nPSUBSCRIBE pattern [pattern ...]",
+      "options": [
+        { "option": "SUBSCRIBE", "description": "Berlangganan channel" },
+        { "option": "PUBLISH", "description": "Kirim pesan ke channel" },
+        { "option": "PSUBSCRIBE", "description": "Berlangganan pattern (wildcard)" },
+        { "option": "UNSUBSCRIBE", "description": "Berhenti berlangganan" }
+      ],
+      "examples": "# Terminal 1: Subscriber\nSUBSCRIBE chat:general\nPSUBSCRIBE news:*\n\n# Terminal 2: Publisher\nPUBLISH chat:general \"Hello everyone!\"\nPUBLISH news:tech \"Redis 8.0 released!\"",
+      "notes": "Pub/Sub fire-and-forget — pesan hilang jika tidak ada subscriber. Gunakan Streams untuk durability."
+    },
+    {
+      "name": "MULTI / EXEC",
+      "title": "Transactions",
+      "description": "Menjalankan beberapa command secara atomic (semua atau tidak sama sekali).",
+      "syntax": "MULTI\n... commands ...\nEXEC",
+      "options": [
+        { "option": "MULTI", "description": "Mulai transaction" },
+        { "option": "EXEC", "description": "Jalankan semua command dalam transaction" },
+        { "option": "DISCARD", "description": "Batalkan transaction" },
+        { "option": "WATCH key", "description": "Optimistic locking — batalkan jika key berubah" }
+      ],
+      "examples": "# Transaction sederhana\nMULTI\nSET account:1:balance 900\nSET account:2:balance 1100\nEXEC\n\n# Optimistic locking\nWATCH account:1:balance\nval = GET account:1:balance\nMULTI\nSET account:1:balance (val - 100)\nEXEC  # return nil jika key diubah oleh client lain",
+      "notes": "WATCH memberikan optimistic locking — transaction dibatalkan jika watched key berubah."
+    },
+    {
+      "name": "EVAL (Lua)",
+      "title": "Lua Scripting",
+      "description": "Menjalankan script Lua secara atomic di server Redis.",
+      "syntax": "EVAL \"script\" numkeys key [key ...] arg [arg ...]",
+      "options": [
+        { "option": "EVAL", "description": "Jalankan script Lua" },
+        { "option": "EVALSHA", "description": "Jalankan cached script by SHA" },
+        { "option": "SCRIPT LOAD", "description": "Load script ke cache" },
+        { "option": "KEYS[n]", "description": "Akses key parameter (Lua)" },
+        { "option": "ARGV[n]", "description": "Akses argument (Lua)" },
+        { "option": "redis.call()", "description": "Panggil Redis command dari Lua" }
+      ],
+      "examples": "# Atomic rate limiter\nEVAL \"\n  local count = redis.call('INCR', KEYS[1])\n  if count == 1 then\n    redis.call('EXPIRE', KEYS[1], ARGV[1])\n  end\n  return count\n\" 1 ratelimit:user:1 60\n\n# Get and delete\nEVAL \"return redis.call('GET', KEYS[1]); redis.call('DEL', KEYS[1])\" 1 temp_key",
+      "notes": "Lua scripts atomic — tidak ada command lain yang berjalan selama script dieksekusi."
+    },
+    {
+      "name": "XADD / XREAD (Streams)",
+      "title": "Redis Streams",
+      "description": "Append-only log data structure untuk messaging dan event sourcing.",
+      "syntax": "XADD key [MAXLEN n] * field value [field value ...]\nXREAD [COUNT n] [BLOCK ms] STREAMS key id",
+      "options": [
+        { "option": "XADD", "description": "Tambah entry ke stream" },
+        { "option": "XREAD", "description": "Baca entry dari stream" },
+        { "option": "XRANGE", "description": "Baca range entry" },
+        { "option": "XLEN", "description": "Panjang stream" },
+        { "option": "XGROUP CREATE", "description": "Buat consumer group" },
+        { "option": "XREADGROUP", "description": "Baca sebagai consumer group" },
+        { "option": "XACK", "description": "Acknowledge message" }
+      ],
+      "examples": "# Producer\nXADD orders * product \"laptop\" quantity 1 price 15000000\nXADD orders MAXLEN 1000 * product \"mouse\" quantity 2\n\n# Consumer: baca semua\nXRANGE orders - +\nXRANGE orders - + COUNT 10\n\n# Consumer: blocking read\nXREAD BLOCK 0 STREAMS orders $\n\n# Consumer group\nXGROUP CREATE orders mygroup 0\nXREADGROUP GROUP mygroup consumer1 COUNT 1 STREAMS orders >\nXACK orders mygroup 1234567890-0",
+      "notes": "Streams lebih baik dari Pub/Sub karena persistent, consumer groups, dan acknowledgment."
+    },
+    {
+      "name": "BGSAVE / RDB / AOF",
+      "title": "Persistence",
+      "description": "Konfigurasi persistence agar data tidak hilang saat restart.",
+      "syntax": "BGSAVE\nBGREWRITEAOF\nLASTSAVE",
+      "options": [
+        { "option": "RDB (snapshotting)", "description": "Point-in-time snapshot ke disk" },
+        { "option": "AOF (Append Only File)", "description": "Log setiap write operation" },
+        { "option": "BGSAVE", "description": "Trigger background RDB save" },
+        { "option": "BGREWRITEAOF", "description": "Rewrite AOF file" }
+      ],
+      "examples": "BGSAVE\nLASTSAVE\nBGREWRITEAOF\n\n# redis.conf\n# RDB: save setiap 60 detik jika ada 1000 perubahan\nsave 60 1000\n\n# AOF: enable\nappendonly yes\nappendfsync everysec",
+      "notes": "Kombinasi RDB + AOF memberikan durability terbaik. AOF untuk data loss minimal."
+    }
+  ]
+}

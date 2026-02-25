@@ -1,0 +1,95 @@
+{
+  "id": "mac-package",
+  "title": "Package (Homebrew)",
+  "description": "Mengelola paket software di macOS menggunakan Homebrew.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "brew-install",
+      "title": "Brew Install",
+      "description": "Menginstall paket menggunakan Homebrew.",
+      "syntax": "brew install [opsi] formula/cask",
+      "options": [
+        { "option": "--cask", "description": "Install aplikasi GUI (cask)" },
+        { "option": "--build-from-source", "description": "Compile dari source" },
+        { "option": "--force", "description": "Force reinstall" }
+      ],
+      "examples": "brew install node\nbrew install python@3.11\nbrew install --cask visual-studio-code\nbrew install --cask google-chrome\nbrew install git wget curl",
+      "notes": "Formula = CLI tools, Cask = GUI apps."
+    },
+    {
+      "name": "brew-search",
+      "title": "Brew Search",
+      "description": "Mencari paket di Homebrew.",
+      "syntax": "brew search [text]",
+      "options": [
+        { "option": "--cask", "description": "Cari cask saja" },
+        { "option": "--formula", "description": "Cari formula saja" }
+      ],
+      "examples": "brew search python\nbrew search --cask chrome\nbrew search node"
+    },
+    {
+      "name": "brew-update",
+      "title": "Brew Update & Upgrade",
+      "description": "Update Homebrew dan upgrade paket.",
+      "syntax": "brew update / brew upgrade [formula]",
+      "options": [
+        { "option": "update", "description": "Update daftar paket Homebrew" },
+        { "option": "upgrade", "description": "Upgrade semua paket" },
+        { "option": "upgrade [pkg]", "description": "Upgrade paket tertentu" }
+      ],
+      "examples": "brew update\nbrew upgrade\nbrew upgrade node\nbrew upgrade --cask"
+    },
+    {
+      "name": "brew-uninstall",
+      "title": "Brew Uninstall",
+      "description": "Menghapus paket.",
+      "syntax": "brew uninstall [formula/cask]",
+      "options": [
+        { "option": "--cask", "description": "Uninstall cask" },
+        { "option": "--force", "description": "Force uninstall" }
+      ],
+      "examples": "brew uninstall node\nbrew uninstall --cask firefox\nbrew uninstall --force python"
+    },
+    {
+      "name": "brew-list",
+      "title": "Brew List & Info",
+      "description": "Menampilkan paket yang terinstall dan informasi paket.",
+      "syntax": "brew list / brew info [formula]",
+      "options": [
+        { "option": "list", "description": "Semua paket terinstall" },
+        { "option": "list --cask", "description": "Cask terinstall" },
+        { "option": "info [pkg]", "description": "Detail paket" },
+        { "option": "deps [pkg]", "description": "Dependencies paket" }
+      ],
+      "examples": "brew list\nbrew list --cask\nbrew info node\nbrew deps --tree node"
+    },
+    {
+      "name": "brew-cleanup",
+      "title": "Brew Cleanup",
+      "description": "Membersihkan file cache dan versi lama.",
+      "syntax": "brew cleanup [opsi]",
+      "options": [
+        { "option": "-n", "description": "Dry run (preview)" },
+        { "option": "-s", "description": "Hapus cache juga" },
+        { "option": "--prune=all", "description": "Hapus semua cache" }
+      ],
+      "examples": "brew cleanup\nbrew cleanup -n\nbrew cleanup -s\nbrew cleanup --prune=all"
+    },
+    {
+      "name": "mas",
+      "title": "Mac App Store CLI",
+      "description": "Mengelola app dari Mac App Store via terminal.",
+      "syntax": "mas [command]",
+      "options": [
+        { "option": "search [app]", "description": "Cari app" },
+        { "option": "install [id]", "description": "Install app" },
+        { "option": "list", "description": "List app terinstall" },
+        { "option": "outdated", "description": "App yang perlu update" },
+        { "option": "upgrade", "description": "Update semua app" }
+      ],
+      "examples": "mas search Xcode\nmas install 497799835\nmas list\nmas outdated\nmas upgrade",
+      "notes": "Install via: `brew install mas`."
+    }
+  ]
+}

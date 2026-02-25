@@ -1,0 +1,82 @@
+{
+  "id": "win-tips-shortcut",
+  "title": "Tips & Shortcut (Windows)",
+  "badge": "Windows",
+  "description": "Keyboard shortcut, tips produktivitas, dan trik berguna di CMD dan PowerShell.",
+  "commands": [
+    {
+      "name": "cmd-shortcuts",
+      "title": "CMD Keyboard Shortcuts",
+      "description": "Shortcut keyboard yang berguna di Command Prompt.",
+      "syntax": "Shortcut keyboard CMD",
+      "options": [
+        {"option": "Tab", "description": "Autocomplete nama file/folder"},
+        {"option": "↑ / ↓", "description": "Navigasi history perintah"},
+        {"option": "F7", "description": "Tampilkan dialog history"},
+        {"option": "F3", "description": "Ulangi perintah terakhir"},
+        {"option": "F1", "description": "Ketik ulang karakter per karakter"},
+        {"option": "Ctrl+C", "description": "Batalkan perintah yang berjalan"},
+        {"option": "Ctrl+V", "description": "Paste dari clipboard"},
+        {"option": "Right-click", "description": "Paste (CMD legacy)"},
+        {"option": "Esc", "description": "Hapus baris saat ini"},
+        {"option": "Ctrl+Home", "description": "Hapus dari kursor ke awal"},
+        {"option": "Ctrl+End", "description": "Hapus dari kursor ke akhir"}
+      ],
+      "examples": "# Autocomplete\ncd Doc[Tab]       # → cd Documents\n\n# History\n↑↑↑              # Navigasi ke perintah sebelumnya\nF7               # Dialog popup history\n\n# Copy-paste di CMD modern\nCtrl+C           # Copy text yang diseleksi\nCtrl+V           # Paste\n\n# Multiple perintah\nperintah1 && perintah2   # Jalankan kedua jika pertama sukses\nperintah1 || perintah2   # Jalankan kedua jika pertama gagal\nperintah1 & perintah2    # Jalankan keduanya"
+    },
+    {
+      "name": "ps-shortcuts",
+      "title": "PowerShell Keyboard Shortcuts",
+      "description": "Shortcut keyboard dan fitur produktivitas PowerShell.",
+      "syntax": "Shortcut keyboard PowerShell",
+      "options": [
+        {"option": "Tab", "description": "Autocomplete (cmdlet, parameter, path)"},
+        {"option": "Ctrl+Space", "description": "Tampilkan menu autocomplete"},
+        {"option": "Ctrl+R", "description": "Reverse search history"},
+        {"option": "Ctrl+L", "description": "Clear screen"},
+        {"option": "Ctrl+C", "description": "Batalkan perintah"},
+        {"option": "Ctrl+A", "description": "Pindah ke awal baris"},
+        {"option": "Ctrl+E", "description": "Pindah ke akhir baris"},
+        {"option": "Alt+.", "description": "Insert argumen terakhir"}
+      ],
+      "examples": "# Tab completion canggih\nGet-[Tab]         # Cycle semua cmdlet Get-*\nGet-Proc[Tab]     # → Get-Process\n-Name [Tab]       # Autocomplete parameter\n\n# Reverse search\nCtrl+R            # Ketik untuk cari history\n\n# Alias berguna\nls = Get-ChildItem\ncd = Set-Location\ncp = Copy-Item\nmv = Move-Item\nrm = Remove-Item\ncat = Get-Content\nclear = Clear-Host\n\n# Cek alias\nGet-Alias ls\nGet-Alias | Where-Object {$_.Definition -like '*Process*'}"
+    },
+    {
+      "name": "win-shortcuts",
+      "title": "Windows System Shortcuts",
+      "description": "Shortcut keyboard Windows untuk akses cepat ke fitur sistem.",
+      "syntax": "Win + Key",
+      "options": [
+        {"option": "Win+R", "description": "Buka Run dialog"},
+        {"option": "Win+X", "description": "Power User menu (admin tools)"},
+        {"option": "Win+I", "description": "Buka Settings"},
+        {"option": "Win+E", "description": "Buka File Explorer"},
+        {"option": "Win+S", "description": "Search"},
+        {"option": "Win+V", "description": "Clipboard history"},
+        {"option": "Win+Shift+S", "description": "Screenshot area"},
+        {"option": "Win+Tab", "description": "Task View / Virtual Desktop"},
+        {"option": "Ctrl+Shift+Esc", "description": "Task Manager langsung"},
+        {"option": "Win+L", "description": "Lock screen"},
+        {"option": "Win+D", "description": "Show desktop"},
+        {"option": "Alt+F4", "description": "Tutup window aktif"}
+      ],
+      "examples": "# Run dialog shortcuts\nWin+R → cmd         # Buka CMD\nWin+R → powershell  # Buka PowerShell\nWin+R → calc        # Kalkulator\nWin+R → notepad     # Notepad\nWin+R → mstsc       # Remote Desktop\nWin+R → control     # Control Panel\nWin+R → devmgmt.msc # Device Manager\nWin+R → diskmgmt.msc # Disk Management\nWin+R → services.msc # Services\nWin+R → regedit     # Registry Editor\nWin+R → msconfig    # System Configuration\nWin+R → cleanmgr    # Disk Cleanup"
+    },
+    {
+      "name": "cmd-tips",
+      "title": "Tips & Trik CMD/PowerShell",
+      "description": "Tips dan trik berguna untuk bekerja lebih efisien di command line Windows.",
+      "syntax": "Tips & Tricks",
+      "options": [
+        {"option": "cmd /c perintah", "description": "Jalankan dan tutup CMD"},
+        {"option": "cmd /k perintah", "description": "Jalankan dan tetap buka CMD"},
+        {"option": "powershell -c \"cmd\"", "description": "Jalankan PowerShell command inline"},
+        {"option": "Start-Transcript", "description": "Rekam sesi PowerShell"},
+        {"option": "$PSVersionTable", "description": "Cek versi PowerShell"},
+        {"option": "Get-Command *kata*", "description": "Cari cmdlet"},
+        {"option": "Get-Help cmdlet", "description": "Bantuan cmdlet"}
+      ],
+      "examples": "# Buka CMD/PS sebagai admin\nWin+X → A    # Terminal Admin\n\n# Rekam sesi PowerShell\nStart-Transcript -Path C:\\session.txt\n# ... kerja ...\nStop-Transcript\n\n# Cek versi PowerShell\n$PSVersionTable.PSVersion\n\n# Cari perintah\nGet-Command *network*\nGet-Command -Verb Get -Noun *IP*\n\n# Bantuan lengkap\nGet-Help Get-Process -Full\nGet-Help Get-Process -Examples\n\n# Execution policy (untuk script)\nGet-ExecutionPolicy\nSet-ExecutionPolicy RemoteSigned -Scope CurrentUser\n\n# Profile PowerShell (auto-load)\nnotepad $PROFILE\n# Tambahkan alias & fungsi yang sering dipakai\n\n# Measure execution time\nMeasure-Command { Get-ChildItem -Recurse }\n\n# History\nGet-History\nInvoke-History 5  # Jalankan ulang perintah #5"
+    }
+  ]
+}

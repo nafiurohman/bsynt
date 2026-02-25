@@ -1,0 +1,137 @@
+{
+  "id": "file-management",
+  "title": "Manajemen File",
+  "description": "Perintah-perintah dasar untuk mengelola file dan direktori di terminal Linux, termasuk menyalin, memindahkan, menghapus, membuat, dan memeriksa informasi file.",
+  "commands": [
+    {
+      "name": "cp",
+      "title": "cp — Menyalin File & Direktori",
+      "description": "Perintah cp digunakan untuk menyalin file atau direktori dari satu lokasi ke lokasi lain.",
+      "syntax": "cp [OPSI] SUMBER TUJUAN",
+      "options": [
+        { "option": "-r, --recursive", "description": "Menyalin direktori beserta seluruh isinya secara rekursif" },
+        { "option": "-i, --interactive", "description": "Meminta konfirmasi sebelum menimpa file yang sudah ada" },
+        { "option": "-f, --force", "description": "Memaksa penyalinan dengan menimpa file tujuan tanpa konfirmasi" },
+        { "option": "-n, --no-clobber", "description": "Tidak menimpa file yang sudah ada di tujuan" },
+        { "option": "-u, --update", "description": "Menyalin hanya jika file sumber lebih baru dari file tujuan" },
+        { "option": "-v, --verbose", "description": "Menampilkan informasi detail proses penyalinan" },
+        { "option": "-a, --archive", "description": "Mode arsip, mempertahankan semua atribut dan struktur file" },
+        { "option": "-p", "description": "Mempertahankan atribut file asli (mode, ownership, timestamps)" },
+        { "option": "-l, --link", "description": "Membuat hard link alih-alih menyalin file" },
+        { "option": "-s, --symbolic-link", "description": "Membuat symbolic link alih-alih menyalin file" },
+        { "option": "--backup", "description": "Membuat backup file tujuan sebelum ditimpa" }
+      ],
+      "examples": "# Menyalin file ke lokasi lain\ncp dokumen.txt /home/user/backup/\n\n# Menyalin file dengan nama baru\ncp dokumen.txt dokumen_backup.txt\n\n# Menyalin direktori beserta isinya\ncp -r /home/user/proyek /home/user/backup/\n\n# Menyalin dengan konfirmasi\ncp -i file_penting.txt /home/user/backup/\n\n# Mode arsip (mempertahankan semua atribut)\ncp -a /var/www/html /backup/website/\n\n# Menyalin hanya file yang lebih baru\ncp -u *.txt /home/user/backup/"
+    },
+    {
+      "name": "mv",
+      "title": "mv — Memindahkan & Mengganti Nama",
+      "description": "Perintah mv digunakan untuk memindahkan file atau direktori ke lokasi lain, atau mengganti nama file/direktori.",
+      "syntax": "mv [OPSI] SUMBER TUJUAN",
+      "options": [
+        { "option": "-i, --interactive", "description": "Meminta konfirmasi sebelum menimpa file" },
+        { "option": "-f, --force", "description": "Memaksa pemindahan tanpa konfirmasi" },
+        { "option": "-n, --no-clobber", "description": "Tidak menimpa file yang sudah ada" },
+        { "option": "-u, --update", "description": "Memindahkan hanya jika file sumber lebih baru" },
+        { "option": "-v, --verbose", "description": "Menampilkan informasi detail proses pemindahan" },
+        { "option": "--backup", "description": "Membuat backup file tujuan sebelum ditimpa" }
+      ],
+      "examples": "# Memindahkan file ke direktori lain\nmv dokumen.txt /home/user/arsip/\n\n# Mengganti nama file\nmv nama_lama.txt nama_baru.txt\n\n# Mengganti nama direktori\nmv proyek_v1 proyek_v2\n\n# Memindahkan dengan konfirmasi\nmv -i file.txt /home/user/backup/"
+    },
+    {
+      "name": "rm",
+      "title": "rm — Menghapus File & Direktori",
+      "description": "Perintah rm digunakan untuk menghapus file atau direktori. File yang dihapus dengan rm tidak masuk ke tempat sampah dan tidak dapat dikembalikan.",
+      "syntax": "rm [OPSI] FILE...",
+      "warning": "Perintah rm bersifat permanen. Jangan pernah menjalankan rm -rf / karena akan menghapus seluruh sistem!",
+      "options": [
+        { "option": "-r, --recursive", "description": "Menghapus direktori beserta seluruh isinya secara rekursif" },
+        { "option": "-f, --force", "description": "Memaksa penghapusan tanpa konfirmasi" },
+        { "option": "-i", "description": "Meminta konfirmasi sebelum setiap penghapusan" },
+        { "option": "-I", "description": "Meminta konfirmasi sekali sebelum menghapus lebih dari 3 file" },
+        { "option": "-v, --verbose", "description": "Menampilkan informasi detail setiap file yang dihapus" },
+        { "option": "-d, --dir", "description": "Menghapus direktori kosong" }
+      ],
+      "examples": "# Menghapus satu file\nrm file_tidak_perlu.txt\n\n# Menghapus direktori beserta isinya\nrm -r direktori_lama/\n\n# Menghapus paksa tanpa konfirmasi\nrm -rf direktori_cache/\n\n# Menghapus dengan menampilkan proses\nrm -rv direktori_temp/"
+    },
+    {
+      "name": "touch",
+      "title": "touch — Membuat File Kosong",
+      "description": "Perintah touch digunakan untuk membuat file kosong baru atau memperbarui timestamp dari file yang sudah ada.",
+      "syntax": "touch [OPSI] FILE...",
+      "options": [
+        { "option": "-a", "description": "Mengubah hanya waktu akses (access time) file" },
+        { "option": "-m", "description": "Mengubah hanya waktu modifikasi (modification time) file" },
+        { "option": "-c, --no-create", "description": "Tidak membuat file baru jika file belum ada" },
+        { "option": "-d, --date=STRING", "description": "Mengatur timestamp menggunakan string tanggal" },
+        { "option": "-t STAMP", "description": "Mengatur timestamp dengan format [[CC]YY]MMDDhhmm[.ss]" },
+        { "option": "-r, --reference=FILE", "description": "Menggunakan timestamp dari file referensi" }
+      ],
+      "examples": "# Membuat file kosong baru\ntouch file_baru.txt\n\n# Membuat beberapa file sekaligus\ntouch file1.txt file2.txt file3.txt\n\n# Mengatur timestamp dengan tanggal spesifik\ntouch -d \"2024-01-15 10:30:00\" laporan.txt\n\n# Membuat banyak file dengan pola\ntouch catatan_{januari,februari,maret}.txt"
+    },
+    {
+      "name": "mkdir",
+      "title": "mkdir — Membuat Direktori",
+      "description": "Perintah mkdir (make directory) digunakan untuk membuat direktori baru. Mendukung pembuatan direktori bertingkat dan pengaturan hak akses saat pembuatan.",
+      "syntax": "mkdir [OPSI] DIREKTORI...",
+      "options": [
+        { "option": "-p, --parents", "description": "Membuat direktori induk yang diperlukan secara otomatis" },
+        { "option": "-m, --mode=MODE", "description": "Mengatur hak akses direktori saat pembuatan" },
+        { "option": "-v, --verbose", "description": "Menampilkan pesan untuk setiap direktori yang berhasil dibuat" }
+      ],
+      "examples": "# Membuat satu direktori\nmkdir proyek_baru\n\n# Membuat direktori bertingkat\nmkdir -p proyek/src/komponen/utilitas\n\n# Membuat dengan hak akses tertentu\nmkdir -m 755 direktori_publik\n\n# Membuat struktur proyek sekaligus\nmkdir -pv proyek/{src,dist,docs,tests}"
+    },
+    {
+      "name": "rmdir",
+      "title": "rmdir — Menghapus Direktori Kosong",
+      "description": "Perintah rmdir digunakan untuk menghapus direktori yang kosong. Lebih aman dari rm -r karena hanya menghapus direktori tanpa isi.",
+      "syntax": "rmdir [OPSI] DIREKTORI...",
+      "options": [
+        { "option": "-p, --parents", "description": "Menghapus direktori beserta direktori induknya jika kosong" },
+        { "option": "-v, --verbose", "description": "Menampilkan pesan untuk setiap direktori yang dihapus" },
+        { "option": "--ignore-fail-on-non-empty", "description": "Mengabaikan error saat mencoba menghapus direktori tidak kosong" }
+      ],
+      "examples": "# Menghapus direktori kosong\nrmdir direktori_kosong\n\n# Menghapus direktori beserta induknya yang kosong\nrmdir -p proyek/src/komponen/kosong\n\n# Menghapus dengan verbose\nrmdir -pv a/b/c/d"
+    },
+    {
+      "name": "ln",
+      "title": "ln — Membuat Link (Tautan)",
+      "description": "Perintah ln digunakan untuk membuat link ke file atau direktori. Linux mendukung hard link dan symbolic link (symlink).",
+      "syntax": "ln [OPSI] TARGET LINK_NAME",
+      "options": [
+        { "option": "-s, --symbolic", "description": "Membuat symbolic link (symlink) alih-alih hard link" },
+        { "option": "-f, --force", "description": "Menimpa link yang sudah ada" },
+        { "option": "-i, --interactive", "description": "Meminta konfirmasi sebelum menimpa" },
+        { "option": "-v, --verbose", "description": "Menampilkan informasi detail" },
+        { "option": "-r, --relative", "description": "Membuat symlink relatif terhadap lokasi link" }
+      ],
+      "examples": "# Membuat symbolic link\nln -s /var/log/syslog ~/log-link\n\n# Membuat hard link\nln file_asli.txt file_link.txt\n\n# Membuat symlink dengan force (timpa jika ada)\nln -sf /usr/local/bin/python3 /usr/bin/python",
+      "notes": "Hard link tidak bisa dibuat untuk direktori dan hanya berfungsi dalam satu filesystem. Symbolic link lebih fleksibel dan bisa lintas filesystem."
+    },
+    {
+      "name": "stat",
+      "title": "stat — Informasi Detail File",
+      "description": "Menampilkan informasi detail mengenai file atau filesystem, termasuk ukuran, inode, permission, dan timestamp.",
+      "syntax": "stat [OPSI] FILE...",
+      "options": [
+        { "option": "-f", "description": "Menampilkan informasi filesystem alih-alih file" },
+        { "option": "-c FORMAT", "description": "Menampilkan output sesuai format tertentu" },
+        { "option": "-t", "description": "Menampilkan output dalam format ringkas (satu baris)" }
+      ],
+      "examples": "# Menampilkan info detail file\nstat file.txt\n\n# Menampilkan hanya ukuran file\nstat -c '%s' file.txt\n\n# Menampilkan permission dalam format oktal\nstat -c '%a' file.txt\n\n# Menampilkan info filesystem\nstat -f /"
+    },
+    {
+      "name": "file",
+      "title": "file — Mendeteksi Tipe File",
+      "description": "Menentukan tipe file berdasarkan kontennya, bukan ekstensi. Berguna untuk mengidentifikasi file tanpa ekstensi.",
+      "syntax": "file [OPSI] FILE...",
+      "options": [
+        { "option": "-b", "description": "Menampilkan tipe file tanpa nama file (brief mode)" },
+        { "option": "-i", "description": "Menampilkan MIME type file" },
+        { "option": "-z", "description": "Memeriksa file yang terkompresi" },
+        { "option": "-L", "description": "Mengikuti symbolic link" }
+      ],
+      "examples": "# Mendeteksi tipe file\nfile gambar.png\ngambar.png: PNG image data, 1920 x 1080\n\n# Menampilkan MIME type\nfile -i dokumen.pdf\ndokumen.pdf: application/pdf; charset=binary\n\n# Brief mode\nfile -b script.sh\nBourne-Again shell script, ASCII text executable"
+    }
+  ]
+}

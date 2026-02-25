@@ -1,0 +1,64 @@
+{
+  "id": "file-permission",
+  "title": "Hak Akses File",
+  "description": "Perintah-perintah untuk mengatur hak akses (permission), kepemilikan (ownership), dan grup pada file dan direktori di Linux.",
+  "commands": [
+    {
+      "name": "chmod",
+      "title": "chmod — Mengubah Hak Akses",
+      "description": "Mengubah hak akses (permission) file atau direktori. Mendukung mode simbolik (rwx) dan mode oktal (755).",
+      "syntax": "chmod [OPSI] MODE FILE...",
+      "options": [
+        { "option": "-R", "description": "Mengubah permission secara rekursif pada direktori dan isinya" },
+        { "option": "-v", "description": "Menampilkan perubahan permission setiap file" },
+        { "option": "-c", "description": "Menampilkan hanya file yang permission-nya berubah" },
+        { "option": "-f", "description": "Tidak menampilkan pesan error" },
+        { "option": "u/g/o/a", "description": "User/Group/Other/All — menentukan siapa yang diubah" },
+        { "option": "+/-/=", "description": "Menambah/Menghapus/Mengatur permission" },
+        { "option": "r/w/x", "description": "Read/Write/Execute — jenis permission" }
+      ],
+      "examples": "# Mode simbolik\nchmod u+x script.sh          # Tambah execute untuk user\nchmod go-w file.txt          # Hapus write untuk group dan other\nchmod a+r dokumen.txt        # Tambah read untuk semua\nchmod u=rwx,g=rx,o=r file    # Set permission spesifik\n\n# Mode oktal\nchmod 755 script.sh          # rwxr-xr-x\nchmod 644 file.txt           # rw-r--r--\nchmod 700 dir_privat/        # rwx------\nchmod 600 rahasia.txt        # rw-------\n\n# Rekursif\nchmod -R 755 /var/www/html/",
+      "notes": "Nilai oktal: 4=read, 2=write, 1=execute. Contoh: 7=rwx (4+2+1), 5=rx (4+1), 6=rw (4+2)"
+    },
+    {
+      "name": "chown",
+      "title": "chown — Mengubah Kepemilikan",
+      "description": "Mengubah pemilik (owner) dan/atau grup dari file atau direktori.",
+      "syntax": "chown [OPSI] [OWNER][:GROUP] FILE...",
+      "options": [
+        { "option": "-R", "description": "Mengubah kepemilikan secara rekursif" },
+        { "option": "-v", "description": "Menampilkan perubahan kepemilikan" },
+        { "option": "-c", "description": "Menampilkan hanya yang berubah" },
+        { "option": "-f", "description": "Menyembunyikan pesan error" },
+        { "option": "--reference=FILE", "description": "Menggunakan kepemilikan file referensi" }
+      ],
+      "examples": "# Mengubah owner\nsudo chown user file.txt\n\n# Mengubah owner dan group\nsudo chown user:group file.txt\n\n# Mengubah group saja\nsudo chown :group file.txt\n\n# Mengubah secara rekursif\nsudo chown -R www-data:www-data /var/www/html/"
+    },
+    {
+      "name": "chgrp",
+      "title": "chgrp — Mengubah Grup",
+      "description": "Mengubah grup pemilik dari file atau direktori.",
+      "syntax": "chgrp [OPSI] GROUP FILE...",
+      "options": [
+        { "option": "-R", "description": "Mengubah grup secara rekursif" },
+        { "option": "-v", "description": "Menampilkan perubahan grup" },
+        { "option": "-c", "description": "Menampilkan hanya yang berubah" },
+        { "option": "--reference=FILE", "description": "Menggunakan grup file referensi" }
+      ],
+      "examples": "# Mengubah grup file\nsudo chgrp developers proyek/\n\n# Mengubah grup secara rekursif\nsudo chgrp -R www-data /var/www/\n\n# Menggunakan referensi file lain\nchgrp --reference=file_referensi.txt target.txt"
+    },
+    {
+      "name": "umask",
+      "title": "umask — Mask Permission Default",
+      "description": "Mengatur mask permission default untuk file dan direktori baru. Nilai umask dikurangkan dari permission maksimal (666 untuk file, 777 untuk direktori).",
+      "syntax": "umask [OPSI] [MODE]",
+      "options": [
+        { "option": "umask", "description": "Menampilkan nilai umask saat ini" },
+        { "option": "-S", "description": "Menampilkan umask dalam format simbolik" },
+        { "option": "-p", "description": "Menampilkan dalam format yang bisa digunakan kembali" }
+      ],
+      "examples": "# Menampilkan umask saat ini\numask\n0022\n\n# Menampilkan dalam format simbolik\numask -S\nu=rwx,g=rx,o=rx\n\n# Mengatur umask\numask 0027     # File: 640, Direktori: 750\numask 0077     # File: 600, Direktori: 700\numask 0022     # File: 644, Direktori: 755 (default)",
+      "notes": "Dengan umask 0022: file baru = 644 (666-022), direktori baru = 755 (777-022)"
+    }
+  ]
+}

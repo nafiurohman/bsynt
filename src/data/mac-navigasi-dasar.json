@@ -1,0 +1,115 @@
+{
+  "id": "mac-navigasi-dasar",
+  "title": "Navigasi Dasar",
+  "description": "Perintah dasar navigasi direktori dan terminal di macOS (zsh/bash).",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "cd",
+      "title": "Change Directory",
+      "description": "Berpindah antar direktori di terminal macOS.",
+      "syntax": "cd [direktori]",
+      "options": [
+        { "option": "cd ~", "description": "Pindah ke home directory" },
+        { "option": "cd ..", "description": "Naik satu level ke parent directory" },
+        { "option": "cd -", "description": "Kembali ke direktori sebelumnya" },
+        { "option": "cd /", "description": "Pindah ke root directory" }
+      ],
+      "examples": "cd ~/Documents\ncd /Applications\ncd ../Projects\ncd -",
+      "notes": "macOS menggunakan zsh sebagai default shell sejak Catalina."
+    },
+    {
+      "name": "ls",
+      "title": "List Directory",
+      "description": "Menampilkan isi direktori.",
+      "syntax": "ls [opsi] [direktori]",
+      "options": [
+        { "option": "-l", "description": "Format panjang (detail)" },
+        { "option": "-a", "description": "Tampilkan file tersembunyi (dotfiles)" },
+        { "option": "-la", "description": "Kombinasi detail + tersembunyi" },
+        { "option": "-lh", "description": "Format panjang dengan ukuran human-readable" },
+        { "option": "-R", "description": "Rekursif, tampilkan subdirektori" },
+        { "option": "-S", "description": "Urutkan berdasarkan ukuran file" },
+        { "option": "-t", "description": "Urutkan berdasarkan waktu modifikasi" },
+        { "option": "-G", "description": "Tampilkan dengan warna (macOS)" }
+      ],
+      "examples": "ls -la ~/Desktop\nls -lhS /Applications\nls -lt ~/Downloads\nls -laG",
+      "notes": "Di macOS, `ls -G` menampilkan warna (bukan --color seperti Linux)."
+    },
+    {
+      "name": "pwd",
+      "title": "Print Working Directory",
+      "description": "Menampilkan path lengkap direktori saat ini.",
+      "syntax": "pwd",
+      "options": [
+        { "option": "-P", "description": "Tampilkan path fisik (resolve symlink)" },
+        { "option": "-L", "description": "Tampilkan path logis (default)" }
+      ],
+      "examples": "pwd\npwd -P",
+      "notes": "Berguna untuk mengetahui posisi saat ini di filesystem."
+    },
+    {
+      "name": "open",
+      "title": "Open File/Folder",
+      "description": "Membuka file, folder, atau URL menggunakan aplikasi default macOS.",
+      "syntax": "open [opsi] [path/URL]",
+      "options": [
+        { "option": "-a [app]", "description": "Buka dengan aplikasi tertentu" },
+        { "option": "-e", "description": "Buka dengan TextEdit" },
+        { "option": "-R", "description": "Reveal di Finder" },
+        { "option": "-n", "description": "Buka instance baru aplikasi" }
+      ],
+      "examples": "open .\nopen ~/Documents\nopen -a \"Visual Studio Code\" file.txt\nopen -R ~/Downloads/file.zip\nopen https://google.com",
+      "notes": "Perintah `open` adalah fitur khas macOS, tidak ada di Linux."
+    },
+    {
+      "name": "clear",
+      "title": "Clear Terminal",
+      "description": "Membersihkan layar terminal.",
+      "syntax": "clear",
+      "options": [],
+      "examples": "clear",
+      "notes": "Shortcut: Cmd+K juga membersihkan terminal di macOS Terminal.app."
+    },
+    {
+      "name": "history",
+      "title": "Command History",
+      "description": "Menampilkan riwayat perintah yang sudah dijalankan.",
+      "syntax": "history [n]",
+      "options": [
+        { "option": "history 10", "description": "Tampilkan 10 perintah terakhir" },
+        { "option": "!!", "description": "Jalankan ulang perintah terakhir" },
+        { "option": "!n", "description": "Jalankan perintah ke-n dari history" }
+      ],
+      "examples": "history\nhistory 20\n!!\n!55",
+      "notes": "Di zsh, history disimpan di ~/.zsh_history."
+    },
+    {
+      "name": "tree",
+      "title": "Tree Directory",
+      "description": "Menampilkan struktur direktori dalam bentuk pohon.",
+      "syntax": "tree [opsi] [direktori]",
+      "options": [
+        { "option": "-L [n]", "description": "Batasi kedalaman level" },
+        { "option": "-d", "description": "Tampilkan direktori saja" },
+        { "option": "-a", "description": "Tampilkan file tersembunyi" },
+        { "option": "-I [pattern]", "description": "Abaikan pattern tertentu" }
+      ],
+      "examples": "tree -L 2\ntree -d\ntree -I 'node_modules|.git'",
+      "notes": "Install via Homebrew: `brew install tree`."
+    },
+    {
+      "name": "pushd-popd",
+      "title": "Push/Pop Directory",
+      "description": "Navigasi direktori dengan directory stack.",
+      "syntax": "pushd [dir] / popd / dirs",
+      "options": [
+        { "option": "pushd [dir]", "description": "Pindah ke dir dan simpan di stack" },
+        { "option": "popd", "description": "Kembali ke direktori sebelumnya dari stack" },
+        { "option": "dirs -v", "description": "Tampilkan directory stack dengan nomor" }
+      ],
+      "examples": "pushd ~/Projects\npushd /tmp\ndirs -v\npopd",
+      "notes": "Berguna untuk berpindah cepat antar beberapa direktori."
+    }
+  ]
+}

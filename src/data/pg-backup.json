@@ -1,0 +1,71 @@
+{
+  "id": "pg-backup",
+  "title": "Backup & Restore",
+  "description": "Backup dan restore database PostgreSQL menggunakan pg_dump, pg_restore, dan pg_basebackup.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "pg_dump",
+      "title": "Backup Database",
+      "description": "Membuat backup (dump) dari satu database.",
+      "syntax": "pg_dump [opsi] nama_database > output.sql",
+      "options": [
+        { "option": "-F c", "description": "Format custom (compressed, bisa partial restore)" },
+        { "option": "-F t", "description": "Format tar" },
+        { "option": "-F p", "description": "Format plain SQL (default)" },
+        { "option": "-t tabel", "description": "Backup tabel tertentu saja" },
+        { "option": "-s", "description": "Schema only (tanpa data)" },
+        { "option": "-a", "description": "Data only (tanpa schema)" },
+        { "option": "--clean", "description": "Tambahkan DROP sebelum CREATE" },
+        { "option": "-j n", "description": "Parallel dump (format directory)" }
+      ],
+      "examples": "# Plain SQL\npg_dump mydb > backup.sql\n\n# Custom format (direkomendasikan)\npg_dump -F c mydb > backup.dump\n\n# Tabel tertentu\npg_dump -t users -t orders mydb > partial.sql\n\n# Schema only\npg_dump -s mydb > schema.sql\n\n# Parallel dump\npg_dump -F d -j 4 mydb -f backup_dir/",
+      "notes": "Format custom (-F c) direkomendasikan karena compressed dan flexible saat restore."
+    },
+    {
+      "name": "pg_restore",
+      "title": "Restore dari Backup",
+      "description": "Mengembalikan database dari file backup format custom atau tar.",
+      "syntax": "pg_restore [opsi] file_backup",
+      "options": [
+        { "option": "-d database", "description": "Database tujuan restore" },
+        { "option": "-c / --clean", "description": "Drop objek sebelum recreate" },
+        { "option": "-C", "description": "Buat database baru" },
+        { "option": "-t tabel", "description": "Restore tabel tertentu" },
+        { "option": "-j n", "description": "Parallel restore" },
+        { "option": "--no-owner", "description": "Skip ownership" },
+        { "option": "-l", "description": "List isi archive" }
+      ],
+      "examples": "# Restore custom format\npg_restore -d mydb backup.dump\n\n# Restore dengan create database\npg_restore -C -d postgres backup.dump\n\n# Restore tabel tertentu\npg_restore -d mydb -t users backup.dump\n\n# Parallel restore\npg_restore -d mydb -j 4 backup.dump\n\n# Restore plain SQL\npsql mydb < backup.sql",
+      "notes": "Untuk plain SQL backup, gunakan psql untuk restore, bukan pg_restore."
+    },
+    {
+      "name": "pg_dumpall",
+      "title": "Backup Semua Database",
+      "description": "Backup semua database termasuk roles dan tablespace.",
+      "syntax": "pg_dumpall > full_backup.sql",
+      "options": [
+        { "option": "-r / --roles-only", "description": "Backup roles saja" },
+        { "option": "-g / --globals-only", "description": "Backup global objects saja" }
+      ],
+      "examples": "pg_dumpall > full_backup.sql\npg_dumpall --roles-only > roles.sql\npsql -f full_backup.sql postgres",
+      "notes": "pg_dumpall hanya menghasilkan plain SQL. Restore dengan psql."
+    },
+    {
+      "name": "pg_basebackup",
+      "title": "Physical Backup (Binary)",
+      "description": "Backup fisik seluruh cluster PostgreSQL untuk Point-in-Time Recovery.",
+      "syntax": "pg_basebackup -D output_dir [opsi]",
+      "options": [
+        { "option": "-D dir", "description": "Direktori output" },
+        { "option": "-F tar", "description": "Format tar" },
+        { "option": "-z", "description": "Compress dengan gzip" },
+        { "option": "-P", "description": "Tampilkan progress" },
+        { "option": "-R", "description": "Setup standby configuration" },
+        { "option": "--wal-method=stream", "description": "Stream WAL selama backup" }
+      ],
+      "examples": "pg_basebackup -D /backup/base -F tar -z -P\npg_basebackup -D /backup/standby -R -P --wal-method=stream",
+      "notes": "Digunakan untuk setup replication dan Point-in-Time Recovery."
+    }
+  ]
+}

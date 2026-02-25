@@ -1,0 +1,56 @@
+{
+  "id": "redis-hash",
+  "title": "Hash Commands",
+  "description": "Operasi pada tipe data Hash di Redis — seperti object/map untuk menyimpan field-value pairs.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "HSET / HGET",
+      "title": "Set dan Get Field",
+      "description": "Menyimpan dan mengambil field value dari hash.",
+      "syntax": "HSET key field value [field value ...]\nHGET key field\nHMGET key field [field ...]",
+      "options": [
+        { "option": "HSET", "description": "Set satu atau lebih field" },
+        { "option": "HGET", "description": "Get satu field" },
+        { "option": "HMGET", "description": "Get beberapa field sekaligus" },
+        { "option": "HGETALL", "description": "Get semua field dan value" },
+        { "option": "HSETNX", "description": "Set hanya jika field belum ada" }
+      ],
+      "examples": "HSET user:1 name \"John\" email \"john@mail.com\" age 30\nHGET user:1 name\nHMGET user:1 name email\nHGETALL user:1\nHSETNX user:1 role \"user\"",
+      "notes": "Hash efisien untuk menyimpan objek — lebih hemat memori dari multiple key."
+    },
+    {
+      "name": "HDEL / HEXISTS / HLEN",
+      "title": "Menghapus dan Memeriksa Field",
+      "description": "Menghapus field, mengecek keberadaan, dan menghitung jumlah field.",
+      "syntax": "HDEL key field [field ...]\nHEXISTS key field\nHLEN key",
+      "options": [
+        { "option": "HKEYS key", "description": "Semua field names" },
+        { "option": "HVALS key", "description": "Semua values" }
+      ],
+      "examples": "HDEL user:1 age\nHEXISTS user:1 email  # 1 (ada) atau 0 (tidak ada)\nHLEN user:1\nHKEYS user:1\nHVALS user:1",
+      "notes": "HDEL mendukung hapus multiple field sekaligus."
+    },
+    {
+      "name": "HINCRBY / HINCRBYFLOAT",
+      "title": "Increment Field Value",
+      "description": "Menambah nilai numerik pada field hash secara atomic.",
+      "syntax": "HINCRBY key field increment\nHINCRBYFLOAT key field increment",
+      "options": [],
+      "examples": "HSET product:1 views 0 price 99.99\nHINCRBY product:1 views 1\nHINCRBY product:1 views 5\nHINCRBYFLOAT product:1 price 10.50",
+      "notes": "Sangat berguna untuk counters per-object (views, likes, etc)."
+    },
+    {
+      "name": "HSCAN",
+      "title": "Iterasi Field Hash",
+      "description": "Iterasi field hash secara incremental (cursor-based).",
+      "syntax": "HSCAN key cursor [MATCH pattern] [COUNT count]",
+      "options": [
+        { "option": "MATCH pattern", "description": "Filter field dengan pattern" },
+        { "option": "COUNT count", "description": "Hint jumlah element per iterasi" }
+      ],
+      "examples": "HSCAN user:1 0\nHSCAN user:1 0 MATCH \"name*\"\nHSCAN user:1 0 COUNT 100",
+      "notes": "Gunakan HSCAN untuk hash besar — HGETALL bisa blocking pada hash dengan banyak field."
+    }
+  ]
+}

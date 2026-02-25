@@ -1,0 +1,85 @@
+{
+  "id": "mac-network",
+  "title": "Network",
+  "description": "Perintah jaringan di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "ifconfig",
+      "title": "Interface Config",
+      "description": "Menampilkan konfigurasi interface jaringan.",
+      "syntax": "ifconfig [interface]",
+      "options": [],
+      "examples": "ifconfig\nifconfig en0\nifconfig en0 | grep 'inet '",
+      "notes": "Di macOS, en0 biasanya Wi-Fi dan en1 Ethernet."
+    },
+    {
+      "name": "networksetup",
+      "title": "Network Setup (macOS)",
+      "description": "Mengelola konfigurasi jaringan macOS.",
+      "syntax": "networksetup [opsi]",
+      "options": [
+        { "option": "-listallhardwareports", "description": "List semua port hardware" },
+        { "option": "-getairportnetwork [if]", "description": "Jaringan Wi-Fi saat ini" },
+        { "option": "-setdnsservers [service] [dns]", "description": "Set DNS server" },
+        { "option": "-getinfo [service]", "description": "Info jaringan" },
+        { "option": "-setairportpower [if] on/off", "description": "Nyalakan/matikan Wi-Fi" }
+      ],
+      "examples": "networksetup -listallhardwareports\nnetworksetup -getairportnetwork en0\nnetworksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4\nnetworksetup -getinfo Wi-Fi",
+      "notes": "Fitur khas macOS untuk konfigurasi jaringan."
+    },
+    {
+      "name": "ping",
+      "title": "Ping",
+      "description": "Mengecek konektivitas ke host.",
+      "syntax": "ping [opsi] host",
+      "options": [
+        { "option": "-c [n]", "description": "Jumlah ping" },
+        { "option": "-i [n]", "description": "Interval (detik)" },
+        { "option": "-t [ttl]", "description": "Set TTL" }
+      ],
+      "examples": "ping google.com\nping -c 5 8.8.8.8\nping -c 3 -i 2 192.168.1.1"
+    },
+    {
+      "name": "curl",
+      "title": "cURL",
+      "description": "Transfer data dari/ke URL.",
+      "syntax": "curl [opsi] URL",
+      "options": [
+        { "option": "-o [file]", "description": "Output ke file" },
+        { "option": "-O", "description": "Simpan dengan nama asli" },
+        { "option": "-L", "description": "Follow redirect" },
+        { "option": "-I", "description": "Header saja" },
+        { "option": "-X [method]", "description": "HTTP method" },
+        { "option": "-d [data]", "description": "POST data" },
+        { "option": "-H [header]", "description": "Custom header" }
+      ],
+      "examples": "curl https://api.github.com\ncurl -o file.zip https://example.com/file.zip\ncurl -X POST -H 'Content-Type: application/json' -d '{\"key\":\"val\"}' https://api.example.com\ncurl -I https://google.com"
+    },
+    {
+      "name": "netstat",
+      "title": "Netstat",
+      "description": "Menampilkan koneksi jaringan dan port.",
+      "syntax": "netstat [opsi]",
+      "options": [
+        { "option": "-an", "description": "Semua koneksi, numerik" },
+        { "option": "-p tcp", "description": "TCP saja" },
+        { "option": "-r", "description": "Routing table" }
+      ],
+      "examples": "netstat -an | grep LISTEN\nnetstat -p tcp\nnetstat -r"
+    },
+    {
+      "name": "scutil",
+      "title": "System Configuration (macOS)",
+      "description": "Mengelola konfigurasi sistem jaringan macOS.",
+      "syntax": "scutil [opsi]",
+      "options": [
+        { "option": "--dns", "description": "Konfigurasi DNS" },
+        { "option": "--proxy", "description": "Konfigurasi proxy" },
+        { "option": "--get ComputerName", "description": "Nama komputer" },
+        { "option": "--set ComputerName [name]", "description": "Set nama komputer" }
+      ],
+      "examples": "scutil --dns\nscutil --proxy\nscutil --get ComputerName\nsudo scutil --set HostName myMac"
+    }
+  ]
+}

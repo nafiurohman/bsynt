@@ -1,0 +1,78 @@
+{
+  "id": "win-file-viewing",
+  "title": "File Viewing (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk melihat isi file di CMD dan PowerShell.",
+  "commands": [
+    {
+      "name": "type",
+      "title": "type — Menampilkan Isi File",
+      "description": "Menampilkan isi file teks ke layar. Setara dengan cat di Linux.",
+      "syntax": "type file",
+      "options": [],
+      "examples": "# Tampilkan isi file\ntype readme.txt\n\n# Tampilkan beberapa file\ntype file1.txt file2.txt\n\n# Pipe ke more\ntype log.txt | more\n\n# PowerShell: Get-Content\nGet-Content readme.txt\nGet-Content readme.txt | Select-Object -First 10\nGet-Content readme.txt | Select-Object -Last 5"
+    },
+    {
+      "name": "more-win",
+      "title": "more — Tampilkan Per Halaman",
+      "description": "Menampilkan isi file satu halaman pada satu waktu. Tekan Space untuk halaman berikutnya.",
+      "syntax": "more [opsi] file",
+      "options": [
+        {"option": "/e", "description": "Mengaktifkan extended features"},
+        {"option": "/c", "description": "Bersihkan layar sebelum tampilkan"},
+        {"option": "/s", "description": "Gabungkan baris kosong berturut-turut"},
+        {"option": "+n", "description": "Mulai dari baris ke-n"}
+      ],
+      "examples": "# Tampilkan per halaman\nmore readme.txt\n\n# Mulai dari baris 100\nmore +100 log.txt\n\n# Pipe dari perintah lain\ndir /s | more\ntype bigfile.txt | more"
+    },
+    {
+      "name": "find-text",
+      "title": "find — Mencari Teks di File",
+      "description": "Mencari string tertentu di dalam file. Berbeda dengan find di Linux.",
+      "syntax": "find [opsi] \"string\" [file]",
+      "options": [
+        {"option": "/i", "description": "Abaikan huruf besar/kecil (case insensitive)"},
+        {"option": "/v", "description": "Tampilkan baris yang TIDAK mengandung string"},
+        {"option": "/c", "description": "Tampilkan jumlah baris yang cocok"},
+        {"option": "/n", "description": "Tampilkan nomor baris"}
+      ],
+      "examples": "# Cari teks di file\nfind \"error\" log.txt\n\n# Case insensitive\nfind /i \"warning\" log.txt\n\n# Tampilkan nomor baris\nfind /n \"TODO\" code.txt\n\n# Hitung jumlah kemunculan\nfind /c \"error\" log.txt\n\n# Pipe dari perintah lain\ntype log.txt | find \"error\"\ndir /s | find \".txt\""
+    },
+    {
+      "name": "findstr",
+      "title": "findstr — Pencarian Teks Lanjutan",
+      "description": "Pencarian teks yang lebih powerful dari find. Mendukung regex dan pencarian multi-file.",
+      "syntax": "findstr [opsi] \"pola\" [file]",
+      "options": [
+        {"option": "/i", "description": "Case insensitive"},
+        {"option": "/s", "description": "Cari di subdirektori"},
+        {"option": "/r", "description": "Gunakan regular expression"},
+        {"option": "/n", "description": "Tampilkan nomor baris"},
+        {"option": "/m", "description": "Tampilkan hanya nama file yang cocok"},
+        {"option": "/c:\"string\"", "description": "Literal search string"},
+        {"option": "/v", "description": "Tampilkan baris yang tidak cocok"},
+        {"option": "/b", "description": "Cocokkan di awal baris"},
+        {"option": "/e", "description": "Cocokkan di akhir baris"}
+      ],
+      "examples": "# Cari teks\nfindstr \"error\" *.log\n\n# Cari rekursif\nfindstr /s /i \"password\" *.txt\n\n# Dengan regex\nfindstr /r \"[0-9][0-9]*\\.[0-9]\" data.txt\n\n# Hanya nama file\nfindstr /s /m \"TODO\" *.py\n\n# PowerShell: Select-String\nSelect-String -Path *.log -Pattern \"error\"\nSelect-String -Path *.txt -Pattern \"password\" -Recurse",
+      "notes": "findstr adalah versi CMD dari grep. Di PowerShell, gunakan Select-String yang jauh lebih powerful."
+    },
+    {
+      "name": "get-content-ps",
+      "title": "Get-Content — Baca File (PowerShell)",
+      "description": "Cmdlet PowerShell untuk membaca isi file dengan berbagai opsi canggih.",
+      "syntax": "Get-Content [opsi] path",
+      "options": [
+        {"option": "-Path", "description": "Path file yang dibaca"},
+        {"option": "-First n", "description": "Baca n baris pertama (head)"},
+        {"option": "-Last n", "description": "Baca n baris terakhir (tail)"},
+        {"option": "-Tail n", "description": "Alias dari -Last"},
+        {"option": "-Wait", "description": "Ikuti perubahan file real-time (seperti tail -f)"},
+        {"option": "-TotalCount n", "description": "Jumlah baris yang dibaca"},
+        {"option": "-Encoding", "description": "Encoding file (UTF8, ASCII, dll)"},
+        {"option": "-Raw", "description": "Baca sebagai satu string (bukan array baris)"}
+      ],
+      "examples": "# Baca file\nGet-Content log.txt\n\n# 10 baris pertama\nGet-Content log.txt -First 10\n\n# 5 baris terakhir\nGet-Content log.txt -Last 5\n\n# Follow real-time (seperti tail -f)\nGet-Content log.txt -Wait\n\n# Baca sebagai raw string\nGet-Content data.json -Raw | ConvertFrom-Json\n\n# Baca dengan encoding tertentu\nGet-Content file.txt -Encoding UTF8"
+    }
+  ]
+}

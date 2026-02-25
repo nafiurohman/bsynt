@@ -1,0 +1,62 @@
+{
+  "id": "redis-list",
+  "title": "List Commands",
+  "description": "Operasi pada tipe data List (linked list) di Redis — queue, stack, dan timeline.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "LPUSH / RPUSH",
+      "title": "Menambah Element ke List",
+      "description": "Menambahkan satu atau lebih element ke awal (L) atau akhir (R) list.",
+      "syntax": "LPUSH key element [element ...]\nRPUSH key element [element ...]",
+      "options": [
+        { "option": "LPUSH", "description": "Push ke head (kiri/awal)" },
+        { "option": "RPUSH", "description": "Push ke tail (kanan/akhir)" },
+        { "option": "LPUSHX", "description": "Push hanya jika key sudah ada" },
+        { "option": "RPUSHX", "description": "Push hanya jika key sudah ada" }
+      ],
+      "examples": "RPUSH tasks \"task1\" \"task2\" \"task3\"\nLPUSH notifications \"new message\"\nLPUSHX mylist \"value\"  # hanya jika mylist ada",
+      "notes": "LPUSH + RPOP = Queue (FIFO). LPUSH + LPOP = Stack (LIFO)."
+    },
+    {
+      "name": "LPOP / RPOP / LRANGE",
+      "title": "Mengambil Element dari List",
+      "description": "Mengambil dan menghapus element, atau melihat range element.",
+      "syntax": "LPOP key [count]\nRPOP key [count]\nLRANGE key start stop",
+      "options": [
+        { "option": "LPOP", "description": "Pop dari head" },
+        { "option": "RPOP", "description": "Pop dari tail" },
+        { "option": "LRANGE 0 -1", "description": "Semua element" },
+        { "option": "LINDEX key n", "description": "Element pada index n" },
+        { "option": "LLEN key", "description": "Panjang list" }
+      ],
+      "examples": "RPUSH queue \"a\" \"b\" \"c\" \"d\"\nLPOP queue         # \"a\"\nRPOP queue         # \"d\"\nLPOP queue 2       # [\"b\", \"c\"]\nLRANGE queue 0 -1  # semua element\nLINDEX queue 0     # element pertama\nLLEN queue",
+      "notes": "LRANGE 0 -1 menampilkan semua element tanpa menghapusnya."
+    },
+    {
+      "name": "BLPOP / BRPOP",
+      "title": "Blocking Pop (Queue)",
+      "description": "Pop dengan blocking — menunggu sampai element tersedia atau timeout.",
+      "syntax": "BLPOP key [key ...] timeout\nBRPOP key [key ...] timeout",
+      "options": [
+        { "option": "timeout", "description": "Timeout dalam detik (0 = tanpa batas)" }
+      ],
+      "examples": "# Consumer: tunggu task baru (timeout 30 detik)\nBLPOP tasks 30\n\n# Consumer: tunggu dari multiple queue\nBLPOP high_priority low_priority 0\n\n# Producer: tambah task\nRPUSH tasks \"process_email\"",
+      "notes": "BLPOP sangat berguna untuk implementasi job queue yang efisien."
+    },
+    {
+      "name": "LSET / LREM / LTRIM",
+      "title": "Modifikasi List",
+      "description": "Mengubah, menghapus, atau memotong list.",
+      "syntax": "LSET key index value\nLREM key count element\nLTRIM key start stop",
+      "options": [
+        { "option": "LSET key n val", "description": "Ganti element pada index n" },
+        { "option": "LREM key 0 val", "description": "Hapus semua kemunculan val" },
+        { "option": "LREM key 2 val", "description": "Hapus 2 kemunculan dari head" },
+        { "option": "LTRIM key 0 99", "description": "Simpan hanya 100 element pertama" }
+      ],
+      "examples": "RPUSH mylist \"a\" \"b\" \"c\" \"b\" \"d\"\nLSET mylist 0 \"A\"       # ganti index 0\nLREM mylist 0 \"b\"       # hapus semua \"b\"\nLTRIM mylist 0 99       # simpan 100 teratas\n\n# Pattern: Capped list (simpan 1000 terbaru)\nLPUSH recent_logs \"new log\"\nLTRIM recent_logs 0 999",
+      "notes": "LTRIM berguna untuk menjaga ukuran list tetap terbatas (capped collection)."
+    }
+  ]
+}

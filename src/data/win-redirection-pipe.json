@@ -1,0 +1,67 @@
+{
+  "id": "win-redirection-pipe",
+  "title": "Redirection & Pipe (Windows)",
+  "badge": "Windows",
+  "description": "Teknik redirect output, input, dan pipe untuk menghubungkan perintah di CMD dan PowerShell.",
+  "commands": [
+    {
+      "name": "redirect-cmd",
+      "title": "> dan >> — Redirect Output (CMD)",
+      "description": "Mengalihkan output ke file di CMD. > menimpa, >> menambahkan.",
+      "syntax": "perintah > file\nperintah >> file",
+      "options": [
+        {"option": ">", "description": "Redirect stdout ke file (menimpa)"},
+        {"option": ">>", "description": "Redirect stdout ke file (append)"},
+        {"option": "2>", "description": "Redirect stderr ke file"},
+        {"option": "2>>", "description": "Redirect stderr ke file (append)"},
+        {"option": "2>&1", "description": "Gabungkan stderr ke stdout"},
+        {"option": "> NUL", "description": "Buang output (seperti /dev/null)"},
+        {"option": "2> NUL", "description": "Buang error output"}
+      ],
+      "examples": "# Simpan output ke file\ndir > daftar.txt\n\n# Append ke file\necho Baris baru >> log.txt\n\n# Redirect error\ncommand 2> errors.txt\n\n# Redirect semua output\ncommand > output.txt 2>&1\n\n# Buang output\ncommand > NUL 2>&1\n\n# Buang error saja\ndir /s 2> NUL"
+    },
+    {
+      "name": "pipe-cmd",
+      "title": "| — Pipe (CMD & PowerShell)",
+      "description": "Menghubungkan output dari satu perintah ke input perintah berikutnya.",
+      "syntax": "perintah1 | perintah2",
+      "options": [
+        {"option": "|", "description": "Pipe output ke perintah berikutnya"},
+        {"option": "| more", "description": "Tampilkan per halaman"},
+        {"option": "| find", "description": "Filter dengan find"},
+        {"option": "| findstr", "description": "Filter dengan findstr"},
+        {"option": "| sort", "description": "Urutkan output"},
+        {"option": "| clip", "description": "Salin ke clipboard"}
+      ],
+      "examples": "# Filter output\ndir | find \".txt\"\ntasklist | findstr \"chrome\"\n\n# Urutkan\ndir /b | sort\n\n# Tampilkan per halaman\ndir /s | more\n\n# Salin ke clipboard\ndir | clip\nipconfig | clip\n\n# Pipeline bertingkat\ndir /s /b | findstr \".log\" | sort\ntasklist | findstr /i \"chrome\" | find /c /v \"\""
+    },
+    {
+      "name": "redirect-ps",
+      "title": "PowerShell Redirection & Pipeline",
+      "description": "PowerShell memiliki pipeline yang jauh lebih powerful karena mengirim objek, bukan teks.",
+      "syntax": "perintah | perintah\nperintah > file",
+      "options": [
+        {"option": ">", "description": "Redirect ke file (alias Out-File)"},
+        {"option": ">>", "description": "Append ke file"},
+        {"option": "| Out-File", "description": "Redirect ke file dengan opsi encoding"},
+        {"option": "| Set-Content", "description": "Tulis ke file"},
+        {"option": "| Add-Content", "description": "Append ke file"},
+        {"option": "| Tee-Object", "description": "Tampilkan dan simpan (seperti tee)"},
+        {"option": "| Out-Null", "description": "Buang output"},
+        {"option": "| Out-String", "description": "Konversi ke string"},
+        {"option": "| Export-Csv", "description": "Ekspor ke CSV"},
+        {"option": "| ConvertTo-Json", "description": "Konversi ke JSON"}
+      ],
+      "examples": "# Simpan ke file\nGet-Process > proses.txt\nGet-Process | Out-File proses.txt -Encoding UTF8\n\n# Tee (tampilkan + simpan)\nGet-Process | Tee-Object -FilePath proses.txt\n\n# Ekspor ke CSV\nGet-Process | Export-Csv proses.csv -NoTypeInformation\n\n# Konversi ke JSON\nGet-Process | Select Name, CPU | ConvertTo-Json > proses.json\n\n# Pipeline objek\nGet-Process | Where-Object {$_.CPU -gt 10} | Sort-Object CPU -Descending\nGet-Service | Where-Object {$_.Status -eq 'Running'} | Select-Object Name, DisplayName\n\n# ForEach pipeline\nGet-ChildItem *.txt | ForEach-Object { Write-Host $_.Name $_.Length }",
+      "notes": "Pipeline PowerShell mengirim objek .NET, bukan teks. Ini membuatnya jauh lebih powerful dibanding pipe CMD."
+    },
+    {
+      "name": "clip",
+      "title": "clip — Salin ke Clipboard",
+      "description": "Menyalin output perintah langsung ke clipboard Windows.",
+      "syntax": "perintah | clip",
+      "options": [],
+      "examples": "# Salin output dir\ndir | clip\n\n# Salin isi file\ntype file.txt | clip\n\n# Salin IP address\nipconfig | findstr \"IPv4\" | clip\n\n# PowerShell: Set-Clipboard\nGet-Process | Set-Clipboard\n\"Hello\" | Set-Clipboard\nGet-Clipboard"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "id": "pg-string-functions",
+  "title": "String Functions",
+  "description": "Fungsi-fungsi untuk manipulasi string di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CONCAT / ||",
+      "title": "Menggabungkan String",
+      "description": "Menggabungkan dua atau lebih string menjadi satu.",
+      "syntax": "CONCAT(str1, str2, ...) atau str1 || str2",
+      "options": [
+        { "option": "CONCAT()", "description": "Mengabaikan NULL" },
+        { "option": "||", "description": "NULL jika salah satu NULL" },
+        { "option": "CONCAT_WS(sep, ...)", "description": "Concat with separator" }
+      ],
+      "examples": "SELECT CONCAT('Hello', ' ', 'World');\nSELECT 'Hello' || ' ' || 'World';\nSELECT CONCAT_WS(', ', 'Jakarta', 'Indonesia');\nSELECT first_name || ' ' || last_name AS full_name FROM users;",
+      "notes": "Gunakan CONCAT() jika ada kemungkinan NULL, karena || akan menghasilkan NULL."
+    },
+    {
+      "name": "LENGTH / CHAR_LENGTH",
+      "title": "Panjang String",
+      "description": "Menghitung jumlah karakter dalam string.",
+      "syntax": "LENGTH(str) / CHAR_LENGTH(str) / OCTET_LENGTH(str)",
+      "options": [
+        { "option": "LENGTH", "description": "Jumlah karakter" },
+        { "option": "CHAR_LENGTH", "description": "Sama dengan LENGTH" },
+        { "option": "OCTET_LENGTH", "description": "Jumlah bytes" },
+        { "option": "BIT_LENGTH", "description": "Jumlah bits" }
+      ],
+      "examples": "SELECT LENGTH('PostgreSQL'); -- 10\nSELECT OCTET_LENGTH('Héllo'); -- 6 (karena é = 2 bytes UTF-8)",
+      "notes": "LENGTH dan CHAR_LENGTH menghitung karakter, bukan bytes."
+    },
+    {
+      "name": "UPPER / LOWER / INITCAP",
+      "title": "Mengubah Huruf Besar/Kecil",
+      "description": "Konversi case pada string.",
+      "syntax": "UPPER(str) / LOWER(str) / INITCAP(str)",
+      "options": [],
+      "examples": "SELECT UPPER('hello'); -- HELLO\nSELECT LOWER('HELLO'); -- hello\nSELECT INITCAP('hello world'); -- Hello World",
+      "notes": "INITCAP mengkapitalisasi huruf pertama setiap kata."
+    },
+    {
+      "name": "SUBSTRING / LEFT / RIGHT",
+      "title": "Mengambil Bagian String",
+      "description": "Mengekstrak bagian tertentu dari string.",
+      "syntax": "SUBSTRING(str FROM pos FOR len) / LEFT(str, n) / RIGHT(str, n)",
+      "options": [
+        { "option": "SUBSTRING(str FROM pattern)", "description": "Extract dengan regex" },
+        { "option": "SPLIT_PART(str, delim, n)", "description": "Split dan ambil bagian ke-n" }
+      ],
+      "examples": "SELECT SUBSTRING('PostgreSQL' FROM 1 FOR 4); -- Post\nSELECT LEFT('PostgreSQL', 4); -- Post\nSELECT RIGHT('PostgreSQL', 3); -- SQL\nSELECT SPLIT_PART('2024-01-15', '-', 2); -- 01\nSELECT SUBSTRING('abc123' FROM '[0-9]+'); -- 123",
+      "notes": "SUBSTRING dengan regex sangat powerful untuk parsing string."
+    },
+    {
+      "name": "REPLACE / TRANSLATE",
+      "title": "Mengganti Karakter/String",
+      "description": "Mengganti substring atau karakter dalam string.",
+      "syntax": "REPLACE(str, from, to) / TRANSLATE(str, from, to)",
+      "options": [
+        { "option": "REPLACE", "description": "Ganti substring" },
+        { "option": "TRANSLATE", "description": "Ganti karakter per karakter" },
+        { "option": "REGEXP_REPLACE", "description": "Ganti dengan regex" }
+      ],
+      "examples": "SELECT REPLACE('Hello World', 'World', 'PG'); -- Hello PG\nSELECT TRANSLATE('12345', '135', 'abc'); -- a2b4c\nSELECT REGEXP_REPLACE('abc 123 def 456', '[0-9]+', 'X', 'g'); -- abc X def X",
+      "notes": "Flag 'g' pada REGEXP_REPLACE untuk replace semua kemunculan."
+    },
+    {
+      "name": "TRIM / LPAD / RPAD",
+      "title": "Trim dan Padding",
+      "description": "Menghapus whitespace atau menambahkan padding pada string.",
+      "syntax": "TRIM([LEADING|TRAILING|BOTH] FROM str) / LPAD(str, len, fill) / RPAD(str, len, fill)",
+      "options": [],
+      "examples": "SELECT TRIM('  hello  '); -- 'hello'\nSELECT LTRIM('  hello'); -- 'hello'\nSELECT RTRIM('hello  '); -- 'hello'\nSELECT LPAD('42', 5, '0'); -- '00042'\nSELECT RPAD('hi', 10, '.'); -- 'hi........'",
+      "notes": "LPAD berguna untuk formatting nomor dengan leading zeros."
+    },
+    {
+      "name": "POSITION / STRPOS",
+      "title": "Mencari Posisi Substring",
+      "description": "Menemukan posisi pertama substring dalam string.",
+      "syntax": "POSITION(substr IN str) / STRPOS(str, substr)",
+      "options": [],
+      "examples": "SELECT POSITION('SQL' IN 'PostgreSQL'); -- 8\nSELECT STRPOS('PostgreSQL', 'SQL'); -- 8\nSELECT STRPOS('hello', 'xyz'); -- 0 (tidak ditemukan)",
+      "notes": "Mengembalikan 0 jika substring tidak ditemukan."
+    },
+    {
+      "name": "FORMAT",
+      "title": "Format String",
+      "description": "Membuat string terformat seperti printf di bahasa C.",
+      "syntax": "FORMAT(format_string, arg1, arg2, ...)",
+      "options": [
+        { "option": "%s", "description": "String" },
+        { "option": "%I", "description": "SQL identifier (di-quote)" },
+        { "option": "%L", "description": "SQL literal (di-quote dan escape)" }
+      ],
+      "examples": "SELECT FORMAT('Hello %s, you are %s years old', 'John', 25);\nSELECT FORMAT('SELECT * FROM %I WHERE %I = %L', 'users', 'name', 'John');",
+      "notes": "FORMAT dengan %I dan %L sangat berguna untuk dynamic SQL yang aman dari SQL injection."
+    }
+  ]
+}

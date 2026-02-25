@@ -1,0 +1,48 @@
+{
+  "id": "pg-triggers",
+  "title": "Triggers",
+  "description": "Membuat trigger yang otomatis dijalankan saat event INSERT, UPDATE, atau DELETE terjadi.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE TRIGGER",
+      "title": "Membuat Trigger",
+      "description": "Trigger menjalankan fungsi secara otomatis sebelum atau sesudah operasi DML.",
+      "syntax": "CREATE TRIGGER nama_trigger\n{BEFORE | AFTER | INSTEAD OF} {INSERT | UPDATE | DELETE} ON tabel\n[FOR EACH ROW | FOR EACH STATEMENT]\nEXECUTE FUNCTION nama_fungsi();",
+      "options": [
+        { "option": "BEFORE", "description": "Sebelum operasi — bisa memodifikasi NEW" },
+        { "option": "AFTER", "description": "Setelah operasi — data sudah berubah" },
+        { "option": "INSTEAD OF", "description": "Menggantikan operasi (hanya untuk view)" },
+        { "option": "FOR EACH ROW", "description": "Dijalankan per baris yang terpengaruh" },
+        { "option": "FOR EACH STATEMENT", "description": "Dijalankan sekali per statement" },
+        { "option": "WHEN (kondisi)", "description": "Trigger bersyarat" },
+        { "option": "NEW", "description": "Data baris baru (INSERT/UPDATE)" },
+        { "option": "OLD", "description": "Data baris lama (UPDATE/DELETE)" }
+      ],
+      "examples": "-- Trigger function\nCREATE OR REPLACE FUNCTION update_timestamp()\nRETURNS TRIGGER AS $$\nBEGIN\n  NEW.updated_at = NOW();\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\n-- Attach trigger\nCREATE TRIGGER set_updated_at\nBEFORE UPDATE ON users\nFOR EACH ROW\nEXECUTE FUNCTION update_timestamp();\n\n-- Audit log trigger\nCREATE OR REPLACE FUNCTION audit_log() RETURNS TRIGGER AS $$\nBEGIN\n  INSERT INTO audit_logs (table_name, action, old_data, new_data, changed_at)\n  VALUES (TG_TABLE_NAME, TG_OP, row_to_json(OLD), row_to_json(NEW), NOW());\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;\n\nCREATE TRIGGER users_audit\nAFTER INSERT OR UPDATE OR DELETE ON users\nFOR EACH ROW EXECUTE FUNCTION audit_log();",
+      "notes": "Trigger function HARUS return TRIGGER type dan return NEW (BEFORE) atau NULL (AFTER)."
+    },
+    {
+      "name": "DROP TRIGGER",
+      "title": "Menghapus Trigger",
+      "description": "Menghapus trigger dari tabel.",
+      "syntax": "DROP TRIGGER [IF EXISTS] nama_trigger ON tabel [CASCADE];",
+      "options": [],
+      "examples": "DROP TRIGGER set_updated_at ON users;\nDROP TRIGGER IF EXISTS users_audit ON users CASCADE;",
+      "notes": "Trigger di PostgreSQL terikat pada tabel tertentu."
+    },
+    {
+      "name": "Event Trigger",
+      "title": "Event Trigger (DDL)",
+      "description": "Trigger yang merespons event DDL (CREATE, ALTER, DROP) di level database.",
+      "syntax": "CREATE EVENT TRIGGER nama ON event EXECUTE FUNCTION fungsi();",
+      "options": [
+        { "option": "ddl_command_start", "description": "Sebelum DDL dijalankan" },
+        { "option": "ddl_command_end", "description": "Setelah DDL dijalankan" },
+        { "option": "sql_drop", "description": "Saat objek di-drop" }
+      ],
+      "examples": "CREATE OR REPLACE FUNCTION log_ddl() RETURNS event_trigger AS $$\nBEGIN\n  RAISE NOTICE 'DDL executed: %', tg_tag;\nEND;\n$$ LANGUAGE plpgsql;\n\nCREATE EVENT TRIGGER ddl_logger ON ddl_command_end\nEXECUTE FUNCTION log_ddl();",
+      "notes": "Event trigger hanya bisa dibuat oleh superuser."
+    }
+  ]
+}

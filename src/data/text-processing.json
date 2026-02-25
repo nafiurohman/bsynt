@@ -1,0 +1,153 @@
+{
+  "id": "text-processing",
+  "title": "Pemrosesan Teks",
+  "description": "Perintah-perintah untuk memanipulasi, memfilter, dan mentransformasi teks di terminal Linux.",
+  "commands": [
+    {
+      "name": "grep",
+      "title": "grep — Pencarian Pola Teks",
+      "description": "Mencari baris dalam file yang cocok dengan pola tertentu. Salah satu perintah paling powerful untuk memfilter teks di Linux.",
+      "syntax": "grep [OPSI] POLA [FILE]...",
+      "options": [
+        { "option": "-i", "description": "Pencarian case-insensitive" },
+        { "option": "-r, --recursive", "description": "Mencari secara rekursif di direktori" },
+        { "option": "-n", "description": "Menampilkan nomor baris yang cocok" },
+        { "option": "-c", "description": "Menampilkan jumlah baris yang cocok (count)" },
+        { "option": "-l", "description": "Menampilkan hanya nama file yang mengandung pola" },
+        { "option": "-L", "description": "Menampilkan nama file yang TIDAK mengandung pola" },
+        { "option": "-v", "description": "Menampilkan baris yang TIDAK cocok (invert match)" },
+        { "option": "-w", "description": "Mencocokkan kata utuh (whole word)" },
+        { "option": "-e POLA", "description": "Menentukan pola (bisa digunakan untuk multi-pola)" },
+        { "option": "-E", "description": "Menggunakan extended regular expression (sama dengan egrep)" },
+        { "option": "-P", "description": "Menggunakan Perl-compatible regular expression" },
+        { "option": "-A N", "description": "Menampilkan N baris setelah baris yang cocok (after)" },
+        { "option": "-B N", "description": "Menampilkan N baris sebelum baris yang cocok (before)" },
+        { "option": "-C N", "description": "Menampilkan N baris sebelum dan sesudah (context)" },
+        { "option": "--color", "description": "Menandai pola yang cocok dengan warna" },
+        { "option": "-o", "description": "Menampilkan hanya bagian yang cocok, bukan seluruh baris" }
+      ],
+      "examples": "# Mencari teks dalam file\ngrep \"error\" /var/log/syslog\n\n# Pencarian case-insensitive dengan nomor baris\ngrep -in \"warning\" log.txt\n\n# Mencari rekursif di direktori\ngrep -r \"TODO\" /home/user/proyek/\n\n# Menampilkan baris yang tidak cocok\ngrep -v \"#\" config.txt\n\n# Mencari dengan context\ngrep -C 3 \"error\" application.log\n\n# Multiple pattern\ngrep -e \"error\" -e \"warning\" log.txt\n\n# Menggunakan regex\ngrep -E \"^[0-9]{3}\" data.txt\n\n# Menghitung jumlah kecocokan\ngrep -c \"GET\" access.log\n\n# Mencari kata utuh\ngrep -w \"port\" config.txt"
+    },
+    {
+      "name": "sed",
+      "title": "sed — Stream Editor",
+      "description": "Editor teks berbasis stream yang sangat powerful untuk transformasi teks. Sering digunakan untuk find-and-replace, penghapusan baris, dan manipulasi teks otomatis.",
+      "syntax": "sed [OPSI] 'PERINTAH' [FILE]",
+      "options": [
+        { "option": "-i", "description": "Mengubah file langsung (in-place editing)" },
+        { "option": "-i.bak", "description": "Mengubah file langsung dan membuat backup dengan ekstensi .bak" },
+        { "option": "-n", "description": "Menekan output otomatis, hanya cetak yang diminta" },
+        { "option": "-e", "description": "Menambahkan perintah editing" },
+        { "option": "-f FILE", "description": "Membaca perintah editing dari file" },
+        { "option": "-r / -E", "description": "Menggunakan extended regular expression" },
+        { "option": "s/pola/pengganti/flag", "description": "Substitusi (find & replace)" },
+        { "option": "g (flag)", "description": "Global — ganti semua kemunculan dalam satu baris" },
+        { "option": "d", "description": "Hapus baris" },
+        { "option": "p", "description": "Cetak baris" },
+        { "option": "a\\\\teks", "description": "Tambahkan teks setelah baris" },
+        { "option": "i\\\\teks", "description": "Sisipkan teks sebelum baris" }
+      ],
+      "examples": "# Find and replace (pertama di setiap baris)\nsed 's/lama/baru/' file.txt\n\n# Replace semua kemunculan\nsed 's/lama/baru/g' file.txt\n\n# Replace langsung di file (in-place)\nsed -i 's/lama/baru/g' file.txt\n\n# Dengan backup\nsed -i.bak 's/lama/baru/g' file.txt\n\n# Hapus baris kosong\nsed '/^$/d' file.txt\n\n# Hapus baris tertentu (baris 5)\nsed '5d' file.txt\n\n# Hapus baris 3 sampai 7\nsed '3,7d' file.txt\n\n# Tampilkan hanya baris 10-20\nsed -n '10,20p' file.txt\n\n# Hapus baris yang mengandung pola\nsed '/pola/d' file.txt\n\n# Tambahkan teks setelah baris yang cocok\nsed '/pola/a\\teks baru' file.txt\n\n# Multiple substitusi\nsed -e 's/foo/bar/g' -e 's/baz/qux/g' file.txt"
+    },
+    {
+      "name": "awk",
+      "title": "awk — Pemroses Data Kolom",
+      "description": "Bahasa pemrograman untuk pemrosesan teks berbasis pola, sangat cocok untuk memproses data terstruktur berkolom seperti CSV atau output perintah.",
+      "syntax": "awk [OPSI] 'PROGRAM' [FILE]",
+      "options": [
+        { "option": "-F SEP", "description": "Mengatur field separator (default: spasi/tab)" },
+        { "option": "-v VAR=VALUE", "description": "Mengatur variabel sebelum eksekusi" },
+        { "option": "-f FILE", "description": "Membaca program dari file" },
+        { "option": "$0", "description": "Seluruh baris" },
+        { "option": "$1, $2, ...", "description": "Field ke-1, ke-2, dst." },
+        { "option": "NR", "description": "Nomor record (baris) saat ini" },
+        { "option": "NF", "description": "Jumlah field di baris saat ini" },
+        { "option": "BEGIN{}", "description": "Blok yang dijalankan sebelum memproses input" },
+        { "option": "END{}", "description": "Blok yang dijalankan setelah memproses semua input" }
+      ],
+      "examples": "# Menampilkan kolom tertentu\nawk '{print $1}' file.txt\n\n# Menampilkan kolom 1 dan 3\nawk '{print $1, $3}' file.txt\n\n# Menggunakan separator kustom (CSV)\nawk -F',' '{print $1, $2}' data.csv\n\n# Filter berdasarkan kondisi\nawk '$3 > 100 {print $1, $3}' data.txt\n\n# Menghitung total kolom\nawk '{sum += $2} END {print \"Total:\", sum}' data.txt\n\n# Menampilkan baris dengan pola tertentu\nawk '/error/ {print NR, $0}' log.txt\n\n# Format output\nawk '{printf \"%-15s %10d\\n\", $1, $2}' data.txt\n\n# Menampilkan baris tertentu\nawk 'NR >= 5 && NR <= 10' file.txt"
+    },
+    {
+      "name": "cut",
+      "title": "cut — Memotong Kolom/Karakter",
+      "description": "Mengekstrak bagian tertentu dari setiap baris input berdasarkan delimiter, posisi karakter, atau posisi byte.",
+      "syntax": "cut [OPSI] [FILE]",
+      "options": [
+        { "option": "-d DELIMITER", "description": "Mengatur delimiter (default: tab)" },
+        { "option": "-f N", "description": "Memilih field ke-N (bisa N-M untuk range)" },
+        { "option": "-c N", "description": "Memilih karakter ke-N" },
+        { "option": "-b N", "description": "Memilih byte ke-N" },
+        { "option": "--complement", "description": "Menampilkan komplemen (kebalikan dari yang dipilih)" },
+        { "option": "--output-delimiter=STR", "description": "Mengatur delimiter output" }
+      ],
+      "examples": "# Mengambil field tertentu dari CSV\ncut -d',' -f1,3 data.csv\n\n# Mengambil karakter 1-10\ncut -c1-10 file.txt\n\n# Mengambil field 2 sampai akhir\ncut -d':' -f2- /etc/passwd\n\n# Mengubah delimiter output\ncut -d':' -f1,6 --output-delimiter='\\t' /etc/passwd"
+    },
+    {
+      "name": "sort",
+      "title": "sort — Mengurutkan Baris",
+      "description": "Mengurutkan baris teks dari input berdasarkan berbagai kriteria seperti alfabet, numerik, atau field tertentu.",
+      "syntax": "sort [OPSI] [FILE]...",
+      "options": [
+        { "option": "-n", "description": "Mengurutkan secara numerik" },
+        { "option": "-r", "description": "Mengurutkan secara terbalik (descending)" },
+        { "option": "-k N", "description": "Mengurutkan berdasarkan field/kolom ke-N" },
+        { "option": "-t SEP", "description": "Mengatur field separator" },
+        { "option": "-u", "description": "Menghilangkan duplikat (unique)" },
+        { "option": "-f", "description": "Mengabaikan perbedaan huruf besar/kecil" },
+        { "option": "-h", "description": "Mengurutkan ukuran human-readable (1K, 2M, 3G)" },
+        { "option": "-o FILE", "description": "Menulis output ke file" },
+        { "option": "-s", "description": "Stable sort (mempertahankan urutan relatif elemen yang sama)" }
+      ],
+      "examples": "# Mengurutkan file secara alfabet\nsort file.txt\n\n# Mengurutkan secara numerik\nsort -n angka.txt\n\n# Mengurutkan terbalik\nsort -rn angka.txt\n\n# Mengurutkan berdasarkan kolom ke-2\nsort -k2 data.txt\n\n# Mengurutkan CSV berdasarkan kolom ke-3 secara numerik\nsort -t',' -k3n data.csv\n\n# Mengurutkan dan hilangkan duplikat\nsort -u file.txt\n\n# Mengurutkan ukuran human-readable\ndu -h | sort -h"
+    },
+    {
+      "name": "uniq",
+      "title": "uniq — Menghilangkan Duplikat",
+      "description": "Menghilangkan atau melaporkan baris duplikat yang berdekatan. Biasanya dikombinasikan dengan sort karena uniq hanya mendeteksi duplikat yang berurutan.",
+      "syntax": "uniq [OPSI] [INPUT [OUTPUT]]",
+      "options": [
+        { "option": "-c", "description": "Menampilkan jumlah kemunculan setiap baris (count)" },
+        { "option": "-d", "description": "Menampilkan hanya baris yang terduplikasi" },
+        { "option": "-u", "description": "Menampilkan hanya baris yang unik (tidak terduplikasi)" },
+        { "option": "-i", "description": "Mengabaikan perbedaan huruf besar/kecil" },
+        { "option": "-f N", "description": "Melewati N field pertama saat membandingkan" },
+        { "option": "-s N", "description": "Melewati N karakter pertama saat membandingkan" }
+      ],
+      "examples": "# Menghilangkan duplikat (input harus terurut)\nsort file.txt | uniq\n\n# Menghitung jumlah kemunculan\nsort file.txt | uniq -c\n\n# Menampilkan hanya duplikat\nsort file.txt | uniq -d\n\n# Menampilkan hanya yang unik\nsort file.txt | uniq -u\n\n# Top 10 baris paling sering muncul\nsort log.txt | uniq -c | sort -rn | head -10"
+    },
+    {
+      "name": "tr",
+      "title": "tr — Translate Karakter",
+      "description": "Mengganti, menghapus, atau mengompresi karakter dari standard input. Berguna untuk konversi huruf besar/kecil dan pembersihan teks.",
+      "syntax": "tr [OPSI] SET1 [SET2]",
+      "options": [
+        { "option": "-d", "description": "Menghapus karakter yang ada di SET1" },
+        { "option": "-s", "description": "Mengompresi karakter berulang menjadi satu (squeeze)" },
+        { "option": "-c", "description": "Menggunakan komplemen dari SET1" },
+        { "option": "[:upper:]", "description": "Semua huruf besar" },
+        { "option": "[:lower:]", "description": "Semua huruf kecil" },
+        { "option": "[:digit:]", "description": "Semua digit (0-9)" },
+        { "option": "[:space:]", "description": "Semua karakter spasi" }
+      ],
+      "examples": "# Konversi huruf kecil ke huruf besar\necho \"hello world\" | tr '[:lower:]' '[:upper:]'\nHELLO WORLD\n\n# Menghapus karakter tertentu\necho \"hello 123 world\" | tr -d '[:digit:]'\nhello  world\n\n# Mengganti spasi dengan newline\necho \"kata1 kata2 kata3\" | tr ' ' '\\n'\n\n# Mengompresi spasi berulang\necho \"banyak    spasi\" | tr -s ' '\nbanyak spasi\n\n# Menghapus karakter newline\ntr -d '\\n' < file.txt"
+    },
+    {
+      "name": "diff",
+      "title": "diff — Membandingkan File",
+      "description": "Membandingkan dua file baris per baris dan menampilkan perbedaannya. Sangat berguna untuk melihat perubahan kode atau konfigurasi.",
+      "syntax": "diff [OPSI] FILE1 FILE2",
+      "options": [
+        { "option": "-u", "description": "Format unified (paling umum, mirip format patch git)" },
+        { "option": "-y", "description": "Menampilkan perbandingan side-by-side" },
+        { "option": "-r", "description": "Membandingkan direktori secara rekursif" },
+        { "option": "-q", "description": "Menampilkan hanya apakah file berbeda atau tidak" },
+        { "option": "-i", "description": "Mengabaikan perbedaan huruf besar/kecil" },
+        { "option": "-w", "description": "Mengabaikan semua perbedaan whitespace" },
+        { "option": "-B", "description": "Mengabaikan baris kosong" },
+        { "option": "--color", "description": "Menampilkan output berwarna" },
+        { "option": "-c", "description": "Format context (menampilkan konteks di sekitar perubahan)" }
+      ],
+      "examples": "# Perbandingan dasar\ndiff file1.txt file2.txt\n\n# Format unified (seperti git diff)\ndiff -u file_lama.txt file_baru.txt\n\n# Perbandingan side-by-side\ndiff -y file1.txt file2.txt\n\n# Membandingkan direktori\ndiff -r dir1/ dir2/\n\n# Membuat file patch\ndiff -u file_lama.txt file_baru.txt > perubahan.patch\n\n# Menerapkan patch\npatch < perubahan.patch"
+    }
+  ]
+}

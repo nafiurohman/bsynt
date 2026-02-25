@@ -1,0 +1,57 @@
+{
+  "id": "mysql-backup",
+  "title": "Backup & Restore",
+  "description": "Perintah untuk backup dan restore database MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "mysqldump",
+      "title": "mysqldump",
+      "description": "Membuat backup database dalam format SQL.",
+      "syntax": "mysqldump [opsi] database [tabel] > file.sql",
+      "options": [
+        { "option": "-u [user]", "description": "Username" },
+        { "option": "-p", "description": "Prompt password" },
+        { "option": "--databases", "description": "Backup beberapa database" },
+        { "option": "--all-databases", "description": "Backup semua database" },
+        { "option": "--single-transaction", "description": "Consistent snapshot (InnoDB)" },
+        { "option": "--routines", "description": "Sertakan procedures/functions" },
+        { "option": "--triggers", "description": "Sertakan triggers (default)" },
+        { "option": "--no-data", "description": "Schema saja (tanpa data)" },
+        { "option": "--compress", "description": "Kompres transfer" }
+      ],
+      "examples": "mysqldump -u root -p myapp > backup.sql\nmysqldump -u root -p --single-transaction myapp > backup.sql\nmysqldump -u root -p --all-databases > all_backup.sql\nmysqldump -u root -p --no-data myapp > schema.sql\nmysqldump -u root -p --routines --triggers myapp > full_backup.sql\nmysqldump -u root -p myapp | gzip > backup.sql.gz",
+      "notes": "Selalu gunakan --single-transaction untuk InnoDB agar backup konsisten."
+    },
+    {
+      "name": "mysql-restore",
+      "title": "Restore Database",
+      "description": "Mengembalikan database dari file backup SQL.",
+      "syntax": "mysql -u user -p database < file.sql",
+      "options": [],
+      "examples": "mysql -u root -p myapp < backup.sql\ngunzip < backup.sql.gz | mysql -u root -p myapp\nmysql -u root -p < all_backup.sql",
+      "notes": "Pastikan database target sudah dibuat sebelum restore (kecuali backup mengandung CREATE DATABASE)."
+    },
+    {
+      "name": "SELECT INTO OUTFILE",
+      "title": "Export ke CSV",
+      "description": "Mengekspor hasil query ke file CSV.",
+      "syntax": "SELECT ... INTO OUTFILE 'path' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';",
+      "options": [],
+      "examples": "SELECT * FROM users\nINTO OUTFILE '/tmp/users.csv'\nFIELDS TERMINATED BY ','\nENCLOSED BY '\"'\nLINES TERMINATED BY '\\n';",
+      "notes": "File ditulis di server MySQL (bukan client). Perlu FILE privilege."
+    },
+    {
+      "name": "LOAD DATA",
+      "title": "Import dari CSV",
+      "description": "Mengimpor data dari file CSV ke tabel.",
+      "syntax": "LOAD DATA [LOCAL] INFILE 'path' INTO TABLE tabel FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' IGNORE 1 ROWS;",
+      "options": [
+        { "option": "LOCAL", "description": "File di sisi client" },
+        { "option": "IGNORE 1 ROWS", "description": "Skip header row" }
+      ],
+      "examples": "LOAD DATA LOCAL INFILE '/tmp/users.csv'\nINTO TABLE users\nFIELDS TERMINATED BY ','\nENCLOSED BY '\"'\nLINES TERMINATED BY '\\n'\nIGNORE 1 ROWS;",
+      "notes": "LOAD DATA sangat cepat untuk import data massal."
+    }
+  ]
+}

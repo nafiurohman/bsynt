@@ -1,0 +1,102 @@
+{
+  "id": "pg-date-functions",
+  "title": "Date & Time Functions",
+  "description": "Fungsi-fungsi untuk manipulasi tanggal dan waktu di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "NOW / CURRENT_TIMESTAMP",
+      "title": "Waktu Saat Ini",
+      "description": "Mendapatkan tanggal dan waktu saat ini.",
+      "syntax": "NOW() / CURRENT_TIMESTAMP / CURRENT_DATE / CURRENT_TIME / CLOCK_TIMESTAMP()",
+      "options": [
+        { "option": "NOW()", "description": "Waktu awal transaction (stabil dalam 1 transaction)" },
+        { "option": "CLOCK_TIMESTAMP()", "description": "Waktu aktual saat dipanggil" },
+        { "option": "CURRENT_DATE", "description": "Tanggal hari ini" },
+        { "option": "CURRENT_TIME", "description": "Waktu sekarang" },
+        { "option": "LOCALTIME", "description": "Waktu lokal tanpa timezone" }
+      ],
+      "examples": "SELECT NOW();\nSELECT CURRENT_DATE;\nSELECT CURRENT_TIMESTAMP;\nSELECT CLOCK_TIMESTAMP();",
+      "notes": "NOW() mengembalikan waktu yang sama dalam satu transaction, CLOCK_TIMESTAMP() berubah."
+    },
+    {
+      "name": "EXTRACT / DATE_PART",
+      "title": "Mengekstrak Bagian Tanggal",
+      "description": "Mengambil bagian tertentu dari tanggal/waktu.",
+      "syntax": "EXTRACT(field FROM source) / DATE_PART('field', source)",
+      "options": [
+        { "option": "year", "description": "Tahun" },
+        { "option": "month", "description": "Bulan (1-12)" },
+        { "option": "day", "description": "Hari (1-31)" },
+        { "option": "hour", "description": "Jam (0-23)" },
+        { "option": "dow", "description": "Day of week (0=Sunday)" },
+        { "option": "doy", "description": "Day of year (1-366)" },
+        { "option": "epoch", "description": "Unix timestamp" },
+        { "option": "quarter", "description": "Quarter (1-4)" }
+      ],
+      "examples": "SELECT EXTRACT(YEAR FROM NOW());\nSELECT EXTRACT(MONTH FROM '2024-06-15'::DATE);\nSELECT DATE_PART('dow', CURRENT_DATE);\nSELECT EXTRACT(EPOCH FROM NOW());\nSELECT EXTRACT(EPOCH FROM INTERVAL '1 day'); -- 86400",
+      "notes": "EXTRACT dan DATE_PART secara fungsional identik."
+    },
+    {
+      "name": "DATE_TRUNC",
+      "title": "Memotong Tanggal",
+      "description": "Memotong tanggal ke presisi tertentu.",
+      "syntax": "DATE_TRUNC('precision', source)",
+      "options": [
+        { "option": "microseconds", "description": "Microsecond" },
+        { "option": "second", "description": "Detik" },
+        { "option": "minute", "description": "Menit" },
+        { "option": "hour", "description": "Jam" },
+        { "option": "day", "description": "Hari" },
+        { "option": "week", "description": "Minggu" },
+        { "option": "month", "description": "Bulan" },
+        { "option": "quarter", "description": "Quarter" },
+        { "option": "year", "description": "Tahun" }
+      ],
+      "examples": "SELECT DATE_TRUNC('month', NOW()); -- 2024-06-01 00:00:00\nSELECT DATE_TRUNC('hour', NOW());\n\n-- Statistik bulanan\nSELECT DATE_TRUNC('month', created_at) AS month, COUNT(*)\nFROM orders GROUP BY 1 ORDER BY 1;",
+      "notes": "Sangat berguna untuk grouping data berdasarkan periode waktu."
+    },
+    {
+      "name": "TO_CHAR / TO_DATE / TO_TIMESTAMP",
+      "title": "Format & Parse Tanggal",
+      "description": "Konversi antara tanggal dan string dengan format tertentu.",
+      "syntax": "TO_CHAR(timestamp, format) / TO_DATE(text, format) / TO_TIMESTAMP(text, format)",
+      "options": [
+        { "option": "YYYY", "description": "Tahun 4 digit" },
+        { "option": "MM", "description": "Bulan 2 digit" },
+        { "option": "DD", "description": "Hari 2 digit" },
+        { "option": "HH24:MI:SS", "description": "Jam 24h:Menit:Detik" },
+        { "option": "Day", "description": "Nama hari" },
+        { "option": "Month", "description": "Nama bulan" },
+        { "option": "TZ", "description": "Timezone abbreviation" }
+      ],
+      "examples": "SELECT TO_CHAR(NOW(), 'DD/MM/YYYY HH24:MI');\nSELECT TO_CHAR(NOW(), 'Day, DD Month YYYY');\nSELECT TO_DATE('15-06-2024', 'DD-MM-YYYY');\nSELECT TO_TIMESTAMP('2024-06-15 14:30:00', 'YYYY-MM-DD HH24:MI:SS');",
+      "notes": "TO_CHAR juga bisa digunakan untuk format angka."
+    },
+    {
+      "name": "INTERVAL",
+      "title": "Aritmatika Tanggal",
+      "description": "Menambah atau mengurangi waktu menggunakan INTERVAL.",
+      "syntax": "timestamp + INTERVAL 'value unit'",
+      "options": [
+        { "option": "years", "description": "Tahun" },
+        { "option": "months", "description": "Bulan" },
+        { "option": "weeks", "description": "Minggu" },
+        { "option": "days", "description": "Hari" },
+        { "option": "hours", "description": "Jam" },
+        { "option": "minutes", "description": "Menit" }
+      ],
+      "examples": "SELECT NOW() + INTERVAL '30 days';\nSELECT NOW() - INTERVAL '2 hours';\nSELECT NOW() + INTERVAL '1 year 3 months';\n\n-- Data 7 hari terakhir\nSELECT * FROM orders WHERE created_at > NOW() - INTERVAL '7 days';",
+      "notes": "INTERVAL bisa digabungkan: '1 year 2 months 3 days 4 hours'."
+    },
+    {
+      "name": "AGE",
+      "title": "Selisih Dua Tanggal",
+      "description": "Menghitung selisih antara dua tanggal.",
+      "syntax": "AGE(timestamp1, timestamp2) / AGE(timestamp)",
+      "options": [],
+      "examples": "SELECT AGE(CURRENT_DATE, '1990-05-15'); -- 34 years 1 mon 0 days\nSELECT AGE(NOW()); -- selisih dari epoch\nSELECT AGE('2024-12-31'::DATE, '2024-01-01'::DATE); -- 11 mons 30 days",
+      "notes": "AGE dengan satu argumen menghitung selisih dari CURRENT_DATE."
+    }
+  ]
+}

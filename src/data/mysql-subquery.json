@@ -1,0 +1,51 @@
+{
+  "id": "mysql-subquery",
+  "title": "Subquery",
+  "description": "Menggunakan subquery (query dalam query) di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "scalar-subquery",
+      "title": "Scalar Subquery",
+      "description": "Subquery yang mengembalikan satu nilai.",
+      "syntax": "SELECT kolom, (SELECT ...) AS alias FROM tabel;",
+      "options": [],
+      "examples": "SELECT name, price,\n  (SELECT AVG(price) FROM products) AS avg_price\nFROM products;\n\nSELECT * FROM products\nWHERE price > (SELECT AVG(price) FROM products);"
+    },
+    {
+      "name": "in-subquery",
+      "title": "IN Subquery",
+      "description": "Subquery dalam klausa IN untuk filter berdasarkan daftar nilai.",
+      "syntax": "SELECT ... WHERE kolom IN (SELECT ...);",
+      "options": [],
+      "examples": "SELECT * FROM users\nWHERE id IN (SELECT user_id FROM orders WHERE total > 1000000);\n\nSELECT * FROM products\nWHERE category_id NOT IN (SELECT id FROM categories WHERE is_active = FALSE);"
+    },
+    {
+      "name": "exists-subquery",
+      "title": "EXISTS Subquery",
+      "description": "Cek apakah subquery mengembalikan hasil.",
+      "syntax": "SELECT ... WHERE EXISTS (SELECT ...);",
+      "options": [],
+      "examples": "SELECT u.username FROM users u\nWHERE EXISTS (\n  SELECT 1 FROM orders o WHERE o.user_id = u.id AND o.total > 500000\n);\n\n-- User tanpa order\nSELECT u.username FROM users u\nWHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.user_id = u.id\n);",
+      "notes": "EXISTS biasanya lebih efisien daripada IN untuk subquery besar."
+    },
+    {
+      "name": "derived-table",
+      "title": "Derived Table (FROM Subquery)",
+      "description": "Subquery di klausa FROM sebagai tabel sementara.",
+      "syntax": "SELECT ... FROM (SELECT ...) AS alias;",
+      "options": [],
+      "examples": "SELECT role, avg_orders FROM (\n  SELECT u.role, AVG(order_count) AS avg_orders FROM (\n    SELECT user_id, COUNT(*) AS order_count\n    FROM orders GROUP BY user_id\n  ) oc\n  JOIN users u ON oc.user_id = u.id\n  GROUP BY u.role\n) summary\nWHERE avg_orders > 5;",
+      "notes": "Derived table HARUS memiliki alias."
+    },
+    {
+      "name": "correlated-subquery",
+      "title": "Correlated Subquery",
+      "description": "Subquery yang mereferensikan tabel di query luar.",
+      "syntax": "SELECT ... WHERE kolom op (SELECT ... WHERE inner.col = outer.col);",
+      "options": [],
+      "examples": "-- Produk termahal per kategori\nSELECT * FROM products p\nWHERE price = (\n  SELECT MAX(price) FROM products\n  WHERE category_id = p.category_id\n);\n\n-- Order terbaru per user\nSELECT * FROM orders o\nWHERE created_at = (\n  SELECT MAX(created_at) FROM orders\n  WHERE user_id = o.user_id\n);",
+      "notes": "Correlated subquery dijalankan untuk setiap baris di query luar — bisa lambat untuk dataset besar."
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "id": "docker-image",
+  "title": "Image Management",
+  "description": "Membuat, mengelola, dan mendistribusikan Docker image.",
+  "badge": "Docker",
+  "commands": [
+    {
+      "name": "docker build",
+      "title": "Membangun Image dari Dockerfile",
+      "description": "Membuat image baru berdasarkan instruksi di Dockerfile.",
+      "syntax": "docker build [opsi] <path|url>",
+      "options": [
+        { "option": "-t / --tag", "description": "Beri nama dan tag pada image" },
+        { "option": "-f / --file", "description": "Tentukan nama Dockerfile" },
+        { "option": "--no-cache", "description": "Build tanpa cache" },
+        { "option": "--build-arg VAR=val", "description": "Kirim build argument" },
+        { "option": "--target stage", "description": "Build sampai stage tertentu (multi-stage)" },
+        { "option": "--platform", "description": "Target platform (linux/amd64, linux/arm64)" }
+      ],
+      "examples": "docker build -t myapp .\ndocker build -t myapp:1.0 .\ndocker build -f Dockerfile.prod -t myapp:prod .\ndocker build --no-cache -t myapp .\ndocker build --build-arg NODE_ENV=production -t myapp .\n\n# Multi-platform\ndocker buildx build --platform linux/amd64,linux/arm64 -t myapp .",
+      "notes": "Titik (.) di akhir adalah build context — Docker menggunakan file dari sana."
+    },
+    {
+      "name": "docker images",
+      "title": "Melihat Daftar Image",
+      "description": "Menampilkan semua image yang ada di local.",
+      "syntax": "docker images [opsi] [repository]",
+      "options": [
+        { "option": "-a", "description": "Tampilkan semua termasuk intermediate" },
+        { "option": "-q", "description": "Hanya ID" },
+        { "option": "--filter", "description": "Filter image" },
+        { "option": "--format", "description": "Custom format" }
+      ],
+      "examples": "docker images\ndocker images -q\ndocker images --filter dangling=true\ndocker images node",
+      "notes": "Dangling images = image tanpa tag, biasanya sisa build lama."
+    },
+    {
+      "name": "docker pull / push",
+      "title": "Pull dan Push Image",
+      "description": "Mengunduh image dari registry atau mengunggah ke registry.",
+      "syntax": "docker pull <image>[:tag]\ndocker push <image>[:tag]",
+      "options": [
+        { "option": "--all-tags", "description": "Pull semua tag dari image" },
+        { "option": "--platform", "description": "Pull untuk platform tertentu" }
+      ],
+      "examples": "docker pull nginx\ndocker pull node:20-alpine\ndocker pull postgres:16\n\n# Push ke Docker Hub\ndocker tag myapp username/myapp:latest\ndocker push username/myapp:latest\n\n# Push ke registry lain\ndocker tag myapp ghcr.io/user/myapp:1.0\ndocker push ghcr.io/user/myapp:1.0",
+      "notes": "Harus docker login terlebih dahulu sebelum push."
+    },
+    {
+      "name": "docker rmi / prune",
+      "title": "Menghapus Image",
+      "description": "Menghapus satu atau lebih image dari local storage.",
+      "syntax": "docker rmi <image>\ndocker image prune [opsi]",
+      "options": [
+        { "option": "-f / --force", "description": "Hapus paksa" },
+        { "option": "prune", "description": "Hapus dangling images" },
+        { "option": "prune -a", "description": "Hapus semua unused images" }
+      ],
+      "examples": "docker rmi nginx\ndocker rmi myapp:1.0\ndocker image prune\ndocker image prune -a\n\n# Hapus semua image\ndocker rmi $(docker images -q)",
+      "warning": "docker image prune -a menghapus SEMUA image yang tidak dipakai container!"
+    },
+    {
+      "name": "Dockerfile",
+      "title": "Instruksi Dockerfile",
+      "description": "Instruksi-instruksi utama dalam Dockerfile untuk membangun image.",
+      "syntax": "FROM image\nWORKDIR /app\nCOPY . .\nRUN command\nEXPOSE port\nCMD [\"command\"]",
+      "options": [
+        { "option": "FROM", "description": "Base image" },
+        { "option": "WORKDIR", "description": "Set working directory" },
+        { "option": "COPY", "description": "Salin file dari host ke image" },
+        { "option": "ADD", "description": "COPY + bisa extract tar dan download URL" },
+        { "option": "RUN", "description": "Jalankan command saat build" },
+        { "option": "ENV", "description": "Set environment variable" },
+        { "option": "ARG", "description": "Build-time variable" },
+        { "option": "EXPOSE", "description": "Dokumentasi port (tidak open otomatis)" },
+        { "option": "CMD", "description": "Default command saat run" },
+        { "option": "ENTRYPOINT", "description": "Command yang selalu dijalankan" },
+        { "option": "VOLUME", "description": "Buat mount point" },
+        { "option": "USER", "description": "Set user untuk RUN, CMD, ENTRYPOINT" },
+        { "option": "HEALTHCHECK", "description": "Instruksi health check" }
+      ],
+      "examples": "# Node.js app\nFROM node:20-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build\n\nFROM node:20-alpine\nWORKDIR /app\nCOPY --from=builder /app/dist ./dist\nCOPY --from=builder /app/node_modules ./node_modules\nEXPOSE 3000\nUSER node\nCMD [\"node\", \"dist/index.js\"]",
+      "notes": "Multi-stage build mengurangi ukuran image final secara signifikan."
+    }
+  ]
+}

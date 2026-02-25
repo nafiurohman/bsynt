@@ -1,0 +1,30 @@
+{
+  "id": "mysql-functions",
+  "title": "User-Defined Functions",
+  "description": "Membuat custom function di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE FUNCTION",
+      "title": "Membuat Function",
+      "description": "Membuat user-defined function yang mengembalikan nilai.",
+      "syntax": "DELIMITER //\nCREATE FUNCTION nama_func(param tipe, ...)\nRETURNS tipe_return\n[DETERMINISTIC|NOT DETERMINISTIC]\nBEGIN\n  DECLARE var tipe;\n  -- logic\n  RETURN value;\nEND //\nDELIMITER ;",
+      "options": [
+        { "option": "DETERMINISTIC", "description": "Hasil selalu sama untuk input sama" },
+        { "option": "NOT DETERMINISTIC", "description": "Hasil bisa berbeda (default)" },
+        { "option": "READS SQL DATA", "description": "Hanya membaca data" },
+        { "option": "NO SQL", "description": "Tidak menggunakan SQL" }
+      ],
+      "examples": "DELIMITER //\nCREATE FUNCTION CalculateDiscount(price DECIMAL(10,2), discount_pct DECIMAL(5,2))\nRETURNS DECIMAL(10,2)\nDETERMINISTIC\nBEGIN\n  RETURN price - (price * discount_pct / 100);\nEND //\nDELIMITER ;\n\n-- Penggunaan\nSELECT name, price, CalculateDiscount(price, 10) AS discounted_price FROM products;\n\n-- Function dengan logika\nDELIMITER //\nCREATE FUNCTION GetUserLevel(total_spent DECIMAL(12,2))\nRETURNS VARCHAR(20)\nDETERMINISTIC\nBEGIN\n  IF total_spent >= 10000000 THEN RETURN 'Platinum';\n  ELSEIF total_spent >= 5000000 THEN RETURN 'Gold';\n  ELSEIF total_spent >= 1000000 THEN RETURN 'Silver';\n  ELSE RETURN 'Bronze';\n  END IF;\nEND //\nDELIMITER ;",
+      "notes": "Function mengembalikan 1 nilai dan bisa dipakai di SELECT, WHERE, dll. Procedure tidak."
+    },
+    {
+      "name": "DROP FUNCTION",
+      "title": "Menghapus Function",
+      "description": "Menghapus user-defined function.",
+      "syntax": "DROP FUNCTION [IF EXISTS] nama_func;",
+      "options": [],
+      "examples": "DROP FUNCTION CalculateDiscount;\nDROP FUNCTION IF EXISTS GetUserLevel;\nSHOW FUNCTION STATUS WHERE Db = 'myapp';"
+    }
+  ]
+}

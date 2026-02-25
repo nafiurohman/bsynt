@@ -1,0 +1,83 @@
+{
+  "id": "mac-file-search",
+  "title": "File Search",
+  "description": "Perintah untuk mencari file dan konten di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "find",
+      "title": "Find",
+      "description": "Mencari file berdasarkan kriteria di filesystem.",
+      "syntax": "find [path] [expression]",
+      "options": [
+        { "option": "-name [pattern]", "description": "Cari berdasarkan nama" },
+        { "option": "-iname [pattern]", "description": "Case-insensitive name" },
+        { "option": "-type f", "description": "File saja" },
+        { "option": "-type d", "description": "Direktori saja" },
+        { "option": "-size +10M", "description": "Lebih besar dari 10MB" },
+        { "option": "-mtime -7", "description": "Dimodifikasi dalam 7 hari" },
+        { "option": "-exec [cmd] {} \\;", "description": "Jalankan perintah pada hasil" }
+      ],
+      "examples": "find . -name '*.swift'\nfind ~/Desktop -type f -size +100M\nfind . -name '*.log' -mtime +30 -delete\nfind /Applications -name '*.app' -maxdepth 1"
+    },
+    {
+      "name": "mdfind",
+      "title": "Spotlight Search (macOS)",
+      "description": "Mencari file menggunakan Spotlight index — sangat cepat.",
+      "syntax": "mdfind [opsi] query",
+      "options": [
+        { "option": "-name [name]", "description": "Cari berdasarkan nama file" },
+        { "option": "-onlyin [dir]", "description": "Batasi pencarian ke direktori" },
+        { "option": "-live", "description": "Update hasil secara real-time" },
+        { "option": "-count", "description": "Tampilkan jumlah hasil saja" }
+      ],
+      "examples": "mdfind 'kMDItemContentType == \"public.jpeg\"'\nmdfind -name \"readme\"\nmdfind -onlyin ~/Documents swift\nmdfind -name '*.pdf' -onlyin ~/Downloads",
+      "notes": "mdfind menggunakan Spotlight index sehingga jauh lebih cepat dari `find` untuk pencarian umum."
+    },
+    {
+      "name": "which",
+      "title": "Which",
+      "description": "Menunjukkan lokasi executable command.",
+      "syntax": "which [command]",
+      "options": [
+        { "option": "-a", "description": "Tampilkan semua lokasi yang ditemukan" }
+      ],
+      "examples": "which python3\nwhich -a node\nwhich brew"
+    },
+    {
+      "name": "whereis",
+      "title": "Where Is",
+      "description": "Mencari lokasi binary, source, dan man page.",
+      "syntax": "whereis [command]",
+      "options": [],
+      "examples": "whereis ls\nwhereis python3\nwhereis gcc"
+    },
+    {
+      "name": "locate",
+      "title": "Locate",
+      "description": "Mencari file dari database yang di-index.",
+      "syntax": "locate [opsi] pattern",
+      "options": [
+        { "option": "-i", "description": "Case-insensitive" },
+        { "option": "-l [n]", "description": "Batasi jumlah hasil" }
+      ],
+      "examples": "locate readme.md\nlocate -i '*.json'\nlocate -l 10 config",
+      "notes": "Database perlu diupdate dengan `sudo /usr/libexec/locate.updatedb` di macOS."
+    },
+    {
+      "name": "grep",
+      "title": "Grep (Search Content)",
+      "description": "Mencari teks/pattern di dalam file.",
+      "syntax": "grep [opsi] pattern [file...]",
+      "options": [
+        { "option": "-r", "description": "Rekursif dalam direktori" },
+        { "option": "-i", "description": "Case-insensitive" },
+        { "option": "-l", "description": "Tampilkan nama file saja" },
+        { "option": "-n", "description": "Tampilkan nomor baris" },
+        { "option": "-c", "description": "Hitung jumlah match" },
+        { "option": "-v", "description": "Invert (tampilkan yang TIDAK cocok)" }
+      ],
+      "examples": "grep -rn 'TODO' ~/Projects/\ngrep -il 'error' /var/log/*.log\ngrep -c 'import' *.swift"
+    }
+  ]
+}

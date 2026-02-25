@@ -1,0 +1,53 @@
+{
+  "id": "redis-basics",
+  "title": "Basics & Connection",
+  "description": "Dasar-dasar Redis: koneksi, konfigurasi, dan operasi fundamental.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "redis-cli",
+      "title": "Koneksi ke Redis",
+      "description": "Menghubungkan ke Redis server menggunakan command-line interface.",
+      "syntax": "redis-cli [opsi]",
+      "options": [
+        { "option": "-h host", "description": "Hostname (default: 127.0.0.1)" },
+        { "option": "-p port", "description": "Port (default: 6379)" },
+        { "option": "-a password", "description": "Password untuk AUTH" },
+        { "option": "-n database", "description": "Database number (0-15)" },
+        { "option": "--tls", "description": "Koneksi TLS/SSL" },
+        { "option": "-u url", "description": "Redis URL (redis://user:pass@host:port/db)" }
+      ],
+      "examples": "redis-cli\nredis-cli -h localhost -p 6379\nredis-cli -a mypassword\nredis-cli -n 1\nredis-cli -u redis://default:pass@localhost:6379/0\n\n# Test koneksi\nredis-cli PING  # PONG",
+      "notes": "Redis memiliki 16 database (0-15). Default adalah database 0."
+    },
+    {
+      "name": "SELECT / DBSIZE / FLUSHDB",
+      "title": "Operasi Database",
+      "description": "Memilih database, melihat ukuran, dan mengosongkan database.",
+      "syntax": "SELECT db_number\nDBSIZE\nFLUSHDB [ASYNC]\nFLUSHALL [ASYNC]",
+      "options": [
+        { "option": "SELECT n", "description": "Pilih database nomor n (0-15)" },
+        { "option": "DBSIZE", "description": "Jumlah key di database saat ini" },
+        { "option": "FLUSHDB", "description": "Hapus semua key di database saat ini" },
+        { "option": "FLUSHALL", "description": "Hapus semua key di semua database" }
+      ],
+      "examples": "SELECT 0\nDBSIZE\nFLUSHDB\nFLUSHALL ASYNC",
+      "warning": "FLUSHDB/FLUSHALL menghapus SEMUA data dan tidak bisa di-undo!"
+    },
+    {
+      "name": "INFO / CONFIG",
+      "title": "Informasi Server",
+      "description": "Melihat informasi dan konfigurasi Redis server.",
+      "syntax": "INFO [section]\nCONFIG GET pattern\nCONFIG SET parameter value",
+      "options": [
+        { "option": "INFO", "description": "Semua informasi server" },
+        { "option": "INFO memory", "description": "Informasi memory" },
+        { "option": "INFO clients", "description": "Informasi client" },
+        { "option": "INFO stats", "description": "Statistik" },
+        { "option": "CONFIG GET *", "description": "Semua konfigurasi" }
+      ],
+      "examples": "INFO\nINFO memory\nINFO server\nCONFIG GET maxmemory\nCONFIG SET maxmemory 256mb\nCONFIG GET save",
+      "notes": "CONFIG SET berlaku sementara. Untuk permanent, edit redis.conf."
+    }
+  ]
+}

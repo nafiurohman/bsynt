@@ -1,0 +1,122 @@
+{
+  "id": "user-management",
+  "title": "Manajemen User",
+  "description": "Perintah-perintah untuk mengelola pengguna, grup, dan autentikasi di sistem Linux.",
+  "commands": [
+    {
+      "name": "useradd",
+      "title": "useradd — Menambah User Baru",
+      "description": "Membuat akun pengguna baru di sistem. Memerlukan hak akses root.",
+      "syntax": "useradd [OPSI] USERNAME",
+      "options": [
+        { "option": "-m", "description": "Membuat home directory untuk user baru" },
+        { "option": "-d DIR", "description": "Menentukan lokasi home directory" },
+        { "option": "-s SHELL", "description": "Menentukan default shell (contoh: /bin/bash)" },
+        { "option": "-g GROUP", "description": "Menentukan primary group" },
+        { "option": "-G GROUPS", "description": "Menambahkan ke supplementary groups (dipisah koma)" },
+        { "option": "-c COMMENT", "description": "Menambahkan komentar/nama lengkap (GECOS)" },
+        { "option": "-e DATE", "description": "Mengatur tanggal kadaluarsa akun (YYYY-MM-DD)" },
+        { "option": "-r", "description": "Membuat system account" },
+        { "option": "-u UID", "description": "Menentukan UID secara manual" }
+      ],
+      "examples": "# Membuat user dengan home directory\nsudo useradd -m john\n\n# Membuat user lengkap\nsudo useradd -m -s /bin/bash -c \"John Doe\" -G sudo,docker john\n\n# Membuat system account\nsudo useradd -r -s /usr/sbin/nologin nginx\n\n# Langsung set password setelah membuat user\nsudo useradd -m john && sudo passwd john"
+    },
+    {
+      "name": "userdel",
+      "title": "userdel — Menghapus User",
+      "description": "Menghapus akun pengguna dari sistem.",
+      "syntax": "userdel [OPSI] USERNAME",
+      "options": [
+        { "option": "-r", "description": "Menghapus home directory dan mail spool user" },
+        { "option": "-f", "description": "Memaksa penghapusan meskipun user masih login" }
+      ],
+      "examples": "# Menghapus user (tanpa home directory)\nsudo userdel john\n\n# Menghapus user beserta home directory\nsudo userdel -r john\n\n# Memaksa penghapusan\nsudo userdel -rf john"
+    },
+    {
+      "name": "usermod",
+      "title": "usermod — Memodifikasi User",
+      "description": "Mengubah konfigurasi akun pengguna yang sudah ada.",
+      "syntax": "usermod [OPSI] USERNAME",
+      "options": [
+        { "option": "-l NEW_NAME", "description": "Mengubah nama login" },
+        { "option": "-d DIR", "description": "Mengubah home directory" },
+        { "option": "-m", "description": "Memindahkan isi home directory lama ke lokasi baru" },
+        { "option": "-s SHELL", "description": "Mengubah default shell" },
+        { "option": "-g GROUP", "description": "Mengubah primary group" },
+        { "option": "-aG GROUPS", "description": "Menambahkan ke supplementary groups (TANPA menghapus yang lama)" },
+        { "option": "-L", "description": "Mengunci (lock) akun user" },
+        { "option": "-U", "description": "Membuka kunci (unlock) akun user" },
+        { "option": "-e DATE", "description": "Mengatur tanggal kadaluarsa" }
+      ],
+      "examples": "# Menambahkan user ke group sudo\nsudo usermod -aG sudo john\n\n# Menambahkan ke multiple groups\nsudo usermod -aG docker,www-data john\n\n# Mengubah shell\nsudo usermod -s /bin/zsh john\n\n# Mengunci akun\nsudo usermod -L john\n\n# Mengubah home directory\nsudo usermod -d /home/newdir -m john",
+      "warning": "Gunakan -aG (dengan -a) saat menambah group. Tanpa -a, user akan dikeluarkan dari semua group sebelumnya!"
+    },
+    {
+      "name": "passwd",
+      "title": "passwd — Mengubah Password",
+      "description": "Mengubah password pengguna. User biasa hanya bisa mengubah password sendiri, root bisa mengubah password user manapun.",
+      "syntax": "passwd [OPSI] [USERNAME]",
+      "options": [
+        { "option": "-l", "description": "Mengunci password user (lock)" },
+        { "option": "-u", "description": "Membuka kunci password (unlock)" },
+        { "option": "-d", "description": "Menghapus password (membuat akun tanpa password)" },
+        { "option": "-e", "description": "Memaksa user mengganti password saat login berikutnya" },
+        { "option": "-n DAYS", "description": "Minimum hari sebelum password bisa diubah" },
+        { "option": "-x DAYS", "description": "Maximum hari sebelum password harus diubah" },
+        { "option": "-w DAYS", "description": "Hari peringatan sebelum password expire" },
+        { "option": "-S", "description": "Menampilkan status password user" }
+      ],
+      "examples": "# Mengubah password sendiri\npasswd\n\n# Mengubah password user lain (root)\nsudo passwd john\n\n# Memaksa ganti password saat login berikutnya\nsudo passwd -e john\n\n# Mengunci akun\nsudo passwd -l john\n\n# Menampilkan status password\nsudo passwd -S john"
+    },
+    {
+      "name": "sudo",
+      "title": "sudo — Superuser Do",
+      "description": "Menjalankan perintah dengan hak akses superuser (root) atau user lain. Memerlukan password user yang menjalankan.",
+      "syntax": "sudo [OPSI] COMMAND",
+      "options": [
+        { "option": "-u USER", "description": "Menjalankan sebagai user tertentu (bukan root)" },
+        { "option": "-i", "description": "Membuka shell interaktif sebagai root" },
+        { "option": "-s", "description": "Menjalankan shell yang ditentukan di SHELL" },
+        { "option": "-l", "description": "Menampilkan perintah yang diizinkan untuk user" },
+        { "option": "-k", "description": "Menghapus timestamp (meminta password lagi)" },
+        { "option": "-v", "description": "Memperbarui timestamp tanpa menjalankan perintah" },
+        { "option": "-E", "description": "Mempertahankan environment variable" }
+      ],
+      "examples": "# Menjalankan perintah sebagai root\nsudo apt update\n\n# Membuka shell root\nsudo -i\n\n# Menjalankan sebagai user lain\nsudo -u www-data whoami\n\n# Mengedit file dengan editor\nsudo visudo\n\n# Melihat izin sudo\nsudo -l"
+    },
+    {
+      "name": "su",
+      "title": "su — Switch User",
+      "description": "Beralih ke akun user lain. Tanpa argumen username, beralih ke root.",
+      "syntax": "su [OPSI] [USERNAME]",
+      "options": [
+        { "option": "-", "description": "Login penuh (memuat environment user target)" },
+        { "option": "-l", "description": "Sama dengan - (login shell)" },
+        { "option": "-c COMMAND", "description": "Menjalankan perintah sebagai user target lalu kembali" },
+        { "option": "-s SHELL", "description": "Menentukan shell yang digunakan" }
+      ],
+      "examples": "# Beralih ke root\nsu -\n\n# Beralih ke user lain\nsu - john\n\n# Menjalankan perintah sebagai user lain\nsu -c 'ls /home/john' john"
+    },
+    {
+      "name": "whoami",
+      "title": "whoami — Siapa Saya?",
+      "description": "Menampilkan username dari user yang sedang login saat ini.",
+      "syntax": "whoami",
+      "options": [],
+      "examples": "# Menampilkan user saat ini\nwhoami\nuser\n\n# Setelah sudo\nsudo whoami\nroot"
+    },
+    {
+      "name": "id",
+      "title": "id — Informasi User & Group",
+      "description": "Menampilkan informasi UID, GID, dan group membership dari user.",
+      "syntax": "id [OPSI] [USERNAME]",
+      "options": [
+        { "option": "-u", "description": "Menampilkan hanya UID" },
+        { "option": "-g", "description": "Menampilkan hanya GID primary group" },
+        { "option": "-G", "description": "Menampilkan semua GID group" },
+        { "option": "-n", "description": "Menampilkan nama alih-alih angka (gunakan dengan -u, -g, -G)" }
+      ],
+      "examples": "# Menampilkan informasi user saat ini\nid\nuid=1000(user) gid=1000(user) groups=1000(user),27(sudo),999(docker)\n\n# Hanya UID\nid -u\n\n# Nama semua group\nid -Gn john\n\n# Informasi user lain\nid www-data"
+    }
+  ]
+}

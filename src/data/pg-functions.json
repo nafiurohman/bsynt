@@ -1,0 +1,64 @@
+{
+  "id": "pg-functions",
+  "title": "Functions & Procedures",
+  "description": "Membuat fungsi dan stored procedure di PostgreSQL menggunakan PL/pgSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE FUNCTION",
+      "title": "Membuat Fungsi",
+      "description": "Fungsi di PostgreSQL bisa ditulis dalam berbagai bahasa, paling umum PL/pgSQL dan SQL.",
+      "syntax": "CREATE [OR REPLACE] FUNCTION nama(param tipe) RETURNS tipe AS $$\nBEGIN\n  -- body\nEND;\n$$ LANGUAGE plpgsql;",
+      "options": [
+        { "option": "RETURNS tipe", "description": "Tipe data yang dikembalikan" },
+        { "option": "RETURNS TABLE", "description": "Mengembalikan set of rows" },
+        { "option": "RETURNS SETOF", "description": "Mengembalikan set of values" },
+        { "option": "IMMUTABLE", "description": "Selalu return sama untuk input sama" },
+        { "option": "STABLE", "description": "Tidak mengubah data, tapi bisa beda tiap transaction" },
+        { "option": "VOLATILE", "description": "Bisa berubah setiap pemanggilan (default)" },
+        { "option": "SECURITY DEFINER", "description": "Jalankan dengan privilege creator" }
+      ],
+      "examples": "-- Fungsi sederhana\nCREATE OR REPLACE FUNCTION add_tax(price DECIMAL, rate DECIMAL DEFAULT 0.11)\nRETURNS DECIMAL AS $$\nBEGIN\n  RETURN price + (price * rate);\nEND;\n$$ LANGUAGE plpgsql IMMUTABLE;\n\nSELECT add_tax(100000); -- 111000\n\n-- Fungsi return TABLE\nCREATE FUNCTION get_user_orders(uid INT)\nRETURNS TABLE(order_id INT, total DECIMAL, status TEXT) AS $$\nBEGIN\n  RETURN QUERY SELECT id, total, status FROM orders WHERE user_id = uid;\nEND;\n$$ LANGUAGE plpgsql STABLE;\n\nSELECT * FROM get_user_orders(1);",
+      "notes": "IMMUTABLE function bisa digunakan dalam index expression."
+    },
+    {
+      "name": "CREATE PROCEDURE",
+      "title": "Membuat Stored Procedure",
+      "description": "Procedure tidak mengembalikan nilai dan bisa mengontrol transaction.",
+      "syntax": "CREATE [OR REPLACE] PROCEDURE nama(param tipe) LANGUAGE plpgsql AS $$\nBEGIN\n  -- body\nEND;\n$$;",
+      "options": [
+        { "option": "CALL", "description": "Memanggil procedure" },
+        { "option": "COMMIT", "description": "Commit dalam procedure" },
+        { "option": "ROLLBACK", "description": "Rollback dalam procedure" }
+      ],
+      "examples": "CREATE OR REPLACE PROCEDURE transfer(\n  sender INT, receiver INT, amount DECIMAL\n) LANGUAGE plpgsql AS $$\nBEGIN\n  UPDATE accounts SET balance = balance - amount WHERE id = sender;\n  UPDATE accounts SET balance = balance + amount WHERE id = receiver;\n  COMMIT;\nEND;\n$$;\n\nCALL transfer(1, 2, 500000);",
+      "notes": "Procedure tersedia sejak PostgreSQL 11. Sebelumnya gunakan FUNCTION."
+    },
+    {
+      "name": "DROP FUNCTION",
+      "title": "Menghapus Fungsi",
+      "description": "Menghapus fungsi atau procedure yang sudah dibuat.",
+      "syntax": "DROP FUNCTION [IF EXISTS] nama(tipe_param) [CASCADE];\nDROP PROCEDURE [IF EXISTS] nama(tipe_param);",
+      "options": [],
+      "examples": "DROP FUNCTION add_tax(DECIMAL, DECIMAL);\nDROP FUNCTION IF EXISTS get_user_orders(INT) CASCADE;\nDROP PROCEDURE transfer(INT, INT, DECIMAL);",
+      "notes": "Harus sertakan parameter types karena PostgreSQL mendukung function overloading."
+    },
+    {
+      "name": "PL/pgSQL Control",
+      "title": "Kontrol Flow PL/pgSQL",
+      "description": "Statement kontrol flow dalam PL/pgSQL: IF, LOOP, FOR, WHILE, EXCEPTION.",
+      "syntax": "IF kondisi THEN ... ELSIF ... ELSE ... END IF;\nFOR var IN 1..10 LOOP ... END LOOP;\nBEGIN ... EXCEPTION WHEN ... THEN ... END;",
+      "options": [
+        { "option": "IF / ELSIF / ELSE", "description": "Percabangan kondisional" },
+        { "option": "CASE WHEN", "description": "Switch/case" },
+        { "option": "FOR ... LOOP", "description": "Loop dengan counter atau query" },
+        { "option": "WHILE ... LOOP", "description": "Loop selama kondisi true" },
+        { "option": "EXIT / CONTINUE", "description": "Keluar atau lanjut loop" },
+        { "option": "EXCEPTION WHEN", "description": "Error handling" },
+        { "option": "RAISE NOTICE/WARNING/EXCEPTION", "description": "Output pesan" }
+      ],
+      "examples": "CREATE FUNCTION check_stock(pid INT) RETURNS TEXT AS $$\nDECLARE\n  qty INT;\nBEGIN\n  SELECT stock INTO qty FROM products WHERE id = pid;\n  IF NOT FOUND THEN\n    RAISE EXCEPTION 'Product % not found', pid;\n  ELSIF qty = 0 THEN\n    RETURN 'out_of_stock';\n  ELSIF qty < 10 THEN\n    RETURN 'low_stock';\n  ELSE\n    RETURN 'in_stock';\n  END IF;\nEXCEPTION\n  WHEN OTHERS THEN\n    RAISE NOTICE 'Error: %', SQLERRM;\n    RETURN 'error';\nEND;\n$$ LANGUAGE plpgsql;",
+      "notes": "RAISE EXCEPTION akan membatalkan transaction. Gunakan EXCEPTION block untuk menanganinya."
+    }
+  ]
+}

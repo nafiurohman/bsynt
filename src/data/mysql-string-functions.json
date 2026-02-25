@@ -1,0 +1,74 @@
+{
+  "id": "mysql-string-functions",
+  "title": "String Functions",
+  "description": "Fungsi-fungsi untuk manipulasi string di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CONCAT",
+      "title": "CONCAT / CONCAT_WS",
+      "description": "Menggabungkan string.",
+      "syntax": "CONCAT(str1, str2, ...) / CONCAT_WS(separator, str1, str2, ...)",
+      "options": [],
+      "examples": "SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users;\nSELECT CONCAT_WS(', ', city, state, country) AS address FROM users;\nSELECT CONCAT('Hello, ', username, '!') FROM users;"
+    },
+    {
+      "name": "SUBSTRING",
+      "title": "SUBSTRING / LEFT / RIGHT",
+      "description": "Mengekstrak bagian dari string.",
+      "syntax": "SUBSTRING(str, pos, len) / LEFT(str, len) / RIGHT(str, len)",
+      "options": [],
+      "examples": "SELECT SUBSTRING('Hello World', 1, 5);  -- 'Hello'\nSELECT SUBSTRING(email, 1, LOCATE('@', email)-1) AS username FROM users;\nSELECT LEFT(title, 50) AS short_title FROM articles;\nSELECT RIGHT(phone, 4) AS last_four FROM users;"
+    },
+    {
+      "name": "LENGTH",
+      "title": "LENGTH / CHAR_LENGTH",
+      "description": "Menghitung panjang string.",
+      "syntax": "LENGTH(str) / CHAR_LENGTH(str)",
+      "options": [],
+      "examples": "SELECT CHAR_LENGTH(username) AS name_length FROM users;\nSELECT * FROM users WHERE CHAR_LENGTH(password_hash) < 60;",
+      "notes": "LENGTH() menghitung bytes, CHAR_LENGTH() menghitung karakter (penting untuk UTF-8)."
+    },
+    {
+      "name": "REPLACE",
+      "title": "REPLACE",
+      "description": "Mengganti substring dalam string.",
+      "syntax": "REPLACE(str, from_str, to_str)",
+      "options": [],
+      "examples": "SELECT REPLACE('Hello World', 'World', 'MySQL');\nUPDATE articles SET body = REPLACE(body, 'http://', 'https://');\nSELECT REPLACE(phone, '-', '') AS clean_phone FROM users;"
+    },
+    {
+      "name": "TRIM",
+      "title": "TRIM / LTRIM / RTRIM",
+      "description": "Menghapus spasi atau karakter dari awal/akhir string.",
+      "syntax": "TRIM([BOTH|LEADING|TRAILING] [char] FROM str)",
+      "options": [],
+      "examples": "SELECT TRIM('  hello  ');  -- 'hello'\nSELECT TRIM(LEADING '0' FROM '00123');  -- '123'\nSELECT LTRIM('  hello');\nSELECT RTRIM('hello  ');"
+    },
+    {
+      "name": "UPPER-LOWER",
+      "title": "UPPER / LOWER",
+      "description": "Mengubah case string.",
+      "syntax": "UPPER(str) / LOWER(str) / UCASE(str) / LCASE(str)",
+      "options": [],
+      "examples": "SELECT UPPER(username) FROM users;\nSELECT LOWER(email) FROM users;\nSELECT * FROM users WHERE LOWER(email) = 'john@mail.com';"
+    },
+    {
+      "name": "REGEXP",
+      "title": "REGEXP / REGEXP_REPLACE",
+      "description": "Pattern matching dan replace dengan regular expression.",
+      "syntax": "str REGEXP pattern / REGEXP_REPLACE(str, pattern, replacement)",
+      "options": [],
+      "examples": "SELECT * FROM users WHERE email REGEXP '^[a-z]+@gmail\\\\.com$';\nSELECT * FROM products WHERE name REGEXP 'laptop|notebook';\nSELECT REGEXP_REPLACE(phone, '[^0-9]', '') AS clean_phone FROM users;",
+      "notes": "REGEXP_REPLACE tersedia di MySQL 8.0+."
+    },
+    {
+      "name": "FORMAT-LPAD",
+      "title": "FORMAT / LPAD / RPAD",
+      "description": "Memformat string dan menambahkan padding.",
+      "syntax": "FORMAT(number, decimals) / LPAD(str, len, pad) / RPAD(str, len, pad)",
+      "options": [],
+      "examples": "SELECT FORMAT(1234567.891, 2);  -- '1,234,567.89'\nSELECT LPAD(id, 6, '0') AS order_no FROM orders;  -- '000042'\nSELECT RPAD(name, 20, '.') FROM products;"
+    }
+  ]
+}

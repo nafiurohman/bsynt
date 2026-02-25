@@ -1,0 +1,77 @@
+{
+  "id": "git-advanced",
+  "title": "Advanced & Maintenance",
+  "description": "Perintah Git lanjutan untuk reflog, cherry-pick, worktree, dan maintenance.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git reflog",
+      "title": "Reference Log (Undo dari Undo)",
+      "description": "Menampilkan history semua pergerakan HEAD — bisa mengembalikan commit yang 'hilang'.",
+      "syntax": "git reflog [opsi]",
+      "options": [
+        { "option": "(tanpa opsi)", "description": "Tampilkan semua reflog entries" },
+        { "option": "--all", "description": "Reflog semua referensi" },
+        { "option": "expire --expire=now --all", "description": "Hapus reflog entries" }
+      ],
+      "examples": "git reflog\n\n# Mengembalikan commit yang di-reset --hard\ngit reflog\n# Temukan commit yang hilang: abc1234\ngit reset --hard abc1234\n\n# Atau buat branch baru dari commit yang hilang\ngit branch recovered abc1234",
+      "notes": "Reflog adalah 'safety net' — hampir tidak ada yang benar-benar hilang di Git."
+    },
+    {
+      "name": "git cherry-pick",
+      "title": "Menyalin Commit Tertentu",
+      "description": "Mengambil satu atau beberapa commit dari branch lain dan menerapkannya ke branch saat ini.",
+      "syntax": "git cherry-pick <commit> [opsi]",
+      "options": [
+        { "option": "-n / --no-commit", "description": "Terapkan tanpa auto-commit" },
+        { "option": "-x", "description": "Tambahkan referensi commit asal di pesan" },
+        { "option": "--abort", "description": "Batalkan cherry-pick" },
+        { "option": "--continue", "description": "Lanjut setelah resolve konflik" }
+      ],
+      "examples": "git cherry-pick abc1234\ngit cherry-pick abc1234 def5678\ngit cherry-pick abc1234..xyz9876  # range\ngit cherry-pick -n abc1234  # tanpa commit",
+      "notes": "Cherry-pick membuat commit BARU — hash akan berbeda dari aslinya."
+    },
+    {
+      "name": "git worktree",
+      "title": "Multiple Working Trees",
+      "description": "Membuat working directory tambahan untuk branch berbeda tanpa stash/switch.",
+      "syntax": "git worktree add <path> <branch>",
+      "options": [
+        { "option": "add path branch", "description": "Buat worktree baru" },
+        { "option": "list", "description": "Tampilkan semua worktree" },
+        { "option": "remove path", "description": "Hapus worktree" },
+        { "option": "prune", "description": "Bersihkan worktree yang invalid" }
+      ],
+      "examples": "git worktree add ../hotfix hotfix/urgent\ngit worktree add ../feature feature/new-ui\ngit worktree list\ngit worktree remove ../hotfix",
+      "notes": "Sangat berguna saat perlu mengerjakan 2 branch bersamaan tanpa stash."
+    },
+    {
+      "name": "git gc / fsck / prune",
+      "title": "Maintenance & Garbage Collection",
+      "description": "Membersihkan dan mengoptimasi repository Git.",
+      "syntax": "git gc [--aggressive]\ngit fsck [--full]\ngit prune",
+      "options": [
+        { "option": "gc", "description": "Garbage collection — compress dan cleanup" },
+        { "option": "gc --aggressive", "description": "Optimasi lebih dalam (lambat)" },
+        { "option": "fsck", "description": "Verifikasi integritas repository" },
+        { "option": "prune", "description": "Hapus objek yang tidak terjangkau" },
+        { "option": "gc --auto", "description": "Jalankan gc jika diperlukan" }
+      ],
+      "examples": "git gc\ngit gc --aggressive --prune=now\ngit fsck --full\ngit prune -v",
+      "notes": "Git biasanya menjalankan gc otomatis. Manual gc untuk repo yang sangat besar."
+    },
+    {
+      "name": "git archive",
+      "title": "Export Repository sebagai Archive",
+      "description": "Membuat file archive (tar/zip) dari repository tanpa folder .git.",
+      "syntax": "git archive [--format=zip|tar] --output=file.zip <branch>",
+      "options": [
+        { "option": "--format", "description": "Format archive: tar, tar.gz, zip" },
+        { "option": "--output / -o", "description": "File output" },
+        { "option": "--prefix=dir/", "description": "Tambahkan prefix path" }
+      ],
+      "examples": "git archive --format=zip --output=release.zip main\ngit archive --format=tar.gz -o project.tar.gz HEAD\ngit archive --prefix=myproject/ main | gzip > myproject.tar.gz",
+      "notes": "Berguna untuk membuat release tanpa menyertakan history Git."
+    }
+  ]
+}

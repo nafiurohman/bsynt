@@ -1,0 +1,122 @@
+{
+  "id": "win-network",
+  "title": "Network (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola jaringan, konektivitas, dan konfigurasi network di Windows.",
+  "commands": [
+    {
+      "name": "ipconfig",
+      "title": "ipconfig — Konfigurasi IP",
+      "description": "Menampilkan dan mengelola konfigurasi IP jaringan. Setara dengan ifconfig/ip addr di Linux.",
+      "syntax": "ipconfig [opsi]",
+      "options": [
+        {"option": "ipconfig", "description": "Info IP ringkas"},
+        {"option": "/all", "description": "Info lengkap semua adapter"},
+        {"option": "/release", "description": "Lepas IP dari DHCP"},
+        {"option": "/renew", "description": "Perbarui IP dari DHCP"},
+        {"option": "/flushdns", "description": "Bersihkan cache DNS"},
+        {"option": "/displaydns", "description": "Tampilkan cache DNS"},
+        {"option": "/registerdns", "description": "Refresh registrasi DNS"}
+      ],
+      "examples": "# Info IP\nipconfig\n\n# Info lengkap\nipconfig /all\n\n# Flush DNS cache\nipconfig /flushdns\n\n# Renew IP\nipconfig /release\nipconfig /renew\n\n# Lihat DNS cache\nipconfig /displaydns\n\n# PowerShell\nGet-NetIPAddress\nGet-NetAdapter\nGet-DnsClientCache\nClear-DnsClientCache"
+    },
+    {
+      "name": "ping-win",
+      "title": "ping — Test Konektivitas",
+      "description": "Mengirim paket ICMP untuk menguji konektivitas jaringan.",
+      "syntax": "ping [opsi] target",
+      "options": [
+        {"option": "-t", "description": "Ping terus-menerus (Ctrl+C untuk stop)"},
+        {"option": "-n count", "description": "Jumlah paket yang dikirim"},
+        {"option": "-l size", "description": "Ukuran paket (bytes)"},
+        {"option": "-w timeout", "description": "Timeout dalam milidetik"},
+        {"option": "-4", "description": "Paksa IPv4"},
+        {"option": "-6", "description": "Paksa IPv6"},
+        {"option": "-a", "description": "Resolve hostname"}
+      ],
+      "examples": "# Ping basic\nping google.com\n\n# Ping terus-menerus\nping -t google.com\n\n# Ping 10 kali\nping -n 10 192.168.1.1\n\n# Ping dengan ukuran paket\nping -l 1500 google.com\n\n# Test-Connection (PowerShell)\nTest-Connection google.com\nTest-Connection -ComputerName google.com -Count 5"
+    },
+    {
+      "name": "tracert",
+      "title": "tracert — Trace Route",
+      "description": "Melacak jalur routing paket ke tujuan. Setara dengan traceroute di Linux.",
+      "syntax": "tracert [opsi] target",
+      "options": [
+        {"option": "-d", "description": "Jangan resolve hostname (lebih cepat)"},
+        {"option": "-h maxhops", "description": "Jumlah hop maksimal"},
+        {"option": "-w timeout", "description": "Timeout per hop (ms)"},
+        {"option": "-4", "description": "Paksa IPv4"},
+        {"option": "-6", "description": "Paksa IPv6"}
+      ],
+      "examples": "# Trace route\ntracert google.com\n\n# Tanpa resolve DNS (lebih cepat)\ntracert -d google.com\n\n# Maksimal 15 hop\ntracert -h 15 google.com\n\n# PowerShell: Test-NetConnection\nTest-NetConnection google.com -TraceRoute"
+    },
+    {
+      "name": "netstat-win",
+      "title": "netstat — Statistik Jaringan",
+      "description": "Menampilkan koneksi jaringan, port yang terbuka, dan statistik.",
+      "syntax": "netstat [opsi]",
+      "options": [
+        {"option": "-a", "description": "Semua koneksi dan port listening"},
+        {"option": "-n", "description": "Tampilkan alamat numerik"},
+        {"option": "-o", "description": "Tampilkan PID proses"},
+        {"option": "-b", "description": "Tampilkan nama program (perlu admin)"},
+        {"option": "-s", "description": "Statistik per protokol"},
+        {"option": "-r", "description": "Tampilkan routing table"},
+        {"option": "-e", "description": "Statistik Ethernet"},
+        {"option": "-p proto", "description": "Filter protokol (TCP, UDP)"}
+      ],
+      "examples": "# Semua koneksi\nnetstat -an\n\n# Koneksi dengan PID\nnetstat -ano\n\n# Koneksi dengan nama program\nnetstat -ab\n\n# Cari port tertentu\nnetstat -ano | findstr :80\nnetstat -ano | findstr :443\n\n# Statistik\nnetstat -s\n\n# Routing table\nnetstat -r\n\n# PowerShell\nGet-NetTCPConnection\nGet-NetTCPConnection -State Listen\nGet-NetTCPConnection -LocalPort 80"
+    },
+    {
+      "name": "nslookup-win",
+      "title": "nslookup — DNS Lookup",
+      "description": "Melakukan query DNS untuk mengetahui IP dari domain atau sebaliknya.",
+      "syntax": "nslookup [domain] [server]",
+      "options": [
+        {"option": "nslookup domain", "description": "Lookup domain"},
+        {"option": "set type=MX", "description": "Query MX records"},
+        {"option": "set type=NS", "description": "Query nameserver"},
+        {"option": "set type=A", "description": "Query A record (IPv4)"},
+        {"option": "set type=AAAA", "description": "Query AAAA record (IPv6)"},
+        {"option": "set type=TXT", "description": "Query TXT record"},
+        {"option": "set type=ANY", "description": "Query semua record"}
+      ],
+      "examples": "# Lookup domain\nnslookup google.com\n\n# Gunakan DNS server tertentu\nnslookup google.com 8.8.8.8\n\n# Query MX record\nnslookup -type=MX google.com\n\n# Query NS record\nnslookup -type=NS google.com\n\n# PowerShell: Resolve-DnsName\nResolve-DnsName google.com\nResolve-DnsName google.com -Type MX\nResolve-DnsName google.com -Server 8.8.8.8"
+    },
+    {
+      "name": "netsh",
+      "title": "netsh — Network Configuration",
+      "description": "Tool komprehensif untuk konfigurasi jaringan Windows. Sangat powerful untuk WiFi, firewall, dan IP.",
+      "syntax": "netsh [konteks] [perintah]",
+      "options": [
+        {"option": "interface show interface", "description": "List semua network interface"},
+        {"option": "wlan show profiles", "description": "List profil WiFi tersimpan"},
+        {"option": "wlan show profile name=x key=clear", "description": "Lihat password WiFi"},
+        {"option": "advfirewall set allprofiles state on/off", "description": "On/off firewall"},
+        {"option": "interface ip set address", "description": "Set IP statis"},
+        {"option": "interface ip set dns", "description": "Set DNS"},
+        {"option": "wlan disconnect", "description": "Disconnect WiFi"},
+        {"option": "wlan connect name=x", "description": "Connect ke WiFi"}
+      ],
+      "examples": "# List interface\nnetsh interface show interface\n\n# List WiFi profiles\nnetsh wlan show profiles\n\n# Lihat password WiFi\nnetsh wlan show profile name=\"WiFiName\" key=clear\n\n# Set IP statis\nnetsh interface ip set address \"Ethernet\" static 192.168.1.100 255.255.255.0 192.168.1.1\n\n# Set DNS\nnetsh interface ip set dns \"Ethernet\" static 8.8.8.8\n\n# Set DHCP\nnetsh interface ip set address \"Ethernet\" dhcp\n\n# Firewall off\nnetsh advfirewall set allprofiles state off\n\n# Ekspor konfigurasi\nnetsh wlan export profile folder=C:\\WiFiBackup",
+      "warning": "Mengubah konfigurasi jaringan bisa memutus koneksi. Pastikan Anda tahu cara mengembalikan konfigurasi sebelumnya."
+    },
+    {
+      "name": "curl-win",
+      "title": "curl — Transfer Data (Windows 10+)",
+      "description": "Windows 10 ke atas menyertakan curl bawaan untuk transfer data dari URL.",
+      "syntax": "curl [opsi] URL",
+      "options": [
+        {"option": "-o file", "description": "Simpan output ke file"},
+        {"option": "-O", "description": "Simpan dengan nama file asli"},
+        {"option": "-I", "description": "Hanya tampilkan header"},
+        {"option": "-X METHOD", "description": "HTTP method (GET, POST, PUT, DELETE)"},
+        {"option": "-H \"header\"", "description": "Tambah header"},
+        {"option": "-d data", "description": "Kirim data (POST)"},
+        {"option": "-L", "description": "Follow redirects"},
+        {"option": "-s", "description": "Silent mode"}
+      ],
+      "examples": "# GET request\ncurl https://api.example.com/data\n\n# Download file\ncurl -o file.zip https://example.com/file.zip\n\n# POST JSON\ncurl -X POST -H \"Content-Type: application/json\" -d \"{\\\"key\\\":\\\"value\\\"}\" https://api.example.com\n\n# Header saja\ncurl -I https://google.com\n\n# PowerShell: Invoke-WebRequest\nInvoke-WebRequest https://google.com\nInvoke-RestMethod https://api.example.com/data\n(Invoke-WebRequest https://example.com/file.zip).Content | Set-Content file.zip -Encoding Byte"
+    }
+  ]
+}

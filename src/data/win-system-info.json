@@ -1,0 +1,80 @@
+{
+  "id": "win-system-info",
+  "title": "System Info (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk menampilkan informasi sistem, hardware, dan konfigurasi Windows.",
+  "commands": [
+    {
+      "name": "systeminfo",
+      "title": "systeminfo — Info Sistem Lengkap",
+      "description": "Menampilkan informasi lengkap tentang sistem operasi, hardware, dan konfigurasi.",
+      "syntax": "systeminfo [opsi]",
+      "options": [
+        {"option": "systeminfo", "description": "Info lengkap sistem"},
+        {"option": "/s komputer", "description": "Info dari komputer remote"},
+        {"option": "/fo format", "description": "Format output: TABLE, LIST, CSV"}
+      ],
+      "examples": "# Info sistem lengkap\nsysteminfo\n\n# Info singkat (filter)\nsysteminfo | findstr /i \"OS Name OS Version\"\nsysteminfo | findstr /i \"Total Physical Memory\"\n\n# Ekspor ke CSV\nsysteminfo /fo csv > sysinfo.csv\n\n# PowerShell\nGet-ComputerInfo\nGet-ComputerInfo | Select-Object OsName, OsVersion, CsTotalPhysicalMemory"
+    },
+    {
+      "name": "hostname-win",
+      "title": "hostname — Nama Komputer",
+      "description": "Menampilkan nama komputer/hostname.",
+      "syntax": "hostname",
+      "options": [],
+      "examples": "# Tampilkan hostname\nhostname\n\n# PowerShell\n$env:COMPUTERNAME\n[System.Net.Dns]::GetHostName()\n\n# Ganti hostname (PowerShell admin)\nRename-Computer -NewName \"NewPC\" -Restart"
+    },
+    {
+      "name": "ver",
+      "title": "ver / winver — Versi Windows",
+      "description": "Menampilkan versi Windows.",
+      "syntax": "ver\nwinver",
+      "options": [],
+      "examples": "# Versi di CMD\nver\n\n# Dialog versi Windows\nwinver\n\n# PowerShell: Detail\n[System.Environment]::OSVersion\n(Get-CimInstance Win32_OperatingSystem).Caption\n(Get-CimInstance Win32_OperatingSystem).Version"
+    },
+    {
+      "name": "wmic-info",
+      "title": "wmic — WMI Query Info Sistem",
+      "description": "Menggunakan WMI untuk mengambil berbagai informasi hardware dan software.",
+      "syntax": "wmic [kelas] get [properti]",
+      "options": [
+        {"option": "os get caption,version", "description": "Info OS"},
+        {"option": "cpu get name,numberofcores", "description": "Info CPU"},
+        {"option": "memorychip get capacity", "description": "Info RAM"},
+        {"option": "baseboard get manufacturer,product", "description": "Info motherboard"},
+        {"option": "bios get smbiosbiosversion", "description": "Info BIOS"},
+        {"option": "nic get name,macaddress", "description": "Info network adapter"},
+        {"option": "product get name,version", "description": "Software terinstal"}
+      ],
+      "examples": "# Info OS\nwmic os get caption,version,osarchitecture\n\n# Info CPU\nwmic cpu get name,numberofcores,maxclockspeed\n\n# Info RAM\nwmic memorychip get capacity,speed,manufacturer\n\n# Info GPU\nwmic path win32_VideoController get name,driverversion\n\n# Serial number\nwmic bios get serialnumber\n\n# Software terinstal\nwmic product get name,version\n\n# PowerShell: Get-CimInstance\nGet-CimInstance Win32_Processor | Select Name, NumberOfCores\nGet-CimInstance Win32_PhysicalMemory | Select Capacity, Speed\nGet-CimInstance Win32_VideoController | Select Name"
+    },
+    {
+      "name": "set-env",
+      "title": "set / setx — Environment Variables",
+      "description": "Menampilkan dan mengatur environment variable di Windows.",
+      "syntax": "set [variable=value]\nsetx variable value [opsi]",
+      "options": [
+        {"option": "set", "description": "Tampilkan semua environment variables"},
+        {"option": "set VAR", "description": "Tampilkan variable tertentu"},
+        {"option": "set VAR=value", "description": "Set variable (sesi ini saja)"},
+        {"option": "setx VAR value", "description": "Set variable permanen (user)"},
+        {"option": "setx VAR value /m", "description": "Set variable permanen (system)"}
+      ],
+      "examples": "# Tampilkan semua\nset\n\n# Tampilkan PATH\nset PATH\necho %PATH%\n\n# Set temporary\nset MYVAR=hello\n\n# Set permanen (user)\nsetx JAVA_HOME \"C:\\Program Files\\Java\\jdk-17\"\n\n# Set permanen (system)\nsetx /m PATH \"%PATH%;C:\\tools\"\n\n# PowerShell\n$env:PATH\n$env:MYVAR = \"hello\"\n[System.Environment]::SetEnvironmentVariable(\"MYVAR\", \"hello\", \"User\")\n[System.Environment]::SetEnvironmentVariable(\"MYVAR\", \"hello\", \"Machine\")",
+      "warning": "setx memiliki batas 1024 karakter. Hati-hati saat mengubah PATH yang panjang — bisa terpotong!"
+    },
+    {
+      "name": "msinfo32",
+      "title": "msinfo32 — System Information GUI",
+      "description": "Menampilkan informasi sistem lengkap dalam antarmuka grafis.",
+      "syntax": "msinfo32 [opsi]",
+      "options": [
+        {"option": "msinfo32", "description": "Buka GUI System Information"},
+        {"option": "/report file", "description": "Ekspor ke file teks"},
+        {"option": "/nfo file", "description": "Simpan sebagai file NFO"},
+        {"option": "/categories", "description": "Tampilkan kategori tertentu"}
+      ],
+      "examples": "# Buka System Information\nmsinfo32\n\n# Ekspor ke file teks\nmsinfo32 /report C:\\sysinfo.txt\n\n# Simpan sebagai NFO\nmsinfo32 /nfo C:\\sysinfo.nfo"
+    }
+  ]
+}

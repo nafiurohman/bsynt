@@ -1,0 +1,59 @@
+{
+  "id": "mysql-joins",
+  "title": "Joins",
+  "description": "Operasi JOIN untuk menggabungkan data dari beberapa tabel di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "INNER JOIN",
+      "title": "Inner Join",
+      "description": "Mengembalikan baris yang memiliki kecocokan di kedua tabel.",
+      "syntax": "SELECT ... FROM tabel1 INNER JOIN tabel2 ON tabel1.col = tabel2.col;",
+      "options": [],
+      "examples": "SELECT u.username, o.id AS order_id, o.total\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id;\n\nSELECT p.name, c.name AS category\nFROM products p\nINNER JOIN categories c ON p.category_id = c.id\nWHERE p.price > 100000;",
+      "notes": "INNER JOIN = JOIN (kata INNER opsional)."
+    },
+    {
+      "name": "LEFT JOIN",
+      "title": "Left Join",
+      "description": "Semua baris dari tabel kiri + kecocokan dari tabel kanan (NULL jika tidak cocok).",
+      "syntax": "SELECT ... FROM tabel1 LEFT JOIN tabel2 ON tabel1.col = tabel2.col;",
+      "options": [],
+      "examples": "SELECT u.username, COUNT(o.id) AS total_orders\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nGROUP BY u.id;\n\n-- User tanpa order\nSELECT u.username\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nWHERE o.id IS NULL;"
+    },
+    {
+      "name": "RIGHT JOIN",
+      "title": "Right Join",
+      "description": "Semua baris dari tabel kanan + kecocokan dari tabel kiri.",
+      "syntax": "SELECT ... FROM tabel1 RIGHT JOIN tabel2 ON tabel1.col = tabel2.col;",
+      "options": [],
+      "examples": "SELECT o.id, u.username\nFROM orders o\nRIGHT JOIN users u ON o.user_id = u.id;",
+      "notes": "RIGHT JOIN jarang digunakan — biasanya bisa ditulis ulang sebagai LEFT JOIN dengan urutan tabel dibalik."
+    },
+    {
+      "name": "CROSS JOIN",
+      "title": "Cross Join",
+      "description": "Menggabungkan setiap baris dari tabel1 dengan setiap baris dari tabel2 (Cartesian product).",
+      "syntax": "SELECT ... FROM tabel1 CROSS JOIN tabel2;",
+      "options": [],
+      "examples": "SELECT s.size, c.color\nFROM sizes s\nCROSS JOIN colors c;\n\n-- Alternatif\nSELECT s.size, c.color FROM sizes s, colors c;",
+      "notes": "Hati-hati: hasilnya = jumlah baris tabel1 × jumlah baris tabel2."
+    },
+    {
+      "name": "SELF JOIN",
+      "title": "Self Join",
+      "description": "Menggabungkan tabel dengan dirinya sendiri.",
+      "syntax": "SELECT ... FROM tabel t1 JOIN tabel t2 ON t1.col = t2.col;",
+      "options": [],
+      "examples": "-- Karyawan dan manajernya\nSELECT e.name AS employee, m.name AS manager\nFROM employees e\nLEFT JOIN employees m ON e.manager_id = m.id;\n\n-- Cari duplikat email\nSELECT a.id, a.email\nFROM users a\nJOIN users b ON a.email = b.email AND a.id < b.id;"
+    },
+    {
+      "name": "MULTI JOIN",
+      "title": "Multiple Joins",
+      "description": "Menggabungkan lebih dari dua tabel.",
+      "syntax": "SELECT ... FROM t1 JOIN t2 ON ... JOIN t3 ON ...;",
+      "options": [],
+      "examples": "SELECT o.id, u.username, p.name, oi.quantity, oi.price\nFROM orders o\nJOIN users u ON o.user_id = u.id\nJOIN order_items oi ON o.id = oi.order_id\nJOIN products p ON oi.product_id = p.id\nWHERE o.status = 'paid'\nORDER BY o.created_at DESC;"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "id": "docker-volume",
+  "title": "Volume & Storage",
+  "description": "Mengelola penyimpanan data persistent menggunakan Docker volumes.",
+  "badge": "Docker",
+  "commands": [
+    {
+      "name": "docker volume create",
+      "title": "Membuat Volume",
+      "description": "Membuat named volume untuk menyimpan data secara persistent.",
+      "syntax": "docker volume create [opsi] [nama]",
+      "options": [
+        { "option": "--driver / -d", "description": "Volume driver (default: local)" },
+        { "option": "--label", "description": "Menambahkan label metadata" }
+      ],
+      "examples": "docker volume create mydata\ndocker volume create --label project=web pgdata\n\n# Menggunakan volume\ndocker run -d -v mydata:/app/data myapp\ndocker run -d -v pgdata:/var/lib/postgresql/data postgres",
+      "notes": "Volume disimpan di /var/lib/docker/volumes/ di host."
+    },
+    {
+      "name": "docker volume ls / inspect",
+      "title": "Melihat & Inspeksi Volume",
+      "description": "Menampilkan daftar volume dan detail informasi.",
+      "syntax": "docker volume ls [opsi]\ndocker volume inspect <volume>",
+      "options": [
+        { "option": "-q", "description": "Hanya nama" },
+        { "option": "--filter", "description": "Filter volume" }
+      ],
+      "examples": "docker volume ls\ndocker volume inspect mydata\ndocker volume ls --filter dangling=true",
+      "notes": "Dangling volume = volume yang tidak dipakai oleh container manapun."
+    },
+    {
+      "name": "docker volume rm / prune",
+      "title": "Menghapus Volume",
+      "description": "Menghapus volume yang tidak terpakai.",
+      "syntax": "docker volume rm <volume>\ndocker volume prune",
+      "options": [
+        { "option": "-f", "description": "Tanpa konfirmasi" }
+      ],
+      "examples": "docker volume rm mydata\ndocker volume prune\ndocker volume prune -f",
+      "warning": "Menghapus volume berarti menghapus SEMUA data di dalamnya secara permanen!"
+    },
+    {
+      "name": "Bind Mount vs Volume",
+      "title": "Bind Mount vs Named Volume",
+      "description": "Dua cara menyimpan data di Docker — bind mount (path host) vs named volume (managed Docker).",
+      "syntax": "# Bind mount\n-v /host/path:/container/path\n\n# Named volume\n-v volume_name:/container/path\n\n# Sintaks --mount (lebih eksplisit)\n--mount type=volume,source=vol,target=/app",
+      "options": [
+        { "option": "Bind mount", "description": "Map path spesifik dari host" },
+        { "option": "Named volume", "description": "Docker mengelola lokasi penyimpanan" },
+        { "option": "tmpfs mount", "description": "Simpan di memory (sementara)" },
+        { "option": ":ro", "description": "Read-only mount" }
+      ],
+      "examples": "# Bind mount (development)\ndocker run -v $(pwd):/app -v /app/node_modules myapp\n\n# Named volume (production)\ndocker run -v pgdata:/var/lib/postgresql/data postgres\n\n# Read-only\ndocker run -v ./config:/app/config:ro myapp\n\n# tmpfs\ndocker run --tmpfs /app/temp myapp",
+      "notes": "Named volume lebih portabel dan dikelola Docker. Bind mount untuk development."
+    }
+  ]
+}

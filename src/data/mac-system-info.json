@@ -1,0 +1,82 @@
+{
+  "id": "mac-system-info",
+  "title": "System Info",
+  "description": "Perintah untuk melihat informasi sistem macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "sw_vers",
+      "title": "Software Version (macOS)",
+      "description": "Menampilkan versi macOS.",
+      "syntax": "sw_vers",
+      "options": [
+        { "option": "-productName", "description": "Nama produk" },
+        { "option": "-productVersion", "description": "Versi OS" },
+        { "option": "-buildVersion", "description": "Build version" }
+      ],
+      "examples": "sw_vers\nsw_vers -productVersion\nsw_vers -productName"
+    },
+    {
+      "name": "system_profiler",
+      "title": "System Profiler (macOS)",
+      "description": "Menampilkan informasi hardware dan software detail.",
+      "syntax": "system_profiler [datatype]",
+      "options": [
+        { "option": "SPHardwareDataType", "description": "Info hardware" },
+        { "option": "SPSoftwareDataType", "description": "Info software" },
+        { "option": "SPMemoryDataType", "description": "Info RAM" },
+        { "option": "SPStorageDataType", "description": "Info storage" },
+        { "option": "SPDisplaysDataType", "description": "Info display" },
+        { "option": "SPNetworkDataType", "description": "Info network" }
+      ],
+      "examples": "system_profiler SPHardwareDataType\nsystem_profiler SPSoftwareDataType\nsystem_profiler SPMemoryDataType\nsystem_profiler SPStorageDataType"
+    },
+    {
+      "name": "uname",
+      "title": "Unix Name",
+      "description": "Menampilkan informasi kernel.",
+      "syntax": "uname [opsi]",
+      "options": [
+        { "option": "-a", "description": "Semua informasi" },
+        { "option": "-m", "description": "Arsitektur (arm64/x86_64)" },
+        { "option": "-r", "description": "Versi kernel" },
+        { "option": "-s", "description": "Nama kernel (Darwin)" }
+      ],
+      "examples": "uname -a\nuname -m\nuname -r"
+    },
+    {
+      "name": "sysctl",
+      "title": "System Control",
+      "description": "Membaca/mengubah parameter kernel.",
+      "syntax": "sysctl [opsi] [name]",
+      "options": [
+        { "option": "-a", "description": "Tampilkan semua parameter" },
+        { "option": "hw.memsize", "description": "Total RAM" },
+        { "option": "machdep.cpu.brand_string", "description": "Info CPU" },
+        { "option": "hw.ncpu", "description": "Jumlah CPU core" }
+      ],
+      "examples": "sysctl hw.memsize\nsysctl machdep.cpu.brand_string\nsysctl hw.ncpu\nsysctl -a | grep cpu"
+    },
+    {
+      "name": "uptime",
+      "title": "Uptime",
+      "description": "Menampilkan waktu aktif sistem.",
+      "syntax": "uptime",
+      "options": [],
+      "examples": "uptime"
+    },
+    {
+      "name": "defaults",
+      "title": "Defaults (macOS)",
+      "description": "Membaca/mengubah pengaturan macOS (plist/preferences).",
+      "syntax": "defaults [read|write|delete] [domain] [key] [value]",
+      "options": [
+        { "option": "read", "description": "Baca pengaturan" },
+        { "option": "write", "description": "Ubah pengaturan" },
+        { "option": "delete", "description": "Hapus pengaturan" }
+      ],
+      "examples": "defaults read com.apple.dock tilesize\ndefaults write com.apple.dock tilesize -int 36\ndefaults write com.apple.finder AppleShowAllFiles -bool true\ndefaults write NSGlobalDomain AppleShowScrollBars -string Always\nkillall Dock\nkillall Finder",
+      "notes": "Banyak hidden settings macOS bisa diubah via defaults. Restart app setelah mengubah."
+    }
+  ]
+}

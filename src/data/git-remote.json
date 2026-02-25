@@ -1,0 +1,66 @@
+{
+  "id": "git-remote",
+  "title": "Remote Repository",
+  "description": "Mengelola remote repository dan sinkronisasi perubahan dengan fetch, pull, push.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git remote",
+      "title": "Mengelola Remote",
+      "description": "Menampilkan, menambah, atau menghapus remote repository.",
+      "syntax": "git remote [opsi]",
+      "options": [
+        { "option": "-v", "description": "Tampilkan URL remote" },
+        { "option": "add nama url", "description": "Menambah remote baru" },
+        { "option": "remove nama", "description": "Menghapus remote" },
+        { "option": "rename old new", "description": "Mengganti nama remote" },
+        { "option": "set-url nama url", "description": "Mengubah URL remote" },
+        { "option": "show nama", "description": "Detail info remote" }
+      ],
+      "examples": "git remote\ngit remote -v\ngit remote add origin https://github.com/user/repo.git\ngit remote add upstream https://github.com/original/repo.git\ngit remote remove origin\ngit remote set-url origin git@github.com:user/repo.git",
+      "notes": "Convention: 'origin' = fork/personal, 'upstream' = original repo."
+    },
+    {
+      "name": "git fetch",
+      "title": "Mengunduh Perubahan dari Remote",
+      "description": "Mengunduh data baru dari remote tanpa menggabungkan ke working directory.",
+      "syntax": "git fetch [remote] [branch]",
+      "options": [
+        { "option": "--all", "description": "Fetch dari semua remote" },
+        { "option": "--prune", "description": "Hapus referensi branch remote yang sudah dihapus" },
+        { "option": "--tags", "description": "Fetch semua tag" }
+      ],
+      "examples": "git fetch\ngit fetch origin\ngit fetch --all\ngit fetch --prune\ngit fetch origin main",
+      "notes": "Fetch aman — tidak mengubah working directory. Review dulu sebelum merge."
+    },
+    {
+      "name": "git pull",
+      "title": "Fetch + Merge dari Remote",
+      "description": "Mengunduh dan langsung menggabungkan perubahan dari remote.",
+      "syntax": "git pull [remote] [branch] [opsi]",
+      "options": [
+        { "option": "--rebase", "description": "Gunakan rebase alih-alih merge" },
+        { "option": "--ff-only", "description": "Hanya fast-forward" },
+        { "option": "--no-commit", "description": "Merge tanpa auto-commit" }
+      ],
+      "examples": "git pull\ngit pull origin main\ngit pull --rebase origin main\ngit pull --ff-only",
+      "notes": "git pull --rebase membuat history lebih bersih dibanding merge biasa."
+    },
+    {
+      "name": "git push",
+      "title": "Mengirim Perubahan ke Remote",
+      "description": "Mengunggah commit lokal ke remote repository.",
+      "syntax": "git push [remote] [branch] [opsi]",
+      "options": [
+        { "option": "-u / --set-upstream", "description": "Set tracking branch" },
+        { "option": "--force / -f", "description": "Force push (timpa remote)" },
+        { "option": "--force-with-lease", "description": "Force push yang lebih aman" },
+        { "option": "--tags", "description": "Push semua tag" },
+        { "option": "--delete", "description": "Hapus branch remote" },
+        { "option": "--all", "description": "Push semua branch" }
+      ],
+      "examples": "git push\ngit push origin main\ngit push -u origin feature/login\ngit push --force-with-lease origin feature/login\ngit push origin --delete old-branch\ngit push --tags",
+      "warning": "git push --force bisa menghapus commit orang lain! Selalu gunakan --force-with-lease."
+    }
+  ]
+}

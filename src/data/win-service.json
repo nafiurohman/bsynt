@@ -1,0 +1,73 @@
+{
+  "id": "win-service",
+  "title": "Service & Task (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola Windows Services, Scheduled Tasks, dan Event Log.",
+  "commands": [
+    {
+      "name": "sc-service",
+      "title": "sc — Service Control Manager",
+      "description": "Mengelola Windows Services dari command line. Tool utama untuk service management.",
+      "syntax": "sc [perintah] [nama_service] [opsi]",
+      "options": [
+        {"option": "query", "description": "Tampilkan status service"},
+        {"option": "start", "description": "Jalankan service"},
+        {"option": "stop", "description": "Hentikan service"},
+        {"option": "config", "description": "Ubah konfigurasi service"},
+        {"option": "create", "description": "Buat service baru"},
+        {"option": "delete", "description": "Hapus service"},
+        {"option": "qc", "description": "Tampilkan konfigurasi service"},
+        {"option": "queryex", "description": "Info extended (termasuk PID)"},
+        {"option": "query type= service state= all", "description": "Semua services"}
+      ],
+      "examples": "# Status service\nsc query wuauserv\n\n# Semua service\nsc query type= service state= all\n\n# Jalankan service\nsc start wuauserv\n\n# Hentikan service\nsc stop wuauserv\n\n# Set auto-start\nsc config wuauserv start= auto\n\n# Set disabled\nsc config wuauserv start= disabled\n\n# PowerShell\nGet-Service\nGet-Service wuauserv\nStart-Service wuauserv\nStop-Service wuauserv\nSet-Service wuauserv -StartupType Automatic",
+      "notes": "Perhatikan spasi setelah '=' di sc (contoh: start= auto, bukan start=auto)."
+    },
+    {
+      "name": "net-service",
+      "title": "net start/stop — Kontrol Service Cepat",
+      "description": "Cara cepat untuk menjalankan dan menghentikan service Windows.",
+      "syntax": "net start|stop nama_service",
+      "options": [
+        {"option": "net start", "description": "List semua service yang berjalan"},
+        {"option": "net start nama", "description": "Jalankan service"},
+        {"option": "net stop nama", "description": "Hentikan service"}
+      ],
+      "examples": "# List service berjalan\nnet start\n\n# Jalankan service\nnet start \"Windows Update\"\nnet start wuauserv\n\n# Hentikan service\nnet stop wuauserv\n\n# Restart (stop lalu start)\nnet stop wuauserv && net start wuauserv"
+    },
+    {
+      "name": "schtasks",
+      "title": "schtasks — Scheduled Tasks",
+      "description": "Mengelola scheduled tasks (task terjadwal) di Windows. Setara dengan cron di Linux.",
+      "syntax": "schtasks [operasi] [opsi]",
+      "options": [
+        {"option": "/query", "description": "List semua scheduled tasks"},
+        {"option": "/create", "description": "Buat task baru"},
+        {"option": "/delete", "description": "Hapus task"},
+        {"option": "/run", "description": "Jalankan task sekarang"},
+        {"option": "/end", "description": "Hentikan task yang berjalan"},
+        {"option": "/change", "description": "Ubah task"},
+        {"option": "/tn", "description": "Nama task"},
+        {"option": "/tr", "description": "Program/perintah yang dijalankan"},
+        {"option": "/sc", "description": "Schedule: MINUTE, HOURLY, DAILY, WEEKLY, MONTHLY, ONCE, ONSTART, ONLOGON"},
+        {"option": "/st", "description": "Start time (HH:MM)"},
+        {"option": "/mo", "description": "Modifier (interval)"}
+      ],
+      "examples": "# List semua tasks\nschtasks /query\n\n# Task harian jam 02:00\nschtasks /create /tn \"Backup\" /tr \"C:\\backup.bat\" /sc daily /st 02:00\n\n# Task setiap 5 menit\nschtasks /create /tn \"Monitor\" /tr \"monitor.bat\" /sc minute /mo 5\n\n# Task saat startup\nschtasks /create /tn \"AutoStart\" /tr \"app.exe\" /sc onstart\n\n# Jalankan sekarang\nschtasks /run /tn \"Backup\"\n\n# Hapus task\nschtasks /delete /tn \"Backup\" /f\n\n# PowerShell\nGet-ScheduledTask\nStart-ScheduledTask -TaskName \"Backup\"\nUnregister-ScheduledTask -TaskName \"Backup\""
+    },
+    {
+      "name": "eventlog",
+      "title": "wevtutil / Get-EventLog — Event Log",
+      "description": "Mengelola dan membaca Windows Event Log. Setara dengan journalctl di Linux.",
+      "syntax": "wevtutil [perintah] [opsi]\nGet-EventLog [opsi]",
+      "options": [
+        {"option": "wevtutil el", "description": "List semua log"},
+        {"option": "wevtutil qe", "description": "Query events"},
+        {"option": "wevtutil cl", "description": "Clear log"},
+        {"option": "Get-EventLog", "description": "PowerShell: baca event log"},
+        {"option": "Get-WinEvent", "description": "PowerShell: baca event log (modern)"}
+      ],
+      "examples": "# List log\nwevtutil el\n\n# Baca 10 event terakhir dari System\nwevtutil qe System /c:10 /f:text\n\n# Clear log\nwevtutil cl Application\n\n# PowerShell: Event log\nGet-EventLog -LogName System -Newest 20\nGet-EventLog -LogName Application -EntryType Error -Newest 10\n\n# PowerShell: Get-WinEvent (modern)\nGet-WinEvent -LogName System -MaxEvents 20\nGet-WinEvent -FilterHashtable @{LogName='System'; Level=2} -MaxEvents 10"
+    }
+  ]
+}

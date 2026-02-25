@@ -1,0 +1,54 @@
+{
+  "id": "mysql-performance",
+  "title": "Performance & Optimization",
+  "description": "Tips dan perintah untuk optimasi performa MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "EXPLAIN ANALYZE",
+      "title": "EXPLAIN ANALYZE",
+      "description": "Analisis eksekusi query secara real-time (MySQL 8.0.18+).",
+      "syntax": "EXPLAIN ANALYZE SELECT ...;",
+      "options": [],
+      "examples": "EXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 1;\nEXPLAIN ANALYZE SELECT u.username, COUNT(o.id) FROM users u JOIN orders o ON u.id = o.user_id GROUP BY u.id;",
+      "notes": "EXPLAIN ANALYZE benar-benar menjalankan query dan menampilkan actual vs estimated rows."
+    },
+    {
+      "name": "SLOW QUERY LOG",
+      "title": "Slow Query Log",
+      "description": "Mengaktifkan logging untuk query lambat.",
+      "syntax": "SET GLOBAL slow_query_log = 'ON';",
+      "options": [
+        { "option": "slow_query_log", "description": "ON/OFF" },
+        { "option": "long_query_time", "description": "Threshold dalam detik" },
+        { "option": "slow_query_log_file", "description": "Path file log" }
+      ],
+      "examples": "SET GLOBAL slow_query_log = 'ON';\nSET GLOBAL long_query_time = 1;\nSHOW VARIABLES LIKE 'slow_query%';\nSHOW VARIABLES LIKE 'long_query_time';",
+      "notes": "Default threshold 10 detik. Turunkan ke 1-2 detik untuk development."
+    },
+    {
+      "name": "QUERY OPTIMIZATION",
+      "title": "Tips Optimasi Query",
+      "description": "Praktik terbaik untuk menulis query yang efisien.",
+      "syntax": "Best Practices",
+      "options": [
+        { "option": "Gunakan index", "description": "Buat index pada kolom yang sering di-WHERE/JOIN/ORDER BY" },
+        { "option": "Hindari SELECT *", "description": "Pilih kolom yang diperlukan saja" },
+        { "option": "Gunakan LIMIT", "description": "Batasi hasil untuk pagination" },
+        { "option": "Hindari function di WHERE", "description": "WHERE YEAR(col) = 2024 tidak bisa pakai index" },
+        { "option": "Gunakan EXISTS vs IN", "description": "EXISTS lebih efisien untuk subquery besar" },
+        { "option": "Batch INSERT", "description": "Insert banyak row sekaligus" }
+      ],
+      "examples": "-- BURUK: function di WHERE (tidak pakai index)\nSELECT * FROM orders WHERE YEAR(created_at) = 2024;\n\n-- BAIK: range query (pakai index)\nSELECT * FROM orders WHERE created_at >= '2024-01-01' AND created_at < '2025-01-01';\n\n-- BURUK: SELECT *\nSELECT * FROM users;\n\n-- BAIK: kolom spesifik\nSELECT id, username, email FROM users;\n\n-- BURUK: INSERT satu-satu\nINSERT INTO logs (msg) VALUES ('a');\nINSERT INTO logs (msg) VALUES ('b');\n\n-- BAIK: batch insert\nINSERT INTO logs (msg) VALUES ('a'), ('b'), ('c');"
+    },
+    {
+      "name": "SHOW STATUS",
+      "title": "Server Status & Variables",
+      "description": "Menampilkan status dan variabel server MySQL.",
+      "syntax": "SHOW [GLOBAL|SESSION] STATUS / SHOW VARIABLES",
+      "options": [],
+      "examples": "SHOW GLOBAL STATUS LIKE 'Threads%';\nSHOW GLOBAL STATUS LIKE 'Queries';\nSHOW VARIABLES LIKE 'innodb_buffer_pool_size';\nSHOW VARIABLES LIKE 'max_connections';\nSHOW PROCESSLIST;\nSHOW ENGINE INNODB STATUS;",
+      "notes": "Gunakan SHOW PROCESSLIST untuk melihat query yang sedang berjalan."
+    }
+  ]
+}

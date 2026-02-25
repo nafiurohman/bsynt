@@ -1,0 +1,82 @@
+{
+  "id": "win-process-management",
+  "title": "Process Management (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola proses, task, dan performa sistem di Windows.",
+  "commands": [
+    {
+      "name": "tasklist",
+      "title": "tasklist — Daftar Proses",
+      "description": "Menampilkan semua proses yang sedang berjalan. Setara dengan ps di Linux.",
+      "syntax": "tasklist [opsi]",
+      "options": [
+        {"option": "/v", "description": "Tampilkan info detail (verbose)"},
+        {"option": "/fo format", "description": "Format output: TABLE, LIST, CSV"},
+        {"option": "/fi \"filter\"", "description": "Filter proses"},
+        {"option": "/svc", "description": "Tampilkan service di setiap proses"},
+        {"option": "/m [modul]", "description": "Tampilkan modul/DLL yang dimuat"},
+        {"option": "/s komputer", "description": "Proses dari komputer remote"},
+        {"option": "/nh", "description": "Tanpa header"}
+      ],
+      "examples": "# List semua proses\ntasklist\n\n# Dengan detail\ntasklist /v\n\n# Format CSV\ntasklist /fo csv > proses.csv\n\n# Filter: cari proses tertentu\ntasklist /fi \"imagename eq chrome.exe\"\ntasklist /fi \"memusage gt 100000\"\ntasklist /fi \"status eq not responding\"\n\n# Tampilkan services\ntasklist /svc\n\n# PowerShell: Get-Process\nGet-Process\nGet-Process chrome\nGet-Process | Sort-Object CPU -Descending | Select-Object -First 10"
+    },
+    {
+      "name": "taskkill",
+      "title": "taskkill — Menghentikan Proses",
+      "description": "Menghentikan proses berdasarkan nama atau PID. Setara dengan kill di Linux.",
+      "syntax": "taskkill [opsi]",
+      "options": [
+        {"option": "/pid PID", "description": "Kill berdasarkan Process ID"},
+        {"option": "/im nama", "description": "Kill berdasarkan nama image"},
+        {"option": "/f", "description": "Force kill (paksa)"},
+        {"option": "/t", "description": "Kill termasuk child processes"},
+        {"option": "/fi \"filter\"", "description": "Kill berdasarkan filter"}
+      ],
+      "examples": "# Kill berdasarkan nama\ntaskkill /im notepad.exe\n\n# Force kill berdasarkan PID\ntaskkill /pid 1234 /f\n\n# Kill termasuk child processes\ntaskkill /im chrome.exe /f /t\n\n# Kill proses not responding\ntaskkill /fi \"status eq not responding\" /f\n\n# PowerShell: Stop-Process\nStop-Process -Name notepad\nStop-Process -Id 1234 -Force\nGet-Process chrome | Stop-Process",
+      "warning": "Menghentikan proses system bisa menyebabkan crash atau restart. Hati-hati dengan svchost.exe dan proses system lainnya."
+    },
+    {
+      "name": "start-win",
+      "title": "start — Menjalankan Program",
+      "description": "Menjalankan program, file, atau URL di window/proses terpisah.",
+      "syntax": "start [opsi] [\"title\"] program [argumen]",
+      "options": [
+        {"option": "/min", "description": "Jalankan terminimize"},
+        {"option": "/max", "description": "Jalankan termaksimize"},
+        {"option": "/wait", "description": "Tunggu sampai program selesai"},
+        {"option": "/b", "description": "Jalankan tanpa window baru"},
+        {"option": "/high", "description": "Prioritas tinggi"},
+        {"option": "/low", "description": "Prioritas rendah"},
+        {"option": "/abovenormal", "description": "Prioritas di atas normal"}
+      ],
+      "examples": "# Buka file\nstart document.docx\n\n# Buka URL\nstart https://google.com\n\n# Buka folder di Explorer\nstart .\nstart C:\\Users\n\n# Jalankan dengan prioritas tinggi\nstart /high program.exe\n\n# Tunggu selesai\nstart /wait installer.exe\n\n# PowerShell: Start-Process\nStart-Process notepad\nStart-Process -FilePath program.exe -Wait\nStart-Process -FilePath cmd -Verb RunAs"
+    },
+    {
+      "name": "wmic-process",
+      "title": "wmic process — Info Proses Detail",
+      "description": "Menampilkan informasi detail proses menggunakan WMI.",
+      "syntax": "wmic process [opsi]",
+      "options": [
+        {"option": "list brief", "description": "Info ringkas semua proses"},
+        {"option": "list full", "description": "Info lengkap semua proses"},
+        {"option": "where name=\"x\" get", "description": "Info proses tertentu"},
+        {"option": "where name=\"x\" delete", "description": "Kill proses"}
+      ],
+      "examples": "# List ringkas\nwmic process list brief\n\n# Info proses tertentu\nwmic process where name=\"chrome.exe\" get processid,commandline\n\n# Kill proses via WMI\nwmic process where name=\"app.exe\" delete\n\n# PowerShell: Get-CimInstance\nGet-CimInstance Win32_Process | Select Name, ProcessId, CommandLine"
+    },
+    {
+      "name": "performance-ps",
+      "title": "Performance Monitoring (PowerShell)",
+      "description": "Cmdlet PowerShell untuk monitoring performa sistem.",
+      "syntax": "Get-Counter [opsi]",
+      "options": [
+        {"option": "Get-Counter", "description": "Ambil performance counter"},
+        {"option": "-Counter", "description": "Counter spesifik"},
+        {"option": "-SampleInterval", "description": "Interval sampling (detik)"},
+        {"option": "-MaxSamples", "description": "Jumlah sampel maksimal"},
+        {"option": "-Continuous", "description": "Monitoring terus-menerus"}
+      ],
+      "examples": "# CPU usage\nGet-Counter '\\Processor(_Total)\\% Processor Time'\n\n# Memory\nGet-Counter '\\Memory\\Available MBytes'\n\n# Monitoring 10 detik\nGet-Counter '\\Processor(_Total)\\% Processor Time' -SampleInterval 2 -MaxSamples 5\n\n# Top CPU processes\nGet-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, CPU, WorkingSet\n\n# Memory per proses (MB)\nGet-Process | Select-Object Name, @{N='MemMB';E={[math]::Round($_.WorkingSet/1MB,2)}} | Sort-Object MemMB -Descending | Select-Object -First 10"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "win-disk-storage",
+  "title": "Disk & Storage (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola disk, partisi, dan storage di Windows.",
+  "commands": [
+    {
+      "name": "diskpart",
+      "title": "diskpart — Manajemen Disk",
+      "description": "Tool interaktif untuk mengelola disk, partisi, dan volume di Windows.",
+      "syntax": "diskpart",
+      "options": [
+        {"option": "list disk", "description": "Menampilkan semua disk"},
+        {"option": "list volume", "description": "Menampilkan semua volume"},
+        {"option": "list partition", "description": "Menampilkan partisi pada disk terpilih"},
+        {"option": "select disk n", "description": "Memilih disk"},
+        {"option": "select volume n", "description": "Memilih volume"},
+        {"option": "clean", "description": "Menghapus semua partisi dari disk"},
+        {"option": "create partition primary", "description": "Membuat partisi primer"},
+        {"option": "format fs=ntfs quick", "description": "Format partisi ke NTFS (cepat)"},
+        {"option": "assign letter=X", "description": "Memberikan huruf drive"},
+        {"option": "extend", "description": "Memperluas volume"},
+        {"option": "shrink desired=SIZE", "description": "Mengecilkan volume (MB)"}
+      ],
+      "examples": "# Masuk diskpart\ndiskpart\n\n# List disk\nDISKPART> list disk\n\n# Pilih disk\nDISKPART> select disk 1\n\n# Buat partisi\nDISKPART> create partition primary\n\n# Format\nDISKPART> format fs=ntfs label=\"Data\" quick\n\n# Assign huruf drive\nDISKPART> assign letter=D\n\n# Shrink volume 10GB\nDISKPART> shrink desired=10240",
+      "warning": "diskpart bisa menghapus data secara permanen. Pastikan memilih disk/volume yang benar sebelum melakukan operasi destruktif!"
+    },
+    {
+      "name": "chkdsk",
+      "title": "chkdsk — Cek & Perbaiki Disk",
+      "description": "Memeriksa dan memperbaiki error pada filesystem disk.",
+      "syntax": "chkdsk [drive:] [opsi]",
+      "options": [
+        {"option": "/f", "description": "Perbaiki error pada disk"},
+        {"option": "/r", "description": "Cari bad sectors dan recover data"},
+        {"option": "/x", "description": "Paksa dismount volume terlebih dahulu"},
+        {"option": "/v", "description": "Tampilkan nama file yang diproses (NTFS)"},
+        {"option": "/scan", "description": "Scan online tanpa perlu dismount (NTFS)"},
+        {"option": "/b", "description": "Re-evaluasi bad clusters (dengan /r)"}
+      ],
+      "examples": "# Cek disk C\nchkdsk C:\n\n# Perbaiki error\nchkdsk C: /f\n\n# Cek dan perbaiki bad sectors\nchkdsk D: /r\n\n# Scan online\nchkdsk C: /scan\n\n# PowerShell\nRepair-Volume -DriveLetter C -Scan"
+    },
+    {
+      "name": "wmic-disk",
+      "title": "wmic / Get-Volume — Info Disk",
+      "description": "Menampilkan informasi disk, partisi, dan penggunaan storage.",
+      "syntax": "wmic diskdrive get [properti]\nGet-Volume",
+      "options": [
+        {"option": "wmic diskdrive list brief", "description": "Info ringkas disk fisik"},
+        {"option": "wmic logicaldisk get", "description": "Info logical disk (drive letters)"},
+        {"option": "Get-Volume", "description": "PowerShell: info semua volume"},
+        {"option": "Get-Disk", "description": "PowerShell: info semua disk fisik"},
+        {"option": "Get-Partition", "description": "PowerShell: info semua partisi"},
+        {"option": "Get-PhysicalDisk", "description": "PowerShell: info disk fisik detail"}
+      ],
+      "examples": "# Info disk fisik (CMD)\nwmic diskdrive list brief\n\n# Info drive letters\nwmic logicaldisk get name,size,freespace,filesystem\n\n# PowerShell: Volume info\nGet-Volume\n\n# PowerShell: Disk info\nGet-Disk | Format-Table\n\n# PowerShell: Partisi\nGet-Partition | Format-Table\n\n# PowerShell: Space usage\nGet-Volume | Select-Object DriveLetter, FileSystemLabel, @{N='SizeGB';E={[math]::Round($_.Size/1GB,2)}}, @{N='FreeGB';E={[math]::Round($_.SizeRemaining/1GB,2)}}"
+    },
+    {
+      "name": "fsutil",
+      "title": "fsutil — Utilitas Filesystem",
+      "description": "Tool lanjutan untuk mengelola filesystem NTFS dan FAT.",
+      "syntax": "fsutil [perintah] [opsi]",
+      "options": [
+        {"option": "fsutil volume diskfree C:", "description": "Info ruang disk"},
+        {"option": "fsutil file createnew", "description": "Buat file dengan ukuran tertentu"},
+        {"option": "fsutil hardlink create", "description": "Buat hard link"},
+        {"option": "fsutil behavior query", "description": "Query behavior filesystem"},
+        {"option": "fsutil usn queryjournal", "description": "Query USN journal"}
+      ],
+      "examples": "# Info ruang disk\nfsutil volume diskfree C:\n\n# Buat file 1GB (untuk testing)\nfsutil file createnew testfile.dat 1073741824\n\n# Buat hard link\nfsutil hardlink create link.txt original.txt\n\n# Cek status short name (8.3)\nfsutil behavior query disable8dot3"
+    }
+  ]
+}

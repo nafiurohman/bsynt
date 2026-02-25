@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://bsynt.beznproject.web.id/</loc>
+    <lastmod>2024-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://bsynt.beznproject.web.id/asisten</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Linux -->
+  <url><loc>https://bsynt.beznproject.web.id/docs/navigasi-dasar</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/file-management</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/file-viewing</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/file-permission</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/file-search</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/text-processing</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/redirection-pipe</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/compression</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/disk-storage</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/process-management</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/user-management</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/system-info</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/network</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/service-systemd</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/package-apt</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/package-dnf</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/package-pacman</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/shell-scripting</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/tips-shortcut</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <!-- MySQL -->
+  <url><loc>https://bsynt.beznproject.web.id/docs/mysql-database</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/mysql-table</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/mysql-crud</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/mysql-joins</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <!-- Git -->
+  <url><loc>https://bsynt.beznproject.web.id/docs/git-config</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/git-init-clone</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/git-branching</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <!-- Docker -->
+  <url><loc>https://bsynt.beznproject.web.id/docs/docker-container</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/docker-image</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/docker-compose</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <!-- Pentest -->
+  <url><loc>https://bsynt.beznproject.web.id/docs/pentest-networking</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/pentest-nmap</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://bsynt.beznproject.web.id/docs/pentest-metasploit</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+</urlset>

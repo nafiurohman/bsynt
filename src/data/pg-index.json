@@ -1,0 +1,61 @@
+{
+  "id": "pg-index",
+  "title": "Index & EXPLAIN",
+  "description": "Membuat dan mengelola index serta menganalisis query plan di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE INDEX",
+      "title": "Membuat Index",
+      "description": "Index mempercepat pencarian data pada kolom tertentu.",
+      "syntax": "CREATE [UNIQUE] INDEX [CONCURRENTLY] nama_index ON tabel [USING method] (kolom);",
+      "options": [
+        { "option": "UNIQUE", "description": "Index dengan constraint unik" },
+        { "option": "CONCURRENTLY", "description": "Membuat index tanpa mengunci tabel" },
+        { "option": "USING btree", "description": "B-tree (default, untuk =, <, >, BETWEEN)" },
+        { "option": "USING hash", "description": "Hash index (untuk = saja)" },
+        { "option": "USING gin", "description": "GIN (untuk JSONB, array, full-text)" },
+        { "option": "USING gist", "description": "GiST (untuk geometric, range, full-text)" },
+        { "option": "USING brin", "description": "BRIN (untuk data berurutan, sangat kecil)" }
+      ],
+      "examples": "CREATE INDEX idx_users_email ON users (email);\nCREATE UNIQUE INDEX idx_users_username ON users (username);\nCREATE INDEX CONCURRENTLY idx_orders_date ON orders (created_at);\n\n-- Partial index\nCREATE INDEX idx_active_users ON users (email) WHERE active = true;\n\n-- Expression index\nCREATE INDEX idx_users_lower_email ON users (LOWER(email));\n\n-- Multi-column index\nCREATE INDEX idx_orders_user_date ON orders (user_id, created_at DESC);\n\n-- GIN untuk JSONB\nCREATE INDEX idx_data_gin ON configs USING GIN (data);",
+      "notes": "Gunakan CONCURRENTLY di production untuk menghindari locking."
+    },
+    {
+      "name": "DROP INDEX",
+      "title": "Menghapus Index",
+      "description": "Menghapus index yang tidak diperlukan.",
+      "syntax": "DROP INDEX [CONCURRENTLY] [IF EXISTS] nama_index;",
+      "options": [],
+      "examples": "DROP INDEX idx_users_email;\nDROP INDEX CONCURRENTLY IF EXISTS idx_old_index;",
+      "notes": "Hapus index yang tidak terpakai untuk menghemat storage dan mempercepat write."
+    },
+    {
+      "name": "EXPLAIN",
+      "title": "Menganalisis Query Plan",
+      "description": "Menampilkan execution plan yang digunakan PostgreSQL untuk menjalankan query.",
+      "syntax": "EXPLAIN [ANALYZE] [VERBOSE] [BUFFERS] [FORMAT json] query;",
+      "options": [
+        { "option": "ANALYZE", "description": "Jalankan query dan tampilkan waktu aktual" },
+        { "option": "VERBOSE", "description": "Informasi lebih detail" },
+        { "option": "BUFFERS", "description": "Informasi I/O buffer" },
+        { "option": "FORMAT json/text/xml/yaml", "description": "Format output" },
+        { "option": "COSTS", "description": "Estimasi biaya" },
+        { "option": "TIMING", "description": "Waktu per node" }
+      ],
+      "examples": "EXPLAIN SELECT * FROM users WHERE email = 'test@mail.com';\n\nEXPLAIN ANALYZE SELECT * FROM orders WHERE user_id = 5;\n\nEXPLAIN (ANALYZE, BUFFERS, FORMAT json)\nSELECT u.name, COUNT(o.id)\nFROM users u JOIN orders o ON u.id = o.user_id\nGROUP BY u.name;",
+      "notes": "EXPLAIN ANALYZE benar-benar menjalankan query — hati-hati dengan DELETE/UPDATE!"
+    },
+    {
+      "name": "REINDEX",
+      "title": "Rebuild Index",
+      "description": "Membangun ulang index yang corrupt atau bloated.",
+      "syntax": "REINDEX [CONCURRENTLY] { INDEX | TABLE | SCHEMA | DATABASE } nama;",
+      "options": [
+        { "option": "CONCURRENTLY", "description": "Rebuild tanpa mengunci (PG 12+)" }
+      ],
+      "examples": "REINDEX INDEX idx_users_email;\nREINDEX TABLE users;\nREINDEX CONCURRENTLY TABLE orders;",
+      "notes": "REINDEX berguna setelah banyak DELETE/UPDATE yang menyebabkan index bloat."
+    }
+  ]
+}

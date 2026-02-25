@@ -1,0 +1,67 @@
+{
+  "id": "redis-string",
+  "title": "String Commands",
+  "description": "Operasi pada tipe data String di Redis — tipe paling dasar dan serbaguna.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "SET / GET",
+      "title": "Set dan Get Value",
+      "description": "Menyimpan dan mengambil string value.",
+      "syntax": "SET key value [EX seconds] [PX milliseconds] [NX|XX]\nGET key",
+      "options": [
+        { "option": "EX seconds", "description": "Set expiry dalam detik" },
+        { "option": "PX milliseconds", "description": "Set expiry dalam milidetik" },
+        { "option": "NX", "description": "Set hanya jika key belum ada" },
+        { "option": "XX", "description": "Set hanya jika key sudah ada" },
+        { "option": "KEEPTTL", "description": "Pertahankan TTL yang ada" },
+        { "option": "GET", "description": "Return old value (GETSET replacement)" }
+      ],
+      "examples": "SET name \"John Doe\"\nGET name\n\n# Dengan expiry\nSET session:123 \"user_data\" EX 3600\n\n# Set hanya jika belum ada (distributed lock)\nSET lock:resource1 \"owner123\" NX EX 30\n\n# Set dan get old value\nSET counter 10 GET  # return old value",
+      "notes": "SET NX EX adalah pattern umum untuk distributed locking."
+    },
+    {
+      "name": "MSET / MGET",
+      "title": "Multiple Set dan Get",
+      "description": "Set atau get beberapa key sekaligus dalam satu operasi.",
+      "syntax": "MSET key1 val1 key2 val2 ...\nMGET key1 key2 ...",
+      "options": [
+        { "option": "MSETNX", "description": "Set multiple hanya jika SEMUA key belum ada" }
+      ],
+      "examples": "MSET name \"John\" age \"30\" city \"Jakarta\"\nMGET name age city\nMSETNX key1 \"val1\" key2 \"val2\"",
+      "notes": "MSET/MGET lebih efisien daripada multiple SET/GET karena satu round-trip."
+    },
+    {
+      "name": "INCR / DECR",
+      "title": "Increment dan Decrement",
+      "description": "Menambah atau mengurangi nilai integer secara atomic.",
+      "syntax": "INCR key\nINCRBY key increment\nDECR key\nDECRBY key decrement\nINCRBYFLOAT key increment",
+      "options": [],
+      "examples": "SET counter 100\nINCR counter          # 101\nINCRBY counter 10     # 111\nDECR counter          # 110\nDECRBY counter 5      # 105\nINCRBYFLOAT price 1.5 # float increment",
+      "notes": "INCR atomic — aman digunakan oleh multiple client bersamaan (rate limiter, counter)."
+    },
+    {
+      "name": "APPEND / STRLEN / GETRANGE",
+      "title": "Manipulasi String",
+      "description": "Menambahkan, mengukur, dan mengambil sebagian string.",
+      "syntax": "APPEND key value\nSTRLEN key\nGETRANGE key start end\nSETRANGE key offset value",
+      "options": [],
+      "examples": "SET greeting \"Hello\"\nAPPEND greeting \" World\"  # \"Hello World\"\nSTRLEN greeting           # 11\nGETRANGE greeting 0 4     # \"Hello\"\nSETRANGE greeting 6 \"Redis\"  # \"Hello Redis\"",
+      "notes": "GETRANGE menggunakan index 0-based. -1 berarti karakter terakhir."
+    },
+    {
+      "name": "SETNX / SETEX / GETDEL",
+      "title": "Set Conditional & Utility",
+      "description": "Variasi SET dengan kondisi khusus.",
+      "syntax": "SETNX key value\nSETEX key seconds value\nGETDEL key\nGETEX key [EX seconds]",
+      "options": [
+        { "option": "SETNX", "description": "Set if Not eXists (deprecated, gunakan SET NX)" },
+        { "option": "SETEX", "description": "Set with Expiry (deprecated, gunakan SET EX)" },
+        { "option": "GETDEL", "description": "Get lalu hapus key" },
+        { "option": "GETEX", "description": "Get dan set/hapus expiry" }
+      ],
+      "examples": "SETNX lock \"owner\"     # Set hanya jika belum ada\nSETEX cache 300 \"data\" # Set dengan TTL 5 menit\nGETDEL temp_token      # Ambil dan hapus\nGETEX session EX 1800  # Get dan perpanjang TTL",
+      "notes": "Gunakan SET dengan opsi NX/EX sebagai ganti SETNX/SETEX (lebih modern dan atomic)."
+    }
+  ]
+}

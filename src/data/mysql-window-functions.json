@@ -1,0 +1,48 @@
+{
+  "id": "mysql-window-functions",
+  "title": "Window Functions",
+  "description": "Window functions (MySQL 8.0+) untuk analisis data lanjutan.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "ROW_NUMBER",
+      "title": "ROW_NUMBER",
+      "description": "Memberikan nomor urut unik ke setiap baris dalam partisi.",
+      "syntax": "ROW_NUMBER() OVER ([PARTITION BY col] ORDER BY col)",
+      "options": [],
+      "examples": "SELECT ROW_NUMBER() OVER (ORDER BY created_at DESC) AS row_num, username, created_at\nFROM users;\n\n-- Nomor urut per kategori\nSELECT ROW_NUMBER() OVER (PARTITION BY category_id ORDER BY price DESC) AS rank_in_cat,\n  name, category_id, price\nFROM products;"
+    },
+    {
+      "name": "RANK-DENSE_RANK",
+      "title": "RANK / DENSE_RANK",
+      "description": "Memberikan ranking (dengan atau tanpa gap).",
+      "syntax": "RANK() / DENSE_RANK() OVER ([PARTITION BY col] ORDER BY col)",
+      "options": [],
+      "examples": "-- RANK: 1, 2, 2, 4 (ada gap)\n-- DENSE_RANK: 1, 2, 2, 3 (tanpa gap)\nSELECT name, price,\n  RANK() OVER (ORDER BY price DESC) AS price_rank,\n  DENSE_RANK() OVER (ORDER BY price DESC) AS dense_rank\nFROM products;\n\n-- Top 3 produk per kategori\nSELECT * FROM (\n  SELECT name, category_id, price,\n    DENSE_RANK() OVER (PARTITION BY category_id ORDER BY price DESC) AS rnk\n  FROM products\n) ranked WHERE rnk <= 3;"
+    },
+    {
+      "name": "LAG-LEAD",
+      "title": "LAG / LEAD",
+      "description": "Mengakses baris sebelum/sesudah baris saat ini.",
+      "syntax": "LAG(col, offset, default) / LEAD(col, offset, default) OVER (...)",
+      "options": [],
+      "examples": "-- Perbandingan dengan bulan sebelumnya\nSELECT month, revenue,\n  LAG(revenue, 1) OVER (ORDER BY month) AS prev_month,\n  revenue - LAG(revenue, 1) OVER (ORDER BY month) AS growth\nFROM monthly_sales;\n\n-- Selisih waktu antar order\nSELECT id, created_at,\n  LEAD(created_at) OVER (PARTITION BY user_id ORDER BY created_at) AS next_order,\n  TIMESTAMPDIFF(DAY, created_at, LEAD(created_at) OVER (PARTITION BY user_id ORDER BY created_at)) AS days_between\nFROM orders;"
+    },
+    {
+      "name": "SUM-OVER",
+      "title": "Running Total (SUM OVER)",
+      "description": "Menghitung running total / cumulative sum.",
+      "syntax": "SUM(col) OVER (ORDER BY col ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
+      "options": [],
+      "examples": "-- Running total revenue\nSELECT date, revenue,\n  SUM(revenue) OVER (ORDER BY date) AS running_total\nFROM daily_sales;\n\n-- Moving average 7 hari\nSELECT date, revenue,\n  AVG(revenue) OVER (ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS moving_avg_7d\nFROM daily_sales;"
+    },
+    {
+      "name": "NTILE",
+      "title": "NTILE / PERCENT_RANK",
+      "description": "Membagi data ke dalam n bucket atau menghitung persentil.",
+      "syntax": "NTILE(n) OVER (ORDER BY col) / PERCENT_RANK() OVER (ORDER BY col)",
+      "options": [],
+      "examples": "-- Bagi customer ke 4 quartile berdasarkan spending\nSELECT username, total_spent,\n  NTILE(4) OVER (ORDER BY total_spent DESC) AS quartile\nFROM (\n  SELECT user_id, u.username, SUM(total) AS total_spent\n  FROM orders o JOIN users u ON o.user_id = u.id\n  GROUP BY user_id\n) spending;\n\nSELECT name, price,\n  PERCENT_RANK() OVER (ORDER BY price) AS pct_rank\nFROM products;"
+    }
+  ]
+}

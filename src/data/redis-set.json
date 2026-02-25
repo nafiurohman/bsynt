@@ -1,0 +1,76 @@
+{
+  "id": "redis-set",
+  "title": "Set & Sorted Set",
+  "description": "Operasi pada tipe data Set (unordered unique) dan Sorted Set (ordered with score) di Redis.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "SADD / SMEMBERS / SISMEMBER",
+      "title": "Set: Menambah dan Melihat Member",
+      "description": "Operasi dasar pada Set — kumpulan nilai unik tanpa urutan.",
+      "syntax": "SADD key member [member ...]\nSMEMBERS key\nSISMEMBER key member",
+      "options": [
+        { "option": "SADD", "description": "Tambah member (diabaikan jika sudah ada)" },
+        { "option": "SMEMBERS", "description": "Semua member" },
+        { "option": "SISMEMBER", "description": "Cek apakah member ada (O(1))" },
+        { "option": "SCARD", "description": "Jumlah member" },
+        { "option": "SREM", "description": "Hapus member" },
+        { "option": "SPOP", "description": "Hapus dan return member random" },
+        { "option": "SRANDMEMBER", "description": "Return member random tanpa hapus" }
+      ],
+      "examples": "SADD tags:article:1 \"redis\" \"nosql\" \"database\"\nSMEMBERS tags:article:1\nSISMEMBER tags:article:1 \"redis\"  # 1\nSCARD tags:article:1              # 3\nSREM tags:article:1 \"nosql\"\nSPOP tags:article:1\nSRANDMEMBER tags:article:1 2      # 2 random members",
+      "notes": "Set cocok untuk tags, unique visitors, online users, dll."
+    },
+    {
+      "name": "SUNION / SINTER / SDIFF",
+      "title": "Set: Operasi Himpunan",
+      "description": "Operasi matematika himpunan: union, intersection, difference.",
+      "syntax": "SUNION key [key ...]\nSINTER key [key ...]\nSDIFF key [key ...]",
+      "options": [
+        { "option": "SUNION", "description": "Gabungan (A ∪ B)" },
+        { "option": "SINTER", "description": "Irisan (A ∩ B)" },
+        { "option": "SDIFF", "description": "Selisih (A - B)" },
+        { "option": "SUNIONSTORE dest", "description": "Simpan hasil union" },
+        { "option": "SINTERSTORE dest", "description": "Simpan hasil intersection" },
+        { "option": "SDIFFSTORE dest", "description": "Simpan hasil difference" }
+      ],
+      "examples": "SADD user:1:skills \"python\" \"javascript\" \"redis\"\nSADD user:2:skills \"javascript\" \"golang\" \"redis\"\n\nSUNION user:1:skills user:2:skills   # semua skills\nSINTER user:1:skills user:2:skills   # skills bersama\nSDIFF user:1:skills user:2:skills    # skills unik user:1\n\nSINTERSTORE common_skills user:1:skills user:2:skills",
+      "notes": "Operasi himpunan sangat berguna untuk mutual friends, common interests, dll."
+    },
+    {
+      "name": "ZADD / ZRANGE / ZSCORE",
+      "title": "Sorted Set: Operasi Dasar",
+      "description": "Sorted Set — set dengan score untuk ordering. Cocok untuk leaderboard, ranking.",
+      "syntax": "ZADD key [NX|XX] [GT|LT] score member [score member ...]\nZRANGE key min max [BYSCORE|BYLEX] [LIMIT offset count]\nZSCORE key member",
+      "options": [
+        { "option": "ZADD", "description": "Tambah member dengan score" },
+        { "option": "NX", "description": "Hanya jika member belum ada" },
+        { "option": "XX", "description": "Hanya jika member sudah ada" },
+        { "option": "GT", "description": "Update hanya jika score baru > score lama" },
+        { "option": "ZRANGE", "description": "Ambil member berdasarkan range" },
+        { "option": "ZREVRANGE", "description": "Ambil member terbalik (skor tertinggi)" },
+        { "option": "ZSCORE", "description": "Lihat score member" },
+        { "option": "ZRANK", "description": "Ranking member (dari terendah)" },
+        { "option": "ZREVRANK", "description": "Ranking member (dari tertinggi)" },
+        { "option": "ZCARD", "description": "Jumlah member" }
+      ],
+      "examples": "# Leaderboard\nZADD leaderboard 100 \"Alice\" 85 \"Bob\" 95 \"Charlie\"\nZRANGE leaderboard 0 -1 WITHSCORES          # ascending\nZRANGE leaderboard 0 -1 REV WITHSCORES      # descending\nZSCORE leaderboard \"Alice\"                   # 100\nZRANK leaderboard \"Alice\"                    # ranking\nZREVRANK leaderboard \"Alice\"                 # 0 (top)\n\n# Update score\nZADD leaderboard GT 110 \"Bob\"                # update hanya jika lebih tinggi\nZINCRBY leaderboard 5 \"Charlie\"              # increment score",
+      "notes": "Sorted Set sangat efisien untuk leaderboard, rate limiting, dan priority queue."
+    },
+    {
+      "name": "ZRANGEBYSCORE / ZREM",
+      "title": "Sorted Set: Filter dan Hapus",
+      "description": "Query berdasarkan score range dan menghapus member.",
+      "syntax": "ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]\nZREM key member [member ...]\nZREMRANGEBYSCORE key min max",
+      "options": [
+        { "option": "ZRANGEBYSCORE", "description": "Member dalam range score" },
+        { "option": "ZREM", "description": "Hapus member tertentu" },
+        { "option": "ZREMRANGEBYSCORE", "description": "Hapus berdasarkan score range" },
+        { "option": "ZREMRANGEBYRANK", "description": "Hapus berdasarkan rank range" },
+        { "option": "ZCOUNT", "description": "Hitung member dalam score range" }
+      ],
+      "examples": "ZRANGEBYSCORE leaderboard 80 100 WITHSCORES\nZRANGEBYSCORE leaderboard -inf +inf  # semua\nZCOUNT leaderboard 90 100\nZREM leaderboard \"Bob\"\nZREMRANGEBYSCORE leaderboard 0 50   # hapus score 0-50\n\n# Pattern: Sliding window rate limiter\nZADD requests:user:1 timestamp1 req1\nZREMRANGEBYSCORE requests:user:1 0 (now-60)\nZCARD requests:user:1  # request dalam 60 detik terakhir",
+      "notes": "-inf dan +inf digunakan untuk min/max tanpa batas."
+    }
+  ]
+}

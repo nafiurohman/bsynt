@@ -1,0 +1,76 @@
+{
+  "id": "mac-file-permission",
+  "title": "File Permission",
+  "description": "Perintah untuk mengelola permission dan atribut file di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "chmod",
+      "title": "Change Mode",
+      "description": "Mengubah permission file/direktori.",
+      "syntax": "chmod [opsi] mode file...",
+      "options": [
+        { "option": "-R", "description": "Rekursif (untuk direktori)" },
+        { "option": "-v", "description": "Verbose" },
+        { "option": "u+x", "description": "Tambah execute untuk user" },
+        { "option": "755", "description": "rwxr-xr-x (oktal)" },
+        { "option": "644", "description": "rw-r--r-- (oktal)" }
+      ],
+      "examples": "chmod +x script.sh\nchmod 755 app\nchmod -R 644 ~/Documents/public/\nchmod u+rw,go-w file.txt"
+    },
+    {
+      "name": "chown",
+      "title": "Change Owner",
+      "description": "Mengubah pemilik file/direktori.",
+      "syntax": "chown [opsi] user[:group] file...",
+      "options": [
+        { "option": "-R", "description": "Rekursif" },
+        { "option": "-v", "description": "Verbose" }
+      ],
+      "examples": "sudo chown user file.txt\nsudo chown user:staff folder/\nsudo chown -R $(whoami) ~/Projects/",
+      "notes": "Membutuhkan sudo untuk mengubah ownership."
+    },
+    {
+      "name": "xattr",
+      "title": "Extended Attributes (macOS)",
+      "description": "Mengelola extended attributes (xattr) file di macOS.",
+      "syntax": "xattr [opsi] file...",
+      "options": [
+        { "option": "-l", "description": "List semua xattr dengan nilai" },
+        { "option": "-d [attr]", "description": "Hapus atribut tertentu" },
+        { "option": "-c", "description": "Hapus semua xattr" },
+        { "option": "-r", "description": "Rekursif" },
+        { "option": "-w [attr] [value]", "description": "Set atribut" }
+      ],
+      "examples": "xattr file.zip\nxattr -l app.dmg\nxattr -d com.apple.quarantine app.zip\nxattr -cr ~/Downloads/app.app",
+      "notes": "Sering digunakan untuk menghapus quarantine flag dari file yang diunduh: `xattr -d com.apple.quarantine`.",
+      "warning": "Hati-hati menghapus quarantine dari file yang tidak terpercaya."
+    },
+    {
+      "name": "umask",
+      "title": "User Mask",
+      "description": "Mengatur default permission untuk file baru.",
+      "syntax": "umask [mode]",
+      "options": [
+        { "option": "022", "description": "Default: file 644, dir 755" },
+        { "option": "077", "description": "Ketat: file 600, dir 700" }
+      ],
+      "examples": "umask\numask 022\numask 077",
+      "notes": "Tambahkan ke ~/.zshrc agar permanen."
+    },
+    {
+      "name": "chflags",
+      "title": "Change Flags (macOS)",
+      "description": "Mengubah file flags khusus macOS.",
+      "syntax": "chflags [opsi] flags file...",
+      "options": [
+        { "option": "hidden", "description": "Sembunyikan file di Finder" },
+        { "option": "nohidden", "description": "Tampilkan kembali di Finder" },
+        { "option": "uchg", "description": "Set user immutable (tidak bisa diubah)" },
+        { "option": "nouchg", "description": "Hapus user immutable" }
+      ],
+      "examples": "chflags hidden secret_folder\nchflags nohidden secret_folder\nchflags uchg important.doc\nsudo chflags nouchg important.doc",
+      "notes": "Fitur khusus macOS/BSD, tidak ada di Linux."
+    }
+  ]
+}

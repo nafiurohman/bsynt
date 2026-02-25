@@ -1,0 +1,137 @@
+{
+  "id": "process-management",
+  "title": "Manajemen Proses",
+  "description": "Perintah-perintah untuk melihat, mengontrol, dan menghentikan proses yang berjalan di sistem Linux.",
+  "commands": [
+    {
+      "name": "ps",
+      "title": "ps — Process Status",
+      "description": "Menampilkan informasi snapshot tentang proses yang sedang berjalan di sistem.",
+      "syntax": "ps [OPSI]",
+      "options": [
+        { "option": "aux", "description": "Menampilkan semua proses dengan detail lengkap (BSD style)" },
+        { "option": "-ef", "description": "Menampilkan semua proses dalam format full (POSIX style)" },
+        { "option": "-u USER", "description": "Menampilkan proses milik user tertentu" },
+        { "option": "-p PID", "description": "Menampilkan informasi proses dengan PID tertentu" },
+        { "option": "--sort=KOLOM", "description": "Mengurutkan output berdasarkan kolom" },
+        { "option": "-o FORMAT", "description": "Mengatur kolom output kustom" },
+        { "option": "--forest", "description": "Menampilkan dalam format tree (hirarki proses)" },
+        { "option": "-C NAMA", "description": "Mencari proses berdasarkan nama command" }
+      ],
+      "examples": "# Menampilkan semua proses\nps aux\n\n# Proses milik user tertentu\nps -u root\n\n# Format tree\nps aux --forest\n\n# Mengurutkan berdasarkan penggunaan memori\nps aux --sort=-%mem | head -10\n\n# Mengurutkan berdasarkan CPU\nps aux --sort=-%cpu | head -10\n\n# Format kustom\nps -eo pid,ppid,user,%mem,%cpu,comm --sort=-%mem | head\n\n# Mencari proses tertentu\nps aux | grep nginx"
+    },
+    {
+      "name": "top",
+      "title": "top — Task Manager Terminal",
+      "description": "Menampilkan proses secara real-time dan interaktif, mirip Task Manager. Menunjukkan penggunaan CPU, memori, dan informasi sistem.",
+      "syntax": "top [OPSI]",
+      "options": [
+        { "option": "-d N", "description": "Mengatur interval refresh dalam detik" },
+        { "option": "-u USER", "description": "Menampilkan proses milik user tertentu" },
+        { "option": "-p PID", "description": "Memantau proses tertentu saja" },
+        { "option": "-n N", "description": "Menjalankan N kali iterasi lalu keluar" },
+        { "option": "-b", "description": "Mode batch (untuk piping atau logging)" },
+        { "option": "k (interaktif)", "description": "Kill proses" },
+        { "option": "M (interaktif)", "description": "Urutkan berdasarkan memori" },
+        { "option": "P (interaktif)", "description": "Urutkan berdasarkan CPU" },
+        { "option": "q (interaktif)", "description": "Keluar dari top" }
+      ],
+      "examples": "# Menjalankan top\ntop\n\n# Refresh setiap 5 detik\ntop -d 5\n\n# Memantau user tertentu\ntop -u www-data\n\n# Mode batch untuk logging\ntop -bn1 > process_snapshot.txt"
+    },
+    {
+      "name": "htop",
+      "title": "htop — Interactive Process Viewer",
+      "description": "Versi interaktif dan lebih user-friendly dari top, dengan tampilan berwarna dan navigasi mouse.",
+      "syntax": "htop [OPSI]",
+      "options": [
+        { "option": "-d N", "description": "Delay refresh dalam puluhan detik (10 = 1 detik)" },
+        { "option": "-u USER", "description": "Menampilkan proses milik user tertentu" },
+        { "option": "-p PID", "description": "Memantau proses tertentu" },
+        { "option": "-t", "description": "Mode tree view" },
+        { "option": "-s KOLOM", "description": "Mengurutkan berdasarkan kolom" },
+        { "option": "F2 (interaktif)", "description": "Setup / Konfigurasi tampilan" },
+        { "option": "F3 (interaktif)", "description": "Pencarian proses" },
+        { "option": "F9 (interaktif)", "description": "Kill proses" },
+        { "option": "F5 (interaktif)", "description": "Toggle tree view" }
+      ],
+      "examples": "# Menjalankan htop\nhtop\n\n# Mode tree\nhtop -t\n\n# User tertentu\nhtop -u root\n\n# Mengurutkan berdasarkan memori\nhtop -s PERCENT_MEM",
+      "notes": "htop mungkin perlu diinstal terlebih dahulu: sudo apt install htop"
+    },
+    {
+      "name": "kill",
+      "title": "kill — Mengirim Sinyal ke Proses",
+      "description": "Mengirim sinyal ke proses berdasarkan PID. Biasanya digunakan untuk menghentikan proses.",
+      "syntax": "kill [OPSI] PID...",
+      "options": [
+        { "option": "-l", "description": "Menampilkan daftar semua sinyal yang tersedia" },
+        { "option": "-9 / -SIGKILL", "description": "Menghentikan proses secara paksa (tidak bisa di-catch)" },
+        { "option": "-15 / -SIGTERM", "description": "Menghentikan proses dengan baik (default, bisa di-catch)" },
+        { "option": "-1 / -SIGHUP", "description": "Hangup — sering digunakan untuk reload konfigurasi" },
+        { "option": "-2 / -SIGINT", "description": "Interrupt — sama seperti Ctrl+C" },
+        { "option": "-19 / -SIGSTOP", "description": "Menghentikan sementara (pause) proses" },
+        { "option": "-18 / -SIGCONT", "description": "Melanjutkan proses yang di-pause" }
+      ],
+      "examples": "# Menghentikan proses (SIGTERM)\nkill 1234\n\n# Menghentikan proses secara paksa\nkill -9 1234\n\n# Reload konfigurasi service\nkill -HUP $(pidof nginx)\n\n# Menghentikan beberapa proses\nkill 1234 5678 9012\n\n# Menampilkan daftar sinyal\nkill -l"
+    },
+    {
+      "name": "killall",
+      "title": "killall — Kill Berdasarkan Nama",
+      "description": "Mengirim sinyal ke semua proses yang cocok dengan nama yang diberikan.",
+      "syntax": "killall [OPSI] NAMA",
+      "options": [
+        { "option": "-i", "description": "Meminta konfirmasi sebelum kill" },
+        { "option": "-I", "description": "Pencarian nama case-insensitive" },
+        { "option": "-v", "description": "Menampilkan proses yang di-kill (verbose)" },
+        { "option": "-u USER", "description": "Kill proses milik user tertentu" },
+        { "option": "-w", "description": "Menunggu sampai semua proses benar-benar berhenti" }
+      ],
+      "examples": "# Kill semua proses Firefox\nkillall firefox\n\n# Kill paksa\nkillall -9 hang_process\n\n# Dengan konfirmasi\nkillall -i python3\n\n# Kill proses milik user tertentu\nkillall -u user python3"
+    },
+    {
+      "name": "nice",
+      "title": "nice — Mengatur Prioritas Proses",
+      "description": "Menjalankan perintah dengan prioritas (niceness) tertentu. Nilai nice berkisar dari -20 (prioritas tertinggi) hingga 19 (prioritas terendah).",
+      "syntax": "nice [OPSI] [COMMAND]",
+      "options": [
+        { "option": "-n N", "description": "Mengatur nilai nice (default: 10)" }
+      ],
+      "examples": "# Menjalankan dengan prioritas rendah\nnice -n 19 tar -czvf backup.tar.gz /home/\n\n# Menjalankan dengan prioritas tinggi (perlu root)\nsudo nice -n -10 /usr/bin/proses-penting\n\n# Mengubah prioritas proses yang sudah berjalan\nrenice -n 15 -p 1234"
+    },
+    {
+      "name": "bg",
+      "title": "bg — Background Job",
+      "description": "Melanjutkan eksekusi job yang di-suspend di background.",
+      "syntax": "bg [JOB_ID]",
+      "options": [
+        { "option": "%N", "description": "Menentukan job berdasarkan nomor job" },
+        { "option": "%+", "description": "Job terakhir (default)" }
+      ],
+      "examples": "# Suspend proses dengan Ctrl+Z, lalu jalankan di background\n$ tar -czvf backup.tar.gz /home/user/\n^Z\n[1]+  Stopped\n$ bg\n[1]+ tar -czvf backup.tar.gz /home/user/ &"
+    },
+    {
+      "name": "fg",
+      "title": "fg — Foreground Job",
+      "description": "Membawa job yang berjalan di background ke foreground.",
+      "syntax": "fg [JOB_ID]",
+      "options": [
+        { "option": "%N", "description": "Menentukan job berdasarkan nomor job" },
+        { "option": "%+", "description": "Job terakhir (default)" }
+      ],
+      "examples": "# Membawa job ke foreground\nfg %1\n\n# Job terakhir\nfg"
+    },
+    {
+      "name": "jobs",
+      "title": "jobs — Daftar Job",
+      "description": "Menampilkan daftar job yang dikelola oleh shell saat ini.",
+      "syntax": "jobs [OPSI]",
+      "options": [
+        { "option": "-l", "description": "Menampilkan PID setiap job" },
+        { "option": "-n", "description": "Menampilkan hanya job yang statusnya berubah" },
+        { "option": "-p", "description": "Menampilkan hanya PID" },
+        { "option": "-r", "description": "Menampilkan hanya job yang berjalan" },
+        { "option": "-s", "description": "Menampilkan hanya job yang di-stop" }
+      ],
+      "examples": "# Menampilkan semua job\njobs\n[1]+  Running    tar -czvf backup.tar.gz /home/ &\n[2]-  Stopped    vim file.txt\n\n# Dengan PID\njobs -l"
+    }
+  ]
+}

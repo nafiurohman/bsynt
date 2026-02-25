@@ -1,0 +1,51 @@
+{
+  "id": "docker-network",
+  "title": "Network",
+  "description": "Mengelola jaringan Docker untuk komunikasi antar container.",
+  "badge": "Docker",
+  "commands": [
+    {
+      "name": "docker network create",
+      "title": "Membuat Network",
+      "description": "Membuat user-defined network untuk komunikasi antar container.",
+      "syntax": "docker network create [opsi] <nama>",
+      "options": [
+        { "option": "--driver / -d", "description": "Driver: bridge (default), overlay, host, none" },
+        { "option": "--subnet", "description": "Menentukan subnet" },
+        { "option": "--gateway", "description": "Menentukan gateway" },
+        { "option": "--internal", "description": "Network tanpa akses internet" }
+      ],
+      "examples": "docker network create mynet\ndocker network create --driver bridge --subnet 172.20.0.0/16 mynet\n\n# Container di network yang sama bisa komunikasi via nama\ndocker run -d --name web --network mynet nginx\ndocker run -d --name db --network mynet postgres\n# 'web' bisa akses 'db' dengan: db:5432",
+      "notes": "User-defined bridge network mendukung DNS otomatis antar container."
+    },
+    {
+      "name": "docker network ls / inspect",
+      "title": "Melihat Network",
+      "description": "Menampilkan daftar dan detail network.",
+      "syntax": "docker network ls\ndocker network inspect <network>",
+      "options": [],
+      "examples": "docker network ls\ndocker network inspect mynet\ndocker network inspect bridge",
+      "notes": "3 network default: bridge, host, none."
+    },
+    {
+      "name": "docker network connect / disconnect",
+      "title": "Menghubungkan Container ke Network",
+      "description": "Menambahkan atau menghapus container dari network.",
+      "syntax": "docker network connect <network> <container>\ndocker network disconnect <network> <container>",
+      "options": [
+        { "option": "--alias", "description": "DNS alias untuk container di network" }
+      ],
+      "examples": "docker network connect mynet web\ndocker network disconnect bridge web\ndocker network connect --alias webserver mynet web",
+      "notes": "Satu container bisa terhubung ke beberapa network sekaligus."
+    },
+    {
+      "name": "docker network rm / prune",
+      "title": "Menghapus Network",
+      "description": "Menghapus network yang tidak terpakai.",
+      "syntax": "docker network rm <network>\ndocker network prune",
+      "options": [],
+      "examples": "docker network rm mynet\ndocker network prune",
+      "notes": "Tidak bisa menghapus network yang masih digunakan container."
+    }
+  ]
+}

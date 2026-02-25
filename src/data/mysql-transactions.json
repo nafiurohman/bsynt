@@ -1,0 +1,71 @@
+{
+  "id": "mysql-transactions",
+  "title": "Transactions",
+  "description": "Mengelola transaksi dan locking di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "START TRANSACTION",
+      "title": "Start Transaction",
+      "description": "Memulai blok transaksi.",
+      "syntax": "START TRANSACTION; / BEGIN;",
+      "options": [
+        { "option": "START TRANSACTION", "description": "Mulai transaksi baru" },
+        { "option": "BEGIN", "description": "Sinonim START TRANSACTION" },
+        { "option": "START TRANSACTION READ ONLY", "description": "Transaksi read-only" }
+      ],
+      "examples": "START TRANSACTION;\nUPDATE accounts SET balance = balance - 100000 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100000 WHERE id = 2;\nCOMMIT;\n\n-- Dengan error handling di procedure\nDELIMITER //\nCREATE PROCEDURE Transfer(IN from_id INT, IN to_id INT, IN amount DECIMAL(12,2))\nBEGIN\n  DECLARE EXIT HANDLER FOR SQLEXCEPTION\n  BEGIN\n    ROLLBACK;\n    RESIGNAL;\n  END;\n  \n  START TRANSACTION;\n  UPDATE accounts SET balance = balance - amount WHERE id = from_id;\n  UPDATE accounts SET balance = balance + amount WHERE id = to_id;\n  COMMIT;\nEND //\nDELIMITER ;",
+      "notes": "Transaksi memastikan semua operasi berhasil atau semua dibatalkan (ACID)."
+    },
+    {
+      "name": "COMMIT",
+      "title": "Commit",
+      "description": "Menyimpan perubahan transaksi secara permanen.",
+      "syntax": "COMMIT;",
+      "options": [],
+      "examples": "START TRANSACTION;\nINSERT INTO orders (user_id, total) VALUES (1, 500000);\nSET @order_id = LAST_INSERT_ID();\nINSERT INTO order_items (order_id, product_id, qty) VALUES (@order_id, 5, 2);\nCOMMIT;"
+    },
+    {
+      "name": "ROLLBACK",
+      "title": "Rollback",
+      "description": "Membatalkan semua perubahan dalam transaksi.",
+      "syntax": "ROLLBACK [TO SAVEPOINT nama];",
+      "options": [],
+      "examples": "START TRANSACTION;\nDELETE FROM users WHERE id = 1;\n-- Oops! Salah user\nROLLBACK;"
+    },
+    {
+      "name": "SAVEPOINT",
+      "title": "Savepoint",
+      "description": "Membuat titik simpan dalam transaksi.",
+      "syntax": "SAVEPOINT nama; / ROLLBACK TO SAVEPOINT nama; / RELEASE SAVEPOINT nama;",
+      "options": [],
+      "examples": "START TRANSACTION;\nINSERT INTO orders (user_id, total) VALUES (1, 500000);\nSAVEPOINT after_order;\nINSERT INTO payments (order_id, amount) VALUES (LAST_INSERT_ID(), 500000);\n-- Jika payment gagal, rollback ke savepoint\nROLLBACK TO SAVEPOINT after_order;\nCOMMIT;"
+    },
+    {
+      "name": "LOCK TABLES",
+      "title": "Lock Tables",
+      "description": "Mengunci tabel untuk akses eksklusif.",
+      "syntax": "LOCK TABLES tabel [READ|WRITE]; / UNLOCK TABLES;",
+      "options": [
+        { "option": "READ", "description": "Lock baca (banyak reader)" },
+        { "option": "WRITE", "description": "Lock tulis (eksklusif)" }
+      ],
+      "examples": "LOCK TABLES products WRITE;\nUPDATE products SET stock = stock - 1 WHERE id = 5;\nUNLOCK TABLES;\n\n-- Row-level locking (lebih baik)\nSELECT * FROM products WHERE id = 5 FOR UPDATE;\nSELECT * FROM products WHERE id = 5 LOCK IN SHARE MODE;",
+      "notes": "Lebih baik gunakan row-level locking (FOR UPDATE) daripada LOCK TABLES."
+    },
+    {
+      "name": "ISOLATION LEVELS",
+      "title": "Isolation Levels",
+      "description": "Mengatur level isolasi transaksi.",
+      "syntax": "SET TRANSACTION ISOLATION LEVEL level;",
+      "options": [
+        { "option": "READ UNCOMMITTED", "description": "Paling rendah, dirty read" },
+        { "option": "READ COMMITTED", "description": "Tidak ada dirty read" },
+        { "option": "REPEATABLE READ", "description": "Default MySQL, snapshot konsisten" },
+        { "option": "SERIALIZABLE", "description": "Paling ketat, paling lambat" }
+      ],
+      "examples": "SET TRANSACTION ISOLATION LEVEL READ COMMITTED;\nSELECT @@transaction_isolation;\nSET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;",
+      "notes": "Default MySQL: REPEATABLE READ. Untuk kebanyakan aplikasi ini sudah cukup."
+    }
+  ]
+}

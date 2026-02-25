@@ -1,0 +1,37 @@
+{
+  "id": "git-tag",
+  "title": "Tag",
+  "description": "Menandai commit penting dengan tag, biasanya untuk versioning release.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git tag",
+      "title": "Membuat dan Melihat Tag",
+      "description": "Tag menandai commit tertentu, biasanya digunakan untuk version release.",
+      "syntax": "git tag [opsi] [nama-tag] [commit]",
+      "options": [
+        { "option": "(tanpa argumen)", "description": "Tampilkan semua tag" },
+        { "option": "-l \"pattern\"", "description": "Filter tag dengan pattern" },
+        { "option": "-a nama -m \"pesan\"", "description": "Annotated tag dengan pesan" },
+        { "option": "nama (tanpa -a)", "description": "Lightweight tag" },
+        { "option": "-d nama", "description": "Hapus tag lokal" },
+        { "option": "-n", "description": "Tampilkan anotasi tag" }
+      ],
+      "examples": "git tag\ngit tag -l \"v1.*\"\ngit tag v1.0\ngit tag -a v1.0 -m \"Release versi 1.0\"\ngit tag -a v0.9 abc1234 -m \"Tag pada commit lama\"\ngit tag -d v1.0",
+      "notes": "Annotated tag (-a) menyimpan metadata (author, date, message). Gunakan untuk release."
+    },
+    {
+      "name": "git push --tags",
+      "title": "Push Tag ke Remote",
+      "description": "Mengirim tag ke remote repository.",
+      "syntax": "git push origin <tag> | git push --tags",
+      "options": [
+        { "option": "origin v1.0", "description": "Push tag tertentu" },
+        { "option": "--tags", "description": "Push semua tag" },
+        { "option": "--delete origin v1.0", "description": "Hapus tag di remote" }
+      ],
+      "examples": "git push origin v1.0\ngit push --tags\ngit push origin --delete v1.0\ngit push origin :refs/tags/v1.0  # alternatif hapus remote tag",
+      "notes": "git push biasa TIDAK mengirim tag — harus eksplisit."
+    }
+  ]
+}

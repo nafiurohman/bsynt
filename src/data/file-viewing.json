@@ -1,0 +1,122 @@
+{
+  "id": "file-viewing",
+  "title": "Melihat Isi File",
+  "description": "Perintah-perintah untuk menampilkan, menelusuri, dan menganalisis isi file langsung dari terminal Linux.",
+  "commands": [
+    {
+      "name": "cat",
+      "title": "cat — Menggabungkan & Menampilkan File",
+      "description": "Menampilkan isi file ke standard output. Bisa juga digunakan untuk menggabungkan beberapa file.",
+      "syntax": "cat [OPSI] [FILE]...",
+      "options": [
+        { "option": "-n", "description": "Menampilkan nomor baris pada setiap baris output" },
+        { "option": "-b", "description": "Menampilkan nomor baris hanya pada baris yang tidak kosong" },
+        { "option": "-s", "description": "Menghilangkan baris kosong berulang (squeeze blank)" },
+        { "option": "-E", "description": "Menampilkan tanda $ di akhir setiap baris" },
+        { "option": "-T", "description": "Menampilkan karakter tab sebagai ^I" },
+        { "option": "-A", "description": "Menampilkan semua karakter non-printing (setara -vET)" }
+      ],
+      "examples": "# Menampilkan isi file\ncat file.txt\n\n# Menampilkan dengan nomor baris\ncat -n file.txt\n\n# Menggabungkan beberapa file\ncat file1.txt file2.txt > gabungan.txt\n\n# Membuat file baru dengan heredoc\ncat << EOF > config.txt\nserver=localhost\nport=8080\nEOF"
+    },
+    {
+      "name": "less",
+      "title": "less — Penjelajah Halaman",
+      "description": "Menampilkan isi file halaman per halaman dengan navigasi yang fleksibel. Lebih baik dari more karena mendukung navigasi maju-mundur.",
+      "syntax": "less [OPSI] FILE",
+      "options": [
+        { "option": "-N", "description": "Menampilkan nomor baris" },
+        { "option": "-S", "description": "Memotong baris panjang (tidak wrap)" },
+        { "option": "-i", "description": "Pencarian case-insensitive" },
+        { "option": "-F", "description": "Keluar otomatis jika file muat dalam satu layar" },
+        { "option": "/pola", "description": "Mencari teks maju (forward search)" },
+        { "option": "?pola", "description": "Mencari teks mundur (backward search)" },
+        { "option": "n / N", "description": "Lanjut / mundur ke hasil pencarian berikutnya" },
+        { "option": "q", "description": "Keluar dari less" },
+        { "option": "Space / b", "description": "Halaman maju / mundur" },
+        { "option": "g / G", "description": "Pindah ke awal / akhir file" }
+      ],
+      "examples": "# Melihat isi file dengan paging\nless file.txt\n\n# Menampilkan dengan nomor baris\nless -N file.txt\n\n# Melihat output perintah dengan paging\nls -la /etc | less\n\n# Melihat log real-time\nless +F /var/log/syslog"
+    },
+    {
+      "name": "more",
+      "title": "more — Pager Sederhana",
+      "description": "Menampilkan isi file halaman per halaman (hanya maju). Lebih sederhana dari less tetapi tersedia di hampir semua sistem.",
+      "syntax": "more [OPSI] FILE",
+      "options": [
+        { "option": "-d", "description": "Menampilkan pesan bantuan di bagian bawah" },
+        { "option": "-s", "description": "Menghilangkan baris kosong berulang" },
+        { "option": "+/pola", "description": "Mulai menampilkan dari baris yang cocok dengan pola" },
+        { "option": "+N", "description": "Mulai menampilkan dari baris ke-N" }
+      ],
+      "examples": "# Melihat isi file\nmore file.txt\n\n# Mulai dari baris tertentu\nmore +50 file.txt\n\n# Mulai dari pola tertentu\nmore +/ERROR /var/log/syslog"
+    },
+    {
+      "name": "head",
+      "title": "head — Baris Pertama File",
+      "description": "Menampilkan baris-baris pertama dari sebuah file. Secara default menampilkan 10 baris pertama.",
+      "syntax": "head [OPSI] FILE...",
+      "options": [
+        { "option": "-n N", "description": "Menampilkan N baris pertama" },
+        { "option": "-c N", "description": "Menampilkan N byte pertama" },
+        { "option": "-q", "description": "Tidak menampilkan header nama file" },
+        { "option": "-v", "description": "Selalu menampilkan header nama file" }
+      ],
+      "examples": "# Menampilkan 10 baris pertama (default)\nhead file.txt\n\n# Menampilkan 5 baris pertama\nhead -n 5 file.txt\n\n# Menampilkan 100 byte pertama\nhead -c 100 file.txt\n\n# Menampilkan baris pertama dari beberapa file\nhead -n 3 file1.txt file2.txt"
+    },
+    {
+      "name": "tail",
+      "title": "tail — Baris Terakhir File",
+      "description": "Menampilkan baris-baris terakhir dari sebuah file. Sangat berguna untuk memonitor log file secara real-time.",
+      "syntax": "tail [OPSI] FILE...",
+      "options": [
+        { "option": "-n N", "description": "Menampilkan N baris terakhir" },
+        { "option": "-c N", "description": "Menampilkan N byte terakhir" },
+        { "option": "-f", "description": "Mengikuti perubahan file secara real-time (follow)" },
+        { "option": "-F", "description": "Seperti -f tapi terus mencoba jika file dihapus/dibuat ulang" },
+        { "option": "--pid=PID", "description": "Berhenti mengikuti setelah proses PID berakhir" }
+      ],
+      "examples": "# Menampilkan 10 baris terakhir\ntail file.txt\n\n# Menampilkan 20 baris terakhir\ntail -n 20 file.txt\n\n# Mengikuti log secara real-time\ntail -f /var/log/syslog\n\n# Mengikuti beberapa log sekaligus\ntail -f /var/log/syslog /var/log/auth.log"
+    },
+    {
+      "name": "tac",
+      "title": "tac — Tampilkan File Terbalik",
+      "description": "Menampilkan isi file dengan urutan baris terbalik (baris terakhir ditampilkan pertama). Kebalikan dari cat.",
+      "syntax": "tac [OPSI] [FILE]...",
+      "options": [
+        { "option": "-s SEPARATOR", "description": "Menggunakan separator tertentu sebagai pemisah record" },
+        { "option": "-r", "description": "Memperlakukan separator sebagai regular expression" },
+        { "option": "-b", "description": "Menempelkan separator di awal record, bukan di akhir" }
+      ],
+      "examples": "# Menampilkan file dengan urutan terbalik\ntac file.txt\n\n# Membalik dan simpan ke file baru\ntac data.txt > data_terbalik.txt\n\n# Membalik log untuk melihat entry terbaru di atas\ntac /var/log/syslog | head -20"
+    },
+    {
+      "name": "nl",
+      "title": "nl — Penomoran Baris",
+      "description": "Menambahkan nomor baris pada output file. Lebih fleksibel daripada cat -n dalam mengatur format penomoran.",
+      "syntax": "nl [OPSI] [FILE]...",
+      "options": [
+        { "option": "-b a", "description": "Memberi nomor pada semua baris (termasuk baris kosong)" },
+        { "option": "-b t", "description": "Memberi nomor hanya pada baris non-kosong (default)" },
+        { "option": "-n ln", "description": "Format rata kiri tanpa leading zero" },
+        { "option": "-n rz", "description": "Format rata kanan dengan leading zero" },
+        { "option": "-w N", "description": "Mengatur lebar kolom nomor baris" },
+        { "option": "-s SEP", "description": "Mengatur separator antara nomor dan teks baris" }
+      ],
+      "examples": "# Menomori semua baris\nnl -b a file.txt\n\n# Menomori dengan leading zero\nnl -n rz file.txt\n\n# Mengatur lebar dan separator\nnl -w 3 -s '. ' file.txt"
+    },
+    {
+      "name": "wc",
+      "title": "wc — Menghitung Kata & Baris",
+      "description": "Menghitung jumlah baris, kata, dan byte/karakter dalam file. Berguna untuk analisis cepat isi file.",
+      "syntax": "wc [OPSI] [FILE]...",
+      "options": [
+        { "option": "-l", "description": "Menghitung jumlah baris" },
+        { "option": "-w", "description": "Menghitung jumlah kata" },
+        { "option": "-c", "description": "Menghitung jumlah byte" },
+        { "option": "-m", "description": "Menghitung jumlah karakter" },
+        { "option": "-L", "description": "Menampilkan panjang baris terpanjang" }
+      ],
+      "examples": "# Menghitung baris, kata, byte\nwc file.txt\n  42  350 2048 file.txt\n\n# Menghitung jumlah baris saja\nwc -l file.txt\n\n# Menghitung jumlah file dalam direktori\nls | wc -l\n\n# Menghitung kata dari beberapa file\nwc -w *.txt"
+    }
+  ]
+}

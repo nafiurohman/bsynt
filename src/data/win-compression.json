@@ -1,0 +1,67 @@
+{
+  "id": "win-compression",
+  "title": "Compression (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengompres dan mengekstrak file di Windows menggunakan CMD, PowerShell, dan tool bawaan.",
+  "commands": [
+    {
+      "name": "compress-archive",
+      "title": "Compress-Archive — Buat ZIP (PowerShell)",
+      "description": "Cmdlet PowerShell untuk membuat file arsip ZIP.",
+      "syntax": "Compress-Archive -Path sumber -DestinationPath tujuan.zip [opsi]",
+      "options": [
+        {"option": "-Path", "description": "File atau folder yang akan dikompres"},
+        {"option": "-DestinationPath", "description": "Path file ZIP output"},
+        {"option": "-CompressionLevel", "description": "Level kompresi: Optimal, Fastest, NoCompression"},
+        {"option": "-Update", "description": "Tambahkan/update file ke arsip yang ada"},
+        {"option": "-Force", "description": "Timpa file ZIP jika sudah ada"}
+      ],
+      "examples": "# Kompres folder\nCompress-Archive -Path C:\\Data -DestinationPath C:\\backup.zip\n\n# Kompres beberapa file\nCompress-Archive -Path file1.txt, file2.txt -DestinationPath files.zip\n\n# Kompres dengan wildcard\nCompress-Archive -Path C:\\Logs\\*.log -DestinationPath logs.zip\n\n# Kompresi tercepat\nCompress-Archive -Path data -DestinationPath data.zip -CompressionLevel Fastest\n\n# Update arsip\nCompress-Archive -Path newfile.txt -DestinationPath existing.zip -Update\n\n# Timpa jika ada\nCompress-Archive -Path data -DestinationPath data.zip -Force"
+    },
+    {
+      "name": "expand-archive",
+      "title": "Expand-Archive — Ekstrak ZIP (PowerShell)",
+      "description": "Cmdlet PowerShell untuk mengekstrak file arsip ZIP.",
+      "syntax": "Expand-Archive -Path arsip.zip -DestinationPath tujuan [opsi]",
+      "options": [
+        {"option": "-Path", "description": "Path file ZIP"},
+        {"option": "-DestinationPath", "description": "Folder tujuan ekstraksi"},
+        {"option": "-Force", "description": "Timpa file yang sudah ada"},
+        {"option": "-PassThru", "description": "Tampilkan file yang diekstrak"}
+      ],
+      "examples": "# Ekstrak ZIP\nExpand-Archive -Path backup.zip -DestinationPath C:\\Restored\n\n# Ekstrak ke folder saat ini\nExpand-Archive -Path archive.zip -DestinationPath .\n\n# Timpa file yang ada\nExpand-Archive -Path update.zip -DestinationPath C:\\App -Force"
+    },
+    {
+      "name": "tar-win",
+      "title": "tar — Arsip TAR (Windows 10+)",
+      "description": "Windows 10 ke atas sudah menyertakan tar bawaan untuk membuat dan mengekstrak arsip tar/gz.",
+      "syntax": "tar [opsi] -f arsip [file]",
+      "options": [
+        {"option": "-c", "description": "Buat arsip baru"},
+        {"option": "-x", "description": "Ekstrak arsip"},
+        {"option": "-f", "description": "Nama file arsip"},
+        {"option": "-z", "description": "Gunakan gzip compression"},
+        {"option": "-v", "description": "Verbose (tampilkan proses)"},
+        {"option": "-t", "description": "Tampilkan isi arsip"},
+        {"option": "-C dir", "description": "Ekstrak ke direktori tertentu"}
+      ],
+      "examples": "# Buat tar.gz\ntar -czf backup.tar.gz folder\\\n\n# Ekstrak tar.gz\ntar -xzf backup.tar.gz\n\n# Ekstrak ke folder tertentu\ntar -xzf backup.tar.gz -C C:\\Extracted\n\n# Lihat isi arsip\ntar -tzf backup.tar.gz\n\n# Buat tar tanpa kompresi\ntar -cf archive.tar folder\\"
+    },
+    {
+      "name": "compact",
+      "title": "compact — Kompresi NTFS",
+      "description": "Mengompres file dan folder menggunakan kompresi NTFS bawaan tanpa membuat arsip terpisah.",
+      "syntax": "compact [opsi] [file]",
+      "options": [
+        {"option": "/c", "description": "Kompres file/folder"},
+        {"option": "/u", "description": "Dekompresi file/folder"},
+        {"option": "/s:dir", "description": "Terapkan ke semua file di direktori"},
+        {"option": "/a", "description": "Tampilkan file hidden/system"},
+        {"option": "/i", "description": "Lanjutkan meskipun ada error"},
+        {"option": "/exe:algoritma", "description": "Kompresi EXE (XPRESS4K, XPRESS8K, XPRESS16K, LZX)"}
+      ],
+      "examples": "# Kompres folder\ncompact /c /s:C:\\Data\n\n# Dekompresi\ncompact /u /s:C:\\Data\n\n# Lihat status kompresi\ncompact C:\\Data\\*\n\n# Kompres dengan algoritma LZX\ncompact /c /exe:LZX /s:C:\\Programs",
+      "notes": "Kompresi NTFS transparan — file tetap bisa diakses normal. Cocok untuk menghemat ruang disk tanpa membuat arsip."
+    }
+  ]
+}

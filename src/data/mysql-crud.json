@@ -1,0 +1,76 @@
+{
+  "id": "mysql-crud",
+  "title": "CRUD Operations",
+  "description": "Operasi dasar Create, Read, Update, Delete di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "SELECT",
+      "title": "Select (Read)",
+      "description": "Mengambil data dari tabel.",
+      "syntax": "SELECT [DISTINCT] kolom1, kolom2 FROM tabel\n[WHERE kondisi]\n[GROUP BY kolom]\n[HAVING kondisi]\n[ORDER BY kolom [ASC|DESC]]\n[LIMIT n [OFFSET m]];",
+      "options": [
+        { "option": "*", "description": "Semua kolom" },
+        { "option": "DISTINCT", "description": "Hapus duplikat" },
+        { "option": "WHERE", "description": "Filter baris" },
+        { "option": "ORDER BY", "description": "Urutkan hasil" },
+        { "option": "LIMIT", "description": "Batasi jumlah baris" },
+        { "option": "OFFSET", "description": "Skip n baris pertama" },
+        { "option": "AS", "description": "Alias kolom/tabel" },
+        { "option": "BETWEEN", "description": "Range nilai" },
+        { "option": "IN (...)", "description": "Daftar nilai" },
+        { "option": "LIKE", "description": "Pattern matching (% dan _)" },
+        { "option": "IS NULL / IS NOT NULL", "description": "Cek null" }
+      ],
+      "examples": "SELECT * FROM users;\nSELECT id, username, email FROM users WHERE is_active = TRUE;\nSELECT * FROM products WHERE price BETWEEN 100 AND 500;\nSELECT * FROM users WHERE role IN ('admin', 'moderator');\nSELECT * FROM users WHERE email LIKE '%@gmail.com';\nSELECT * FROM orders ORDER BY created_at DESC LIMIT 10;\nSELECT * FROM products ORDER BY price ASC LIMIT 20 OFFSET 40;\nSELECT DISTINCT city FROM users;\nSELECT COUNT(*) AS total, role FROM users GROUP BY role HAVING total > 5;"
+    },
+    {
+      "name": "INSERT",
+      "title": "Insert (Create)",
+      "description": "Menambahkan data baru ke tabel.",
+      "syntax": "INSERT INTO tabel (kolom1, kolom2) VALUES (nilai1, nilai2);",
+      "options": [
+        { "option": "VALUES (...), (...)", "description": "Insert multiple rows" },
+        { "option": "INSERT IGNORE", "description": "Skip jika duplikat" },
+        { "option": "ON DUPLICATE KEY UPDATE", "description": "Update jika duplikat (upsert)" }
+      ],
+      "examples": "INSERT INTO users (username, email, password_hash) VALUES ('john', 'john@mail.com', 'hash123');\n\n-- Multiple insert\nINSERT INTO products (name, price) VALUES\n  ('Laptop', 15000000),\n  ('Mouse', 250000),\n  ('Keyboard', 750000);\n\n-- Upsert\nINSERT INTO settings (user_id, theme) VALUES (1, 'dark')\nON DUPLICATE KEY UPDATE theme = VALUES(theme);\n\n-- Insert from select\nINSERT INTO archive_orders SELECT * FROM orders WHERE created_at < '2024-01-01';"
+    },
+    {
+      "name": "UPDATE",
+      "title": "Update",
+      "description": "Mengubah data yang sudah ada di tabel.",
+      "syntax": "UPDATE tabel SET kolom1 = nilai1, kolom2 = nilai2 WHERE kondisi;",
+      "options": [
+        { "option": "SET", "description": "Kolom yang diubah" },
+        { "option": "WHERE", "description": "Filter baris (WAJIB!)" },
+        { "option": "LIMIT", "description": "Batasi jumlah baris yang diubah" },
+        { "option": "ORDER BY", "description": "Urutkan sebelum limit" }
+      ],
+      "examples": "UPDATE users SET role = 'admin' WHERE id = 1;\nUPDATE products SET price = price * 1.1 WHERE category = 'electronics';\nUPDATE users SET is_active = FALSE WHERE last_login < '2024-01-01';\nUPDATE orders SET status = 'shipped', shipped_at = NOW() WHERE id = 42;",
+      "warning": "SELALU gunakan WHERE! UPDATE tanpa WHERE akan mengubah SEMUA baris."
+    },
+    {
+      "name": "DELETE",
+      "title": "Delete",
+      "description": "Menghapus data dari tabel.",
+      "syntax": "DELETE FROM tabel WHERE kondisi;",
+      "options": [
+        { "option": "WHERE", "description": "Filter baris (WAJIB!)" },
+        { "option": "LIMIT", "description": "Batasi jumlah baris yang dihapus" },
+        { "option": "ORDER BY", "description": "Urutkan sebelum limit" }
+      ],
+      "examples": "DELETE FROM users WHERE id = 5;\nDELETE FROM logs WHERE created_at < '2024-01-01';\nDELETE FROM sessions WHERE expires_at < NOW();\nDELETE FROM products ORDER BY created_at ASC LIMIT 10;",
+      "warning": "SELALU gunakan WHERE! DELETE tanpa WHERE akan menghapus SEMUA baris."
+    },
+    {
+      "name": "REPLACE",
+      "title": "Replace",
+      "description": "Insert atau replace jika sudah ada (berdasarkan primary/unique key).",
+      "syntax": "REPLACE INTO tabel (kolom1, kolom2) VALUES (nilai1, nilai2);",
+      "options": [],
+      "examples": "REPLACE INTO settings (user_id, theme, language) VALUES (1, 'dark', 'id');",
+      "notes": "REPLACE melakukan DELETE lalu INSERT jika row sudah ada. ON DUPLICATE KEY UPDATE biasanya lebih baik."
+    }
+  ]
+}

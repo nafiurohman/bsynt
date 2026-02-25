@@ -1,0 +1,60 @@
+{
+  "id": "mysql-aggregate",
+  "title": "Aggregate Functions",
+  "description": "Fungsi agregat dan GROUP BY di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "COUNT-SUM-AVG",
+      "title": "COUNT / SUM / AVG",
+      "description": "Fungsi agregat dasar untuk menghitung, menjumlahkan, dan rata-rata.",
+      "syntax": "COUNT(expr) / SUM(expr) / AVG(expr)",
+      "options": [
+        { "option": "COUNT(*)", "description": "Hitung semua baris (termasuk NULL)" },
+        { "option": "COUNT(col)", "description": "Hitung baris non-NULL" },
+        { "option": "COUNT(DISTINCT col)", "description": "Hitung nilai unik" }
+      ],
+      "examples": "SELECT COUNT(*) FROM users;\nSELECT COUNT(DISTINCT city) FROM users;\nSELECT SUM(total) AS revenue FROM orders WHERE status = 'paid';\nSELECT AVG(price) AS avg_price FROM products;\nSELECT role, COUNT(*) AS total FROM users GROUP BY role;"
+    },
+    {
+      "name": "MIN-MAX",
+      "title": "MIN / MAX",
+      "description": "Nilai minimum dan maksimum.",
+      "syntax": "MIN(expr) / MAX(expr)",
+      "options": [],
+      "examples": "SELECT MIN(price), MAX(price) FROM products;\nSELECT category_id, MIN(price) AS cheapest, MAX(price) AS most_expensive\nFROM products GROUP BY category_id;"
+    },
+    {
+      "name": "GROUP BY",
+      "title": "GROUP BY",
+      "description": "Mengelompokkan baris untuk fungsi agregat.",
+      "syntax": "SELECT kolom, AGG(kolom2) FROM tabel GROUP BY kolom [WITH ROLLUP];",
+      "options": [
+        { "option": "WITH ROLLUP", "description": "Tambahkan baris subtotal/grand total" }
+      ],
+      "examples": "SELECT DATE(created_at) AS date, COUNT(*) AS orders, SUM(total) AS revenue\nFROM orders\nGROUP BY DATE(created_at)\nORDER BY date DESC;\n\nSELECT category, COUNT(*) AS total, AVG(price) AS avg_price\nFROM products\nGROUP BY category\nWITH ROLLUP;"
+    },
+    {
+      "name": "HAVING",
+      "title": "HAVING",
+      "description": "Filter pada hasil agregat (WHERE untuk GROUP BY).",
+      "syntax": "SELECT ... GROUP BY kolom HAVING kondisi_agregat;",
+      "options": [],
+      "examples": "SELECT user_id, COUNT(*) AS order_count, SUM(total) AS total_spent\nFROM orders\nGROUP BY user_id\nHAVING order_count >= 5 AND total_spent > 1000000;",
+      "notes": "WHERE filter baris SEBELUM aggregation, HAVING filter SETELAH aggregation."
+    },
+    {
+      "name": "GROUP_CONCAT",
+      "title": "GROUP_CONCAT",
+      "description": "Menggabungkan nilai dari grup menjadi satu string.",
+      "syntax": "GROUP_CONCAT([DISTINCT] expr [ORDER BY col] [SEPARATOR sep])",
+      "options": [
+        { "option": "DISTINCT", "description": "Hapus duplikat" },
+        { "option": "ORDER BY", "description": "Urutkan sebelum gabung" },
+        { "option": "SEPARATOR", "description": "Custom separator (default ',')" }
+      ],
+      "examples": "SELECT user_id, GROUP_CONCAT(product_name) AS products\nFROM orders GROUP BY user_id;\n\nSELECT category,\n  GROUP_CONCAT(DISTINCT name ORDER BY price DESC SEPARATOR ' | ') AS products\nFROM products GROUP BY category;",
+      "notes": "Default max length 1024. Ubah dengan: SET SESSION group_concat_max_len = 100000;"
+    }
+  ]
+}

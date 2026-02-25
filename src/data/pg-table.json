@@ -1,0 +1,82 @@
+{
+  "id": "pg-table",
+  "title": "Table Management",
+  "description": "Membuat, mengubah, dan menghapus tabel di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE TABLE",
+      "title": "Membuat Tabel",
+      "description": "Membuat tabel baru dengan kolom, tipe data, dan constraint.",
+      "syntax": "CREATE TABLE [IF NOT EXISTS] nama_tabel (\n  kolom tipe_data [constraint],\n  ...\n);",
+      "options": [
+        { "option": "IF NOT EXISTS", "description": "Tidak error jika tabel sudah ada" },
+        { "option": "TEMPORARY / TEMP", "description": "Membuat temporary table" },
+        { "option": "UNLOGGED", "description": "Tabel tanpa WAL logging (lebih cepat, tidak crash-safe)" },
+        { "option": "INHERITS (parent)", "description": "Mewarisi kolom dari tabel lain" },
+        { "option": "PARTITION BY", "description": "Membuat partitioned table" },
+        { "option": "LIKE source_table", "description": "Menyalin struktur dari tabel lain" }
+      ],
+      "examples": "CREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  username VARCHAR(50) UNIQUE NOT NULL,\n  email VARCHAR(100) NOT NULL,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n\n-- Dengan foreign key\nCREATE TABLE orders (\n  id SERIAL PRIMARY KEY,\n  user_id INT REFERENCES users(id) ON DELETE CASCADE,\n  total DECIMAL(12,2) NOT NULL,\n  status VARCHAR(20) DEFAULT 'pending'\n);\n\n-- Partitioned table\nCREATE TABLE logs (\n  id BIGSERIAL,\n  created_at DATE NOT NULL,\n  message TEXT\n) PARTITION BY RANGE (created_at);",
+      "notes": "SERIAL = auto-increment integer. Gunakan BIGSERIAL untuk data besar."
+    },
+    {
+      "name": "ALTER TABLE",
+      "title": "Mengubah Struktur Tabel",
+      "description": "Menambah, mengubah, atau menghapus kolom dan constraint pada tabel yang sudah ada.",
+      "syntax": "ALTER TABLE nama_tabel action;",
+      "options": [
+        { "option": "ADD COLUMN", "description": "Menambah kolom baru" },
+        { "option": "DROP COLUMN", "description": "Menghapus kolom" },
+        { "option": "ALTER COLUMN ... TYPE", "description": "Mengubah tipe data kolom" },
+        { "option": "ALTER COLUMN ... SET DEFAULT", "description": "Mengatur default value" },
+        { "option": "ALTER COLUMN ... SET NOT NULL", "description": "Menambah constraint NOT NULL" },
+        { "option": "RENAME COLUMN", "description": "Mengganti nama kolom" },
+        { "option": "RENAME TO", "description": "Mengganti nama tabel" },
+        { "option": "ADD CONSTRAINT", "description": "Menambah constraint" }
+      ],
+      "examples": "ALTER TABLE users ADD COLUMN phone VARCHAR(20);\nALTER TABLE users DROP COLUMN phone;\nALTER TABLE users ALTER COLUMN email TYPE TEXT;\nALTER TABLE users RENAME COLUMN username TO name;\nALTER TABLE users RENAME TO customers;\nALTER TABLE users ADD CONSTRAINT unique_email UNIQUE (email);",
+      "notes": "Beberapa ALTER memerlukan exclusive lock pada tabel."
+    },
+    {
+      "name": "DROP TABLE",
+      "title": "Menghapus Tabel",
+      "description": "Menghapus tabel beserta seluruh data di dalamnya.",
+      "syntax": "DROP TABLE [IF EXISTS] nama_tabel [CASCADE | RESTRICT];",
+      "options": [
+        { "option": "IF EXISTS", "description": "Tidak error jika tabel tidak ada" },
+        { "option": "CASCADE", "description": "Menghapus juga objek yang bergantung" },
+        { "option": "RESTRICT", "description": "Gagal jika ada dependensi (default)" }
+      ],
+      "examples": "DROP TABLE users;\nDROP TABLE IF EXISTS temp_data;\nDROP TABLE orders CASCADE;",
+      "warning": "CASCADE akan menghapus semua view, foreign key, dll yang bergantung!"
+    },
+    {
+      "name": "TRUNCATE",
+      "title": "Mengosongkan Tabel",
+      "description": "Menghapus semua baris dari tabel dengan cepat (lebih cepat dari DELETE).",
+      "syntax": "TRUNCATE [TABLE] nama_tabel [CASCADE] [RESTART IDENTITY];",
+      "options": [
+        { "option": "CASCADE", "description": "Truncate juga tabel yang memiliki foreign key reference" },
+        { "option": "RESTART IDENTITY", "description": "Reset sequence/auto-increment ke awal" },
+        { "option": "CONTINUE IDENTITY", "description": "Tidak mereset sequence (default)" }
+      ],
+      "examples": "TRUNCATE TABLE logs;\nTRUNCATE TABLE orders CASCADE;\nTRUNCATE TABLE users RESTART IDENTITY CASCADE;",
+      "warning": "Tidak bisa di-rollback jika tidak dalam transaction!"
+    },
+    {
+      "name": "\\dt / information_schema",
+      "title": "Melihat Daftar Tabel",
+      "description": "Menampilkan semua tabel di database atau schema tertentu.",
+      "syntax": "\\dt [schema.]pattern  -- psql\nSELECT * FROM information_schema.tables WHERE table_schema = 'public';",
+      "options": [
+        { "option": "\\dt", "description": "Daftar tabel di schema aktif" },
+        { "option": "\\dt+", "description": "Info lengkap termasuk ukuran" },
+        { "option": "\\d nama_tabel", "description": "Detail struktur tabel" },
+        { "option": "\\d+ nama_tabel", "description": "Detail lengkap termasuk storage" }
+      ],
+      "examples": "\\dt\n\\dt public.*\n\\dt+ users\n\\d users\n\n-- SQL\nSELECT table_name, pg_size_pretty(pg_total_relation_size(quote_ident(table_name)))\nFROM information_schema.tables\nWHERE table_schema = 'public';",
+      "notes": "\\d juga menampilkan index dan constraint."
+    }
+  ]
+}

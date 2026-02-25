@@ -1,0 +1,77 @@
+{
+  "id": "pg-joins",
+  "title": "Joins",
+  "description": "Menggabungkan data dari beberapa tabel menggunakan berbagai jenis JOIN di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "INNER JOIN",
+      "title": "Inner Join",
+      "description": "Menggabungkan baris dari dua tabel yang memiliki kecocokan di kedua sisi.",
+      "syntax": "SELECT * FROM tabel1 INNER JOIN tabel2 ON tabel1.kolom = tabel2.kolom;",
+      "options": [
+        { "option": "ON", "description": "Kondisi penggabungan" },
+        { "option": "USING (kolom)", "description": "Shortcut jika nama kolom sama" }
+      ],
+      "examples": "SELECT u.name, o.total\nFROM users u\nINNER JOIN orders o ON u.id = o.user_id;\n\n-- Dengan USING\nSELECT * FROM orders JOIN products USING (product_id);",
+      "notes": "INNER JOIN adalah default. Menulis JOIN saja sama dengan INNER JOIN."
+    },
+    {
+      "name": "LEFT JOIN",
+      "title": "Left Outer Join",
+      "description": "Menampilkan semua baris dari tabel kiri, meskipun tidak ada kecocokan di tabel kanan.",
+      "syntax": "SELECT * FROM tabel1 LEFT JOIN tabel2 ON tabel1.kolom = tabel2.kolom;",
+      "options": [
+        { "option": "LEFT JOIN", "description": "Semua dari kiri, NULL jika tidak cocok di kanan" },
+        { "option": "LEFT OUTER JOIN", "description": "Sama dengan LEFT JOIN" }
+      ],
+      "examples": "SELECT u.name, COUNT(o.id) AS total_orders\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nGROUP BY u.name;\n\n-- Cari user tanpa order\nSELECT u.* FROM users u LEFT JOIN orders o ON u.id = o.user_id WHERE o.id IS NULL;",
+      "notes": "Berguna untuk menemukan data yang tidak memiliki relasi (anti-join pattern)."
+    },
+    {
+      "name": "RIGHT JOIN",
+      "title": "Right Outer Join",
+      "description": "Menampilkan semua baris dari tabel kanan, NULL jika tidak cocok di kiri.",
+      "syntax": "SELECT * FROM tabel1 RIGHT JOIN tabel2 ON tabel1.kolom = tabel2.kolom;",
+      "options": [],
+      "examples": "SELECT o.id, u.name\nFROM orders o\nRIGHT JOIN users u ON o.user_id = u.id;",
+      "notes": "Jarang dipakai — biasanya bisa ditulis ulang sebagai LEFT JOIN dengan urutan tabel dibalik."
+    },
+    {
+      "name": "FULL OUTER JOIN",
+      "title": "Full Outer Join",
+      "description": "Menampilkan semua baris dari kedua tabel, NULL jika tidak ada kecocokan.",
+      "syntax": "SELECT * FROM tabel1 FULL OUTER JOIN tabel2 ON tabel1.kolom = tabel2.kolom;",
+      "options": [],
+      "examples": "SELECT s.name AS student, c.name AS course\nFROM students s\nFULL OUTER JOIN enrollments e ON s.id = e.student_id\nFULL OUTER JOIN courses c ON e.course_id = c.id;",
+      "notes": "Berguna untuk melihat data yang tidak memiliki pasangan di kedua sisi."
+    },
+    {
+      "name": "CROSS JOIN",
+      "title": "Cross Join (Cartesian Product)",
+      "description": "Menghasilkan semua kemungkinan kombinasi baris dari kedua tabel.",
+      "syntax": "SELECT * FROM tabel1 CROSS JOIN tabel2;",
+      "options": [],
+      "examples": "SELECT s.name AS size, c.name AS color\nFROM sizes s CROSS JOIN colors c;",
+      "warning": "Hati-hati dengan tabel besar — hasilnya bisa sangat banyak (m × n baris)!"
+    },
+    {
+      "name": "LATERAL JOIN",
+      "title": "Lateral Join",
+      "description": "Fitur unik PostgreSQL — subquery di JOIN bisa mereferensi kolom dari tabel sebelumnya.",
+      "syntax": "SELECT * FROM tabel1, LATERAL (subquery) alias;",
+      "options": [],
+      "examples": "-- Top 3 order per user\nSELECT u.name, o.total, o.created_at\nFROM users u,\nLATERAL (\n  SELECT total, created_at FROM orders\n  WHERE user_id = u.id\n  ORDER BY total DESC LIMIT 3\n) o;\n\n-- LATERAL dengan function\nSELECT * FROM generate_series(1, 5) AS s(n),\nLATERAL generate_series(1, s.n) AS t(m);",
+      "notes": "LATERAL sangat powerful untuk subquery yang bergantung pada baris tabel sebelumnya."
+    },
+    {
+      "name": "NATURAL JOIN",
+      "title": "Natural Join",
+      "description": "Otomatis join berdasarkan kolom-kolom yang namanya sama.",
+      "syntax": "SELECT * FROM tabel1 NATURAL JOIN tabel2;",
+      "options": [],
+      "examples": "SELECT * FROM orders NATURAL JOIN customers;",
+      "warning": "Hindari di production — bisa bergabung dengan kolom yang tidak diinginkan jika ada nama sama."
+    }
+  ]
+}

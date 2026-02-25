@@ -1,0 +1,76 @@
+{
+  "id": "pg-aggregate",
+  "title": "Aggregate Functions",
+  "description": "Fungsi aggregate untuk menghitung statistik dari sekumpulan data.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "COUNT / SUM / AVG",
+      "title": "Count, Sum, Average",
+      "description": "Fungsi aggregate dasar untuk menghitung jumlah, total, dan rata-rata.",
+      "syntax": "COUNT(*) / COUNT(DISTINCT kolom) / SUM(kolom) / AVG(kolom)",
+      "options": [
+        { "option": "COUNT(*)", "description": "Hitung semua baris termasuk NULL" },
+        { "option": "COUNT(kolom)", "description": "Hitung baris non-NULL" },
+        { "option": "COUNT(DISTINCT kolom)", "description": "Hitung nilai unik" },
+        { "option": "SUM(kolom)", "description": "Total penjumlahan" },
+        { "option": "AVG(kolom)", "description": "Rata-rata" }
+      ],
+      "examples": "SELECT COUNT(*) FROM users;\nSELECT COUNT(DISTINCT city) FROM users;\nSELECT AVG(price), SUM(quantity) FROM order_items;\n\nSELECT category, COUNT(*) AS total, AVG(price) AS avg_price\nFROM products GROUP BY category HAVING COUNT(*) > 5;",
+      "notes": "AVG mengabaikan NULL. Gunakan COALESCE jika ingin menganggap NULL sebagai 0."
+    },
+    {
+      "name": "MIN / MAX",
+      "title": "Minimum dan Maximum",
+      "description": "Mencari nilai terkecil dan terbesar.",
+      "syntax": "MIN(kolom) / MAX(kolom)",
+      "options": [],
+      "examples": "SELECT MIN(price), MAX(price) FROM products;\nSELECT MIN(created_at), MAX(created_at) FROM orders;",
+      "notes": "Bekerja pada angka, string, dan tanggal."
+    },
+    {
+      "name": "STRING_AGG",
+      "title": "Menggabungkan String dalam Group",
+      "description": "Menggabungkan nilai string dari beberapa baris menjadi satu string.",
+      "syntax": "STRING_AGG(kolom, delimiter [ORDER BY kolom])",
+      "options": [
+        { "option": "DISTINCT", "description": "Hanya nilai unik" },
+        { "option": "ORDER BY", "description": "Mengurutkan sebelum digabung" }
+      ],
+      "examples": "SELECT department, STRING_AGG(name, ', ' ORDER BY name) AS members\nFROM employees GROUP BY department;\n\nSELECT STRING_AGG(DISTINCT tag, ', ') FROM article_tags WHERE article_id = 1;",
+      "notes": "Equivalent MySQL GROUP_CONCAT."
+    },
+    {
+      "name": "ARRAY_AGG / JSON_AGG",
+      "title": "Aggregate ke Array atau JSON",
+      "description": "Mengumpulkan nilai ke dalam array atau JSON array.",
+      "syntax": "ARRAY_AGG(kolom) / JSON_AGG(expression) / JSONB_AGG(expression)",
+      "options": [
+        { "option": "ARRAY_AGG", "description": "Kumpulkan ke PostgreSQL array" },
+        { "option": "JSON_AGG", "description": "Kumpulkan ke JSON array" },
+        { "option": "JSONB_AGG", "description": "Kumpulkan ke JSONB array" },
+        { "option": "JSON_OBJECT_AGG", "description": "Kumpulkan ke JSON object" }
+      ],
+      "examples": "SELECT department, ARRAY_AGG(name ORDER BY name) FROM employees GROUP BY department;\n\nSELECT JSON_AGG(row_to_json(u)) FROM users u WHERE active = true;\n\nSELECT JSON_OBJECT_AGG(key, value) FROM settings;",
+      "notes": "ARRAY_AGG dan JSON_AGG sangat berguna untuk denormalisasi data."
+    },
+    {
+      "name": "BOOL_AND / BOOL_OR",
+      "title": "Aggregate Boolean",
+      "description": "Aggregate logika AND dan OR pada kolom boolean.",
+      "syntax": "BOOL_AND(kolom) / BOOL_OR(kolom)",
+      "options": [],
+      "examples": "SELECT department, BOOL_AND(active) AS all_active, BOOL_OR(is_manager) AS has_manager\nFROM employees GROUP BY department;",
+      "notes": "BOOL_AND = true jika semua true. BOOL_OR = true jika salah satu true."
+    },
+    {
+      "name": "FILTER",
+      "title": "Conditional Aggregate (FILTER)",
+      "description": "Menerapkan filter pada aggregate function tanpa subquery.",
+      "syntax": "aggregate_function(kolom) FILTER (WHERE kondisi)",
+      "options": [],
+      "examples": "SELECT\n  COUNT(*) AS total,\n  COUNT(*) FILTER (WHERE status = 'completed') AS completed,\n  COUNT(*) FILTER (WHERE status = 'pending') AS pending,\n  SUM(total) FILTER (WHERE status = 'completed') AS completed_revenue\nFROM orders;",
+      "notes": "FILTER lebih bersih dan efisien dari CASE WHEN dalam aggregate. Fitur unik PostgreSQL."
+    }
+  ]
+}

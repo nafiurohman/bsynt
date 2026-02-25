@@ -1,0 +1,76 @@
+{
+  "id": "pg-performance",
+  "title": "Performance & Tuning",
+  "description": "Optimasi performa query dan konfigurasi PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "EXPLAIN ANALYZE",
+      "title": "Analisis Query Plan",
+      "description": "Menjalankan query dan menampilkan execution plan beserta waktu aktual.",
+      "syntax": "EXPLAIN (ANALYZE, BUFFERS, FORMAT json) query;",
+      "options": [
+        { "option": "ANALYZE", "description": "Jalankan query dan tampilkan waktu aktual" },
+        { "option": "BUFFERS", "description": "Informasi cache hit/miss" },
+        { "option": "VERBOSE", "description": "Detail output kolom" },
+        { "option": "SETTINGS", "description": "Tampilkan parameter yang mempengaruhi (PG 12+)" },
+        { "option": "WAL", "description": "Informasi WAL usage (PG 13+)" }
+      ],
+      "examples": "EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@mail.com';\n\nEXPLAIN (ANALYZE, BUFFERS)\nSELECT u.name, COUNT(o.id)\nFROM users u JOIN orders o ON u.id = o.user_id\nGROUP BY u.name;",
+      "notes": "Perhatikan: Seq Scan vs Index Scan, Nested Loop vs Hash Join, buffer hit ratio."
+    },
+    {
+      "name": "VACUUM / ANALYZE",
+      "title": "Maintenance: Vacuum & Analyze",
+      "description": "Membersihkan dead tuples dan memperbarui statistik tabel.",
+      "syntax": "VACUUM [FULL] [ANALYZE] [VERBOSE] tabel;\nANALYZE tabel;",
+      "options": [
+        { "option": "VACUUM", "description": "Membersihkan dead tuples (tidak mengunci)" },
+        { "option": "VACUUM FULL", "description": "Rewrite tabel, reclaim space (mengunci!)" },
+        { "option": "VACUUM ANALYZE", "description": "Vacuum + update statistik" },
+        { "option": "ANALYZE", "description": "Update statistik saja" }
+      ],
+      "examples": "VACUUM users;\nVACUUM FULL large_table;\nVACUUM (VERBOSE, ANALYZE) orders;\nANALYZE users;\n\n-- Cek dead tuples\nSELECT relname, n_dead_tup, n_live_tup,\n  ROUND(n_dead_tup * 100.0 / NULLIF(n_live_tup, 0), 2) AS dead_pct\nFROM pg_stat_user_tables ORDER BY n_dead_tup DESC;",
+      "notes": "autovacuum biasanya sudah berjalan. VACUUM FULL mengunci tabel — gunakan jarang."
+    },
+    {
+      "name": "pg_stat_statements",
+      "title": "Query Statistics",
+      "description": "Extension untuk tracking statistik semua query yang dijalankan.",
+      "syntax": "CREATE EXTENSION pg_stat_statements;\nSELECT * FROM pg_stat_statements;",
+      "options": [],
+      "examples": "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;\n\n-- Top 10 slowest queries\nSELECT query, calls, mean_exec_time, total_exec_time\nFROM pg_stat_statements\nORDER BY mean_exec_time DESC LIMIT 10;\n\n-- Reset statistics\nSELECT pg_stat_statements_reset();",
+      "notes": "Tambahkan 'pg_stat_statements' ke shared_preload_libraries di postgresql.conf."
+    },
+    {
+      "name": "Configuration Tuning",
+      "title": "Parameter Konfigurasi Penting",
+      "description": "Parameter konfigurasi PostgreSQL yang paling berpengaruh pada performa.",
+      "syntax": "SHOW parameter;\nSET parameter = value;\nALTER SYSTEM SET parameter = value;",
+      "options": [
+        { "option": "shared_buffers", "description": "Cache memori utama (25% RAM)" },
+        { "option": "effective_cache_size", "description": "Estimasi cache OS (50-75% RAM)" },
+        { "option": "work_mem", "description": "Memori per operasi sort/hash (4-64MB)" },
+        { "option": "maintenance_work_mem", "description": "Memori untuk VACUUM, CREATE INDEX (256MB-1GB)" },
+        { "option": "wal_buffers", "description": "Buffer WAL (16MB biasanya cukup)" },
+        { "option": "max_connections", "description": "Jumlah koneksi maksimal" },
+        { "option": "random_page_cost", "description": "Cost untuk random I/O (1.1 untuk SSD)" }
+      ],
+      "examples": "SHOW shared_buffers;\nSHOW work_mem;\n\n-- Ubah untuk session\nSET work_mem = '256MB';\n\n-- Ubah permanent\nALTER SYSTEM SET shared_buffers = '4GB';\nSELECT pg_reload_conf();",
+      "notes": "Beberapa parameter memerlukan restart. ALTER SYSTEM menulis ke postgresql.auto.conf."
+    },
+    {
+      "name": "Connection Pooling",
+      "title": "Connection Pooling",
+      "description": "Menggunakan PgBouncer atau built-in pooling untuk mengelola koneksi database.",
+      "syntax": "-- pgbouncer.ini\n[databases]\nmydb = host=localhost dbname=mydb\n\n[pgbouncer]\npool_mode = transaction\nmax_client_conn = 1000\ndefault_pool_size = 25",
+      "options": [
+        { "option": "session mode", "description": "Satu koneksi per session (paling aman)" },
+        { "option": "transaction mode", "description": "Koneksi di-share antar transaction (direkomendasikan)" },
+        { "option": "statement mode", "description": "Koneksi di-share per statement (paling agresif)" }
+      ],
+      "examples": "-- Cek jumlah koneksi aktif\nSELECT count(*) FROM pg_stat_activity;\n\n-- Koneksi per state\nSELECT state, count(*) FROM pg_stat_activity GROUP BY state;\n\n-- Kill koneksi idle lama\nSELECT pg_terminate_backend(pid)\nFROM pg_stat_activity\nWHERE state = 'idle' AND query_start < NOW() - INTERVAL '1 hour';",
+      "notes": "PostgreSQL bawaan max_connections terbatas. Gunakan PgBouncer untuk skala besar."
+    }
+  ]
+}

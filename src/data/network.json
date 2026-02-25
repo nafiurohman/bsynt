@@ -1,0 +1,149 @@
+{
+  "id": "network",
+  "title": "Jaringan",
+  "description": "Perintah-perintah untuk mengelola koneksi jaringan, transfer data, pemantauan, dan keamanan jaringan di Linux.",
+  "commands": [
+    {
+      "name": "ping",
+      "title": "ping — Test Konektivitas",
+      "description": "Mengirim paket ICMP ECHO_REQUEST ke host jaringan untuk menguji konektivitas.",
+      "syntax": "ping [opsi] host",
+      "options": [
+        { "option": "-c jumlah", "description": "Mengirim sejumlah paket tertentu lalu berhenti" },
+        { "option": "-i interval", "description": "Mengatur interval waktu antar pengiriman paket" },
+        { "option": "-s ukuran", "description": "Mengatur ukuran paket yang dikirim (dalam byte)" },
+        { "option": "-t ttl", "description": "Mengatur nilai Time To Live paket" },
+        { "option": "-w deadline", "description": "Batas waktu total eksekusi (detik)" },
+        { "option": "-W timeout", "description": "Batas waktu tunggu respons per paket" },
+        { "option": "-q", "description": "Mode senyap, hanya ringkasan" },
+        { "option": "-4 / -6", "description": "Memaksa IPv4 / IPv6" }
+      ],
+      "examples": "# Ping host sebanyak 5 kali\nping -c 5 google.com\n\n# Ping dengan interval 2 detik\nping -i 2 -s 1024 google.com\n\n# Ping dengan batas waktu\nping -w 10 192.168.1.1"
+    },
+    {
+      "name": "curl",
+      "title": "curl — Transfer Data",
+      "description": "Alat baris perintah untuk mentransfer data dari atau ke server menggunakan berbagai protokol (HTTP, HTTPS, FTP, dll).",
+      "syntax": "curl [opsi] URL",
+      "options": [
+        { "option": "-o file", "description": "Menyimpan output ke file dengan nama tertentu" },
+        { "option": "-O", "description": "Menyimpan output dengan nama file dari URL" },
+        { "option": "-L", "description": "Mengikuti redirect secara otomatis" },
+        { "option": "-I", "description": "Hanya menampilkan header respons (HEAD request)" },
+        { "option": "-v", "description": "Mode verbose" },
+        { "option": "-s", "description": "Mode senyap" },
+        { "option": "-X metode", "description": "Menentukan metode HTTP (GET, POST, PUT, DELETE)" },
+        { "option": "-d data", "description": "Mengirim data dalam body request" },
+        { "option": "-H header", "description": "Menambahkan header kustom" },
+        { "option": "-u user:pass", "description": "Autentikasi Basic Auth" },
+        { "option": "-k", "description": "Mengabaikan verifikasi SSL" },
+        { "option": "-F field=value", "description": "Mengirim form multipart (upload file)" },
+        { "option": "-b cookie", "description": "Mengirim cookie" }
+      ],
+      "examples": "# Mengunduh file\ncurl -O https://example.com/file.tar.gz\n\n# POST request dengan JSON\ncurl -X POST -H \"Content-Type: application/json\" -d '{\"key\":\"value\"}' https://api.example.com/data\n\n# Mengunduh dengan redirect\ncurl -L -o output.html https://example.com\n\n# Upload file\ncurl -F \"file=@/path/to/file.jpg\" https://example.com/upload"
+    },
+    {
+      "name": "wget",
+      "title": "wget — Download File",
+      "description": "Utilitas untuk mengunduh file dari web secara non-interaktif, mendukung HTTP, HTTPS, dan FTP.",
+      "syntax": "wget [opsi] URL",
+      "options": [
+        { "option": "-O file", "description": "Menyimpan dengan nama tertentu" },
+        { "option": "-P dir", "description": "Menyimpan ke direktori tertentu" },
+        { "option": "-c", "description": "Melanjutkan unduhan yang terputus (resume)" },
+        { "option": "-r", "description": "Mengunduh secara rekursif" },
+        { "option": "-q", "description": "Mode senyap" },
+        { "option": "-b", "description": "Menjalankan di latar belakang" },
+        { "option": "--limit-rate=speed", "description": "Membatasi kecepatan unduh" },
+        { "option": "-m", "description": "Mode mirror" },
+        { "option": "-k", "description": "Mengkonversi tautan untuk akses lokal" },
+        { "option": "-i file", "description": "Mengunduh URL dari daftar dalam file" }
+      ],
+      "examples": "# Mengunduh file\nwget -O installer.deb https://example.com/package.deb\n\n# Resume unduhan\nwget -c https://example.com/largefile.iso\n\n# Mirror situs\nwget -m -k --limit-rate=500k https://example.com\n\n# Unduh dari daftar\nwget -i daftar-url.txt -P ~/unduhan/"
+    },
+    {
+      "name": "ssh",
+      "title": "ssh — Secure Shell",
+      "description": "Klien SSH untuk login ke mesin remote secara aman melalui jaringan.",
+      "syntax": "ssh [opsi] [user@]hostname [perintah]",
+      "options": [
+        { "option": "-p port", "description": "Menentukan port koneksi SSH" },
+        { "option": "-i file_kunci", "description": "Menggunakan private key tertentu" },
+        { "option": "-v", "description": "Mode verbose (debug)" },
+        { "option": "-X", "description": "Mengaktifkan X11 forwarding" },
+        { "option": "-L local:host:remote", "description": "Local port forwarding" },
+        { "option": "-R remote:host:local", "description": "Remote port forwarding" },
+        { "option": "-D port", "description": "Dynamic port forwarding (SOCKS proxy)" },
+        { "option": "-N", "description": "Tidak menjalankan perintah, hanya forwarding" },
+        { "option": "-J proxy", "description": "Jump host (proxy)" },
+        { "option": "-C", "description": "Mengaktifkan kompresi" }
+      ],
+      "examples": "# Koneksi SSH\nssh user@192.168.1.100\n\n# Port tertentu\nssh -p 2222 user@server.com\n\n# Dengan private key\nssh -i ~/.ssh/id_rsa user@server.com\n\n# Local port forwarding\nssh -L 3306:localhost:3306 user@server.com\n\n# Via jump host\nssh -J proxy@jump.com user@target.com"
+    },
+    {
+      "name": "scp",
+      "title": "scp — Secure Copy",
+      "description": "Menyalin file antar host melalui jaringan secara aman menggunakan SSH.",
+      "syntax": "scp [opsi] sumber tujuan",
+      "options": [
+        { "option": "-r", "description": "Menyalin direktori secara rekursif" },
+        { "option": "-P port", "description": "Menentukan port SSH" },
+        { "option": "-i file_kunci", "description": "Menggunakan private key" },
+        { "option": "-p", "description": "Mempertahankan timestamp dan permission" },
+        { "option": "-q", "description": "Mode senyap" },
+        { "option": "-C", "description": "Mengaktifkan kompresi" }
+      ],
+      "examples": "# Upload file ke server\nscp file.txt user@server.com:/home/user/\n\n# Download file dari server\nscp user@server.com:/var/log/syslog ./\n\n# Copy direktori rekursif\nscp -r -P 2222 ./proyek/ user@server.com:/home/user/"
+    },
+    {
+      "name": "rsync",
+      "title": "rsync — Remote Sync",
+      "description": "Sinkronisasi file yang cepat dan fleksibel, hanya mentransfer bagian yang berubah (delta transfer).",
+      "syntax": "rsync [opsi] sumber tujuan",
+      "options": [
+        { "option": "-a", "description": "Mode arsip (mempertahankan semua atribut)" },
+        { "option": "-v", "description": "Verbose" },
+        { "option": "-z", "description": "Kompresi saat transfer" },
+        { "option": "--progress", "description": "Menampilkan progress per file" },
+        { "option": "--delete", "description": "Menghapus file di tujuan yang tidak ada di sumber" },
+        { "option": "--exclude=pola", "description": "Mengecualikan file tertentu" },
+        { "option": "-e command", "description": "Menentukan remote shell" },
+        { "option": "-n", "description": "Dry-run (simulasi)" },
+        { "option": "-P", "description": "Progress + resume transfer parsial" },
+        { "option": "--bwlimit=speed", "description": "Membatasi bandwidth (KB/s)" }
+      ],
+      "examples": "# Sinkronisasi ke server\nrsync -avz --progress /data/ user@server.com:/backup/\n\n# Dengan delete\nrsync -avz --delete /var/www/ /backup/www/\n\n# Dry-run\nrsync -avzn --exclude='*.log' /proyek/ user@server.com:/proyek/\n\n# Via SSH dengan port tertentu\nrsync -avz -e 'ssh -p 2222' --bwlimit=1000 /data/ user@server.com:/data/"
+    },
+    {
+      "name": "ip",
+      "title": "ip — Konfigurasi Jaringan",
+      "description": "Perintah modern untuk menampilkan dan mengkonfigurasi interface jaringan, routing, dan tunnel. Pengganti ifconfig.",
+      "syntax": "ip [opsi] OBJEK PERINTAH",
+      "options": [
+        { "option": "ip addr / ip a", "description": "Menampilkan alamat IP semua interface" },
+        { "option": "ip link", "description": "Menampilkan status interface jaringan" },
+        { "option": "ip route / ip r", "description": "Menampilkan tabel routing" },
+        { "option": "ip neigh", "description": "Menampilkan ARP table (tetangga jaringan)" },
+        { "option": "ip link set DEV up/down", "description": "Mengaktifkan/menonaktifkan interface" },
+        { "option": "ip addr add/del", "description": "Menambah/menghapus alamat IP" }
+      ],
+      "examples": "# Menampilkan semua IP\nip addr show\n\n# Menampilkan routing\nip route show\n\n# Menambahkan IP\nsudo ip addr add 192.168.1.100/24 dev eth0\n\n# Mengaktifkan interface\nsudo ip link set eth0 up\n\n# Menambahkan route\nsudo ip route add 10.0.0.0/24 via 192.168.1.1"
+    },
+    {
+      "name": "ss",
+      "title": "ss — Socket Statistics",
+      "description": "Menampilkan informasi socket jaringan. Pengganti modern dari netstat yang lebih cepat.",
+      "syntax": "ss [opsi]",
+      "options": [
+        { "option": "-t", "description": "Menampilkan koneksi TCP" },
+        { "option": "-u", "description": "Menampilkan koneksi UDP" },
+        { "option": "-l", "description": "Menampilkan hanya socket listening" },
+        { "option": "-p", "description": "Menampilkan proses pemilik socket" },
+        { "option": "-n", "description": "Menampilkan angka (tidak resolve hostname)" },
+        { "option": "-a", "description": "Menampilkan semua socket" },
+        { "option": "-s", "description": "Menampilkan ringkasan statistik" }
+      ],
+      "examples": "# Menampilkan port yang listening\nss -tlnp\n\n# Semua koneksi TCP\nss -tan\n\n# Koneksi ke port tertentu\nss -tn dst :443\n\n# Statistik ringkasan\nss -s"
+    }
+  ]
+}

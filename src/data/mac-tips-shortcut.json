@@ -1,0 +1,55 @@
+{
+  "id": "mac-tips-shortcut",
+  "title": "Tips & Shortcut",
+  "description": "Tips, trik, dan keyboard shortcut di terminal macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "keyboard-shortcuts",
+      "title": "Keyboard Shortcuts Terminal",
+      "description": "Shortcut penting di Terminal.app / iTerm2.",
+      "syntax": "Keyboard Shortcuts",
+      "options": [
+        { "option": "Ctrl+A", "description": "Ke awal baris" },
+        { "option": "Ctrl+E", "description": "Ke akhir baris" },
+        { "option": "Ctrl+U", "description": "Hapus dari cursor ke awal" },
+        { "option": "Ctrl+K", "description": "Hapus dari cursor ke akhir" },
+        { "option": "Ctrl+W", "description": "Hapus kata sebelum cursor" },
+        { "option": "Ctrl+R", "description": "Search history (reverse)" },
+        { "option": "Ctrl+C", "description": "Cancel/hentikan perintah" },
+        { "option": "Ctrl+Z", "description": "Suspend proses (bg/fg)" },
+        { "option": "Ctrl+L", "description": "Clear screen" },
+        { "option": "Cmd+K", "description": "Clear scrollback (macOS Terminal)" },
+        { "option": "Cmd+T", "description": "Tab baru" },
+        { "option": "Cmd+N", "description": "Window baru" }
+      ],
+      "examples": "# Ctrl+R lalu ketik kata untuk mencari di history\n# Tab completion: ketik sebagian lalu tekan Tab\n# Cmd+D untuk split pane di iTerm2"
+    },
+    {
+      "name": "oh-my-zsh",
+      "title": "Oh My Zsh",
+      "description": "Framework populer untuk kustomisasi zsh.",
+      "syntax": "~/.oh-my-zsh",
+      "options": [
+        { "option": "ZSH_THEME", "description": "Set tema di ~/.zshrc" },
+        { "option": "plugins=()", "description": "Aktifkan plugin" }
+      ],
+      "examples": "# Install Oh My Zsh\nsh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"\n\n# Edit ~/.zshrc\nZSH_THEME=\"agnoster\"\nplugins=(git node npm docker brew macos)\n\nsource ~/.zshrc",
+      "notes": "Plugin populer: git, docker, brew, macos, zsh-autosuggestions, zsh-syntax-highlighting."
+    },
+    {
+      "name": "useful-tricks",
+      "title": "Tips Berguna macOS",
+      "description": "Trik dan tips untuk produktivitas di terminal macOS.",
+      "syntax": "Tips & Tricks",
+      "options": [
+        { "option": "caffeinate", "description": "Cegah Mac dari sleep" },
+        { "option": "say [text]", "description": "Text-to-speech" },
+        { "option": "screencapture", "description": "Screenshot dari terminal" },
+        { "option": "pmset", "description": "Power management settings" }
+      ],
+      "examples": "caffeinate -t 3600  # Cegah sleep 1 jam\nsay \"Build complete\"  # Text-to-speech\nscreencapture -c  # Screenshot ke clipboard\nscreencapture -T 3 screenshot.png  # Delayed screenshot\npmset displaysleepnow  # Matikan display\nsudo purge  # Bersihkan RAM cache\nopen -a Calculator  # Buka app",
+      "notes": "caffeinate sangat berguna saat menjalankan proses panjang."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "file-search",
+  "title": "Pencarian File",
+  "description": "Perintah-perintah untuk mencari file, direktori, dan lokasi program di sistem Linux.",
+  "commands": [
+    {
+      "name": "find",
+      "title": "find — Pencarian File Lengkap",
+      "description": "Mencari file dan direktori berdasarkan berbagai kriteria seperti nama, ukuran, waktu, permission, dan tipe. Perintah pencarian paling powerful di Linux.",
+      "syntax": "find [PATH] [EKSPRESI]",
+      "options": [
+        { "option": "-name pola", "description": "Mencari berdasarkan nama file (case-sensitive)" },
+        { "option": "-iname pola", "description": "Mencari berdasarkan nama file (case-insensitive)" },
+        { "option": "-type f/d/l", "description": "Mencari berdasarkan tipe: f=file, d=direktori, l=symlink" },
+        { "option": "-size +/-N", "description": "Mencari berdasarkan ukuran file (c=byte, k=KB, M=MB, G=GB)" },
+        { "option": "-mtime N", "description": "File dimodifikasi N hari lalu (+ lebih dari, - kurang dari)" },
+        { "option": "-mmin N", "description": "File dimodifikasi N menit lalu" },
+        { "option": "-user nama", "description": "Mencari file milik user tertentu" },
+        { "option": "-group nama", "description": "Mencari file milik group tertentu" },
+        { "option": "-perm mode", "description": "Mencari berdasarkan permission" },
+        { "option": "-empty", "description": "Mencari file atau direktori kosong" },
+        { "option": "-maxdepth N", "description": "Membatasi kedalaman pencarian" },
+        { "option": "-exec CMD {} \\;", "description": "Menjalankan perintah pada setiap hasil" },
+        { "option": "-delete", "description": "Menghapus file yang ditemukan" }
+      ],
+      "examples": "# Mencari file berdasarkan nama\nfind /home -name \"*.txt\"\n\n# Mencari file besar (lebih dari 100MB)\nfind / -size +100M -type f\n\n# Mencari file yang dimodifikasi 7 hari terakhir\nfind /var/log -mtime -7\n\n# Mencari dan hapus file .tmp\nfind /tmp -name \"*.tmp\" -delete\n\n# Mencari dan jalankan perintah\nfind . -name \"*.log\" -exec gzip {} \\;\n\n# Mencari file kosong\nfind . -empty -type f\n\n# Mencari dengan kedalaman terbatas\nfind . -maxdepth 2 -name \"*.conf\""
+    },
+    {
+      "name": "locate",
+      "title": "locate — Pencarian Cepat via Database",
+      "description": "Mencari file menggunakan database index yang sudah dibuat sebelumnya. Jauh lebih cepat dari find tetapi memerlukan database yang ter-update.",
+      "syntax": "locate [OPSI] POLA",
+      "options": [
+        { "option": "-i", "description": "Pencarian case-insensitive" },
+        { "option": "-n N", "description": "Membatasi jumlah hasil pencarian" },
+        { "option": "-c", "description": "Menampilkan jumlah hasil saja (count)" },
+        { "option": "-r REGEX", "description": "Menggunakan regular expression" },
+        { "option": "-e", "description": "Hanya menampilkan file yang benar-benar ada" }
+      ],
+      "examples": "# Mencari file\nlocate nginx.conf\n\n# Pencarian case-insensitive\nlocate -i readme\n\n# Membatasi jumlah hasil\nlocate -n 10 \"*.log\"\n\n# Update database locate\nsudo updatedb"
+    },
+    {
+      "name": "which",
+      "title": "which — Lokasi Executable",
+      "description": "Menampilkan path lengkap dari sebuah executable command yang akan dijalankan di shell.",
+      "syntax": "which [OPSI] COMMAND",
+      "options": [
+        { "option": "-a", "description": "Menampilkan semua lokasi yang cocok di PATH" }
+      ],
+      "examples": "# Mencari lokasi perintah\nwhich python\n/usr/bin/python\n\n# Mencari semua lokasi\nwhich -a python\n/usr/bin/python\n/usr/local/bin/python"
+    },
+    {
+      "name": "whereis",
+      "title": "whereis — Lokasi Binary, Source, Manual",
+      "description": "Mencari lokasi file binary, source code, dan manual page dari sebuah perintah.",
+      "syntax": "whereis [OPSI] COMMAND",
+      "options": [
+        { "option": "-b", "description": "Mencari hanya file binary" },
+        { "option": "-m", "description": "Mencari hanya manual page" },
+        { "option": "-s", "description": "Mencari hanya source code" }
+      ],
+      "examples": "# Mencari semua lokasi\nwhereis nginx\nnginx: /usr/sbin/nginx /usr/lib/nginx /etc/nginx /usr/share/nginx /usr/share/man/man8/nginx.8.gz\n\n# Mencari hanya binary\nwhereis -b python\n\n# Mencari hanya manual\nwhereis -m ls"
+    },
+    {
+      "name": "type",
+      "title": "type — Tipe Perintah",
+      "description": "Menampilkan informasi tentang tipe sebuah perintah — apakah itu alias, built-in, function, atau file external.",
+      "syntax": "type [OPSI] COMMAND",
+      "options": [
+        { "option": "-t", "description": "Menampilkan hanya tipe (alias, builtin, file, function, keyword)" },
+        { "option": "-a", "description": "Menampilkan semua lokasi/definisi perintah" },
+        { "option": "-p", "description": "Menampilkan path file disk (hanya untuk file)" }
+      ],
+      "examples": "# Melihat tipe perintah\ntype ls\nls is aliased to 'ls --color=auto'\n\ntype cd\ncd is a shell builtin\n\ntype python\npython is /usr/bin/python\n\n# Menampilkan hanya tipe\ntype -t ls\nalias"
+    }
+  ]
+}

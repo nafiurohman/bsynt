@@ -1,0 +1,62 @@
+{
+  "id": "pg-constraints",
+  "title": "Constraints",
+  "description": "Constraint untuk menjaga integritas data di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "PRIMARY KEY",
+      "title": "Primary Key",
+      "description": "Constraint yang menjamin nilai unik dan NOT NULL untuk identifikasi baris.",
+      "syntax": "kolom tipe PRIMARY KEY\n-- atau\nCONSTRAINT nama_pk PRIMARY KEY (kolom1, kolom2)",
+      "options": [],
+      "examples": "CREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  email TEXT NOT NULL\n);\n\n-- Composite primary key\nCREATE TABLE enrollments (\n  student_id INT,\n  course_id INT,\n  PRIMARY KEY (student_id, course_id)\n);",
+      "notes": "Otomatis membuat unique B-tree index."
+    },
+    {
+      "name": "FOREIGN KEY",
+      "title": "Foreign Key",
+      "description": "Constraint referensial yang menghubungkan kolom ke primary key tabel lain.",
+      "syntax": "kolom tipe REFERENCES tabel_lain(kolom) [ON DELETE action] [ON UPDATE action]",
+      "options": [
+        { "option": "CASCADE", "description": "Hapus/update baris terkait" },
+        { "option": "SET NULL", "description": "Set kolom FK ke NULL" },
+        { "option": "SET DEFAULT", "description": "Set ke nilai default" },
+        { "option": "RESTRICT", "description": "Tolak jika ada referensi (default)" },
+        { "option": "NO ACTION", "description": "Sama dengan RESTRICT tapi dicek di akhir transaction" },
+        { "option": "DEFERRABLE", "description": "Bisa ditunda pengecekannya" }
+      ],
+      "examples": "CREATE TABLE orders (\n  id SERIAL PRIMARY KEY,\n  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,\n  product_id INT REFERENCES products(id) ON DELETE SET NULL\n);\n\n-- Deferrable FK\nALTER TABLE orders ADD CONSTRAINT fk_user\n  FOREIGN KEY (user_id) REFERENCES users(id)\n  DEFERRABLE INITIALLY DEFERRED;",
+      "notes": "DEFERRABLE FK memungkinkan cek constraint ditunda sampai COMMIT."
+    },
+    {
+      "name": "UNIQUE",
+      "title": "Unique Constraint",
+      "description": "Menjamin nilai kolom tidak duplikat.",
+      "syntax": "kolom tipe UNIQUE\nCONSTRAINT nama UNIQUE (kolom1, kolom2)",
+      "options": [
+        { "option": "NULLS NOT DISTINCT", "description": "NULL dianggap sama (PG 15+)" }
+      ],
+      "examples": "CREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  email TEXT UNIQUE NOT NULL,\n  phone TEXT UNIQUE\n);\n\n-- Multi-column unique\nALTER TABLE permissions ADD CONSTRAINT uniq_user_role UNIQUE (user_id, role_id);",
+      "notes": "UNIQUE mengizinkan multiple NULL kecuali NULLS NOT DISTINCT."
+    },
+    {
+      "name": "CHECK",
+      "title": "Check Constraint",
+      "description": "Validasi bahwa data memenuhi kondisi tertentu.",
+      "syntax": "CONSTRAINT nama CHECK (kondisi)",
+      "options": [],
+      "examples": "CREATE TABLE products (\n  id SERIAL PRIMARY KEY,\n  name TEXT NOT NULL,\n  price DECIMAL CHECK (price >= 0),\n  stock INT CHECK (stock >= 0),\n  CONSTRAINT price_stock CHECK (price > 0 OR stock = 0)\n);\n\nCREATE TABLE events (\n  start_date DATE NOT NULL,\n  end_date DATE NOT NULL,\n  CHECK (end_date >= start_date)\n);",
+      "notes": "CHECK constraint dievaluasi saat INSERT dan UPDATE."
+    },
+    {
+      "name": "EXCLUDE",
+      "title": "Exclusion Constraint",
+      "description": "Constraint unik PostgreSQL — memastikan tidak ada overlap berdasarkan operator tertentu.",
+      "syntax": "EXCLUDE USING gist (kolom WITH operator)",
+      "options": [],
+      "examples": "CREATE EXTENSION IF NOT EXISTS btree_gist;\n\nCREATE TABLE reservations (\n  room_id INT,\n  during TSTZRANGE,\n  EXCLUDE USING GIST (room_id WITH =, during WITH &&)\n);\n\n-- Tidak bisa booking room yang sama di waktu yang overlap\nINSERT INTO reservations VALUES (1, '[2024-01-01, 2024-01-05)');",
+      "notes": "Memerlukan extension btree_gist. Sangat berguna untuk scheduling/booking."
+    }
+  ]
+}

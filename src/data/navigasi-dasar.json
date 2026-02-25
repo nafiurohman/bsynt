@@ -1,0 +1,131 @@
+{
+  "id": "navigasi-dasar",
+  "title": "Navigasi Dasar",
+  "description": "Perintah-perintah dasar untuk navigasi direktori, menampilkan informasi, dan berinteraksi dengan terminal Linux. Fondasi penting sebelum mempelajari perintah lanjutan.",
+  "commands": [
+    {
+      "name": "ls",
+      "title": "ls — Menampilkan Isi Direktori",
+      "description": "Menampilkan daftar file dan direktori. Salah satu perintah paling sering digunakan di terminal Linux. Secara default menampilkan isi direktori saat ini.",
+      "syntax": "ls [OPSI]... [DIREKTORI]...",
+      "options": [
+        { "option": "-l", "description": "Menampilkan dalam format panjang (long listing) — permission, owner, size, tanggal modifikasi" },
+        { "option": "-a", "description": "Menampilkan semua file termasuk file tersembunyi (diawali titik .)" },
+        { "option": "-la", "description": "Kombinasi long listing dan tampilkan semua file tersembunyi" },
+        { "option": "-lh", "description": "Long listing dengan ukuran file yang mudah dibaca (KB, MB, GB)" },
+        { "option": "-R", "description": "Menampilkan isi direktori secara rekursif (termasuk sub-direktori)" },
+        { "option": "-S", "description": "Mengurutkan berdasarkan ukuran file (terbesar di atas)" },
+        { "option": "-t", "description": "Mengurutkan berdasarkan waktu modifikasi (terbaru di atas)" },
+        { "option": "-r", "description": "Membalik urutan sorting (reverse)" },
+        { "option": "-i", "description": "Menampilkan nomor inode setiap file" },
+        { "option": "-d", "description": "Menampilkan informasi direktori itu sendiri, bukan isinya" },
+        { "option": "-1", "description": "Menampilkan satu file per baris (satu kolom)" },
+        { "option": "--color", "description": "Menampilkan output berwarna untuk membedakan tipe file" },
+        { "option": "-F", "description": "Menambahkan indikator tipe file (/ direktori, * executable, @ symlink)" },
+        { "option": "-X", "description": "Mengurutkan berdasarkan ekstensi file secara alfabetis" },
+        { "option": "--group-directories-first", "description": "Menampilkan direktori terlebih dahulu sebelum file" }
+      ],
+      "examples": "# Menampilkan isi direktori saat ini\n$ ls\nDesktop  Documents  Downloads  Music  Pictures  Videos\n\n# Long listing dengan ukuran human-readable\n$ ls -lh\ntotal 24K\ndrwxr-xr-x 2 user user 4.0K Jan 15 10:30 Desktop\ndrwxr-xr-x 5 user user 4.0K Jan 20 14:22 Documents\n\n# Tampilkan semua file termasuk tersembunyi\n$ ls -la\ntotal 48\ndrwxr-xr-x 8 user user 4096 Jan 20 14:22 .\ndrwxr-xr-x 3 root root 4096 Jan  5 08:00 ..\n-rw-r--r-- 1 user user 3771 Jan  5 08:00 .bashrc\n\n# Urutkan berdasarkan ukuran (terbesar dulu)\n$ ls -lhS\n\n# Tampilkan isi direktori secara rekursif\n$ ls -R Documents/\n\n# Tampilkan dengan indikator tipe dan direktori di atas\n$ ls -F --group-directories-first"
+    },
+    {
+      "name": "cd",
+      "title": "cd — Berpindah Direktori",
+      "description": "Berpindah antar direktori (change directory). Perintah navigasi paling fundamental di terminal Linux.",
+      "syntax": "cd [DIREKTORI]",
+      "options": [
+        { "option": "cd ~", "description": "Pindah ke home directory pengguna (/home/username)" },
+        { "option": "cd -", "description": "Pindah ke direktori sebelumnya (toggle antara dua direktori)" },
+        { "option": "cd ..", "description": "Pindah satu level ke atas (parent directory)" },
+        { "option": "cd /", "description": "Pindah ke root directory" },
+        { "option": "cd", "description": "Tanpa argumen, pindah ke home directory (sama seperti cd ~)" },
+        { "option": "cd ../..", "description": "Pindah dua level ke atas" },
+        { "option": "cd ~/Documents", "description": "Pindah ke direktori Documents di home" }
+      ],
+      "examples": "# Pindah ke home directory\n$ cd ~\n$ pwd\n/home/user\n\n# Pindah ke direktori tertentu\n$ cd /var/log\n\n# Pindah ke parent directory\n$ cd ..\n\n# Toggle antara dua direktori\n$ cd /etc\n$ cd /tmp\n$ cd -\n/etc"
+    },
+    {
+      "name": "pwd",
+      "title": "pwd — Menampilkan Direktori Saat Ini",
+      "description": "Menampilkan path lengkap dari direktori kerja saat ini (print working directory). Berguna untuk mengetahui posisi Anda di dalam struktur direktori.",
+      "syntax": "pwd [OPSI]",
+      "options": [
+        { "option": "-L", "description": "Menampilkan path logis, termasuk symlink (default)" },
+        { "option": "-P", "description": "Menampilkan path fisik sebenarnya, mengabaikan symlink" }
+      ],
+      "examples": "# Menampilkan direktori saat ini\n$ pwd\n/home/user/Documents\n\n# Path logis vs fisik pada symlink\n$ ln -s /var/log ~/logs-link\n$ cd ~/logs-link\n$ pwd -L\n/home/user/logs-link\n$ pwd -P\n/var/log"
+    },
+    {
+      "name": "clear",
+      "title": "clear — Membersihkan Layar Terminal",
+      "description": "Membersihkan layar terminal dari semua output sebelumnya. Berguna untuk merapikan tampilan terminal agar lebih fokus.",
+      "syntax": "clear",
+      "options": [
+        { "option": "clear", "description": "Membersihkan seluruh layar terminal" },
+        { "option": "Ctrl+L", "description": "Shortcut keyboard untuk membersihkan layar (lebih cepat)" },
+        { "option": "reset", "description": "Mereset terminal sepenuhnya — membersihkan layar dan mengembalikan konfigurasi terminal ke default" }
+      ],
+      "examples": "# Membersihkan layar terminal\n$ clear\n\n# Shortcut keyboard (lebih cepat)\n# Tekan Ctrl+L\n\n# Reset terminal jika tampilan rusak\n$ reset\n\n# Membersihkan lalu jalankan perintah\n$ clear && ls -la"
+    },
+    {
+      "name": "history",
+      "title": "history — Riwayat Perintah",
+      "description": "Menampilkan dan mengelola riwayat perintah yang pernah dijalankan di terminal. Sangat berguna untuk mengulang perintah sebelumnya tanpa mengetik ulang.",
+      "syntax": "history [OPSI] [N]",
+      "options": [
+        { "option": "history", "description": "Menampilkan seluruh riwayat perintah" },
+        { "option": "history N", "description": "Menampilkan N perintah terakhir dari riwayat" },
+        { "option": "!!", "description": "Mengulang perintah terakhir yang dijalankan" },
+        { "option": "!N", "description": "Menjalankan perintah nomor N dari riwayat" },
+        { "option": "!string", "description": "Menjalankan perintah terakhir yang diawali dengan string" },
+        { "option": "-c", "description": "Menghapus seluruh riwayat perintah dari memori" },
+        { "option": "-d OFFSET", "description": "Menghapus entri riwayat pada posisi OFFSET tertentu" },
+        { "option": "-w", "description": "Menulis riwayat saat ini ke file ~/.bash_history" },
+        { "option": "Ctrl+R", "description": "Pencarian interaktif riwayat perintah (reverse search)" }
+      ],
+      "examples": "# Menampilkan 10 perintah terakhir\n$ history 10\n\n# Mengulang perintah terakhir\n$ !!\n\n# Menjalankan perintah nomor 42\n$ !42\n\n# Menjalankan perintah terakhir yang diawali ssh\n$ !ssh\n\n# Menghapus seluruh riwayat\n$ history -c"
+    },
+    {
+      "name": "alias",
+      "title": "alias — Membuat Alias Perintah",
+      "description": "Membuat shortcut atau singkatan untuk perintah yang sering digunakan. Alias bersifat sementara (hanya untuk sesi saat ini) kecuali ditambahkan ke file konfigurasi shell.",
+      "syntax": "alias [nama='perintah']",
+      "options": [
+        { "option": "alias", "description": "Menampilkan semua alias yang aktif" },
+        { "option": "alias nama='perintah'", "description": "Membuat alias baru" },
+        { "option": "unalias nama", "description": "Menghapus alias tertentu" },
+        { "option": "unalias -a", "description": "Menghapus semua alias" }
+      ],
+      "examples": "# Membuat alias untuk perintah panjang\n$ alias ll='ls -la'\n$ alias gs='git status'\n$ alias update='sudo apt update && sudo apt upgrade -y'\n\n# Menampilkan semua alias aktif\n$ alias\n\n# Menghapus alias\n$ unalias ll\n\n# Membuat alias permanen (tambahkan ke ~/.bashrc)\n$ echo \"alias ll='ls -la'\" >> ~/.bashrc\n$ source ~/.bashrc",
+      "notes": "Untuk membuat alias permanen, tambahkan ke file ~/.bashrc atau ~/.zshrc lalu jalankan source pada file tersebut."
+    },
+    {
+      "name": "echo",
+      "title": "echo — Menampilkan Teks ke Terminal",
+      "description": "Menampilkan baris teks atau nilai variabel ke standard output. Sering digunakan dalam shell scripting untuk output pesan.",
+      "syntax": "echo [OPSI] [STRING]",
+      "options": [
+        { "option": "-n", "description": "Tidak menambahkan newline di akhir output" },
+        { "option": "-e", "description": "Mengaktifkan interpretasi escape character (\\n, \\t, dll)" },
+        { "option": "-E", "description": "Menonaktifkan interpretasi escape character (default)" }
+      ],
+      "examples": "# Menampilkan teks sederhana\n$ echo \"Hello World\"\nHello World\n\n# Menampilkan variabel\n$ echo $HOME\n/home/user\n\n# Tanpa newline di akhir\n$ echo -n \"Loading...\"\n\n# Dengan escape character\n$ echo -e \"Baris 1\\nBaris 2\\tTab\"\nBaris 1\nBaris 2\tTab\n\n# Menulis ke file\n$ echo \"isi file\" > file.txt\n$ echo \"tambahan\" >> file.txt"
+    },
+    {
+      "name": "printf",
+      "title": "printf — Menampilkan Teks dengan Format",
+      "description": "Menampilkan teks dengan format yang lebih terkontrol dibanding echo. Mendukung format specifier seperti %s (string), %d (integer), %f (float).",
+      "syntax": "printf FORMAT [ARGUMEN]...",
+      "options": [
+        { "option": "%s", "description": "Format string" },
+        { "option": "%d", "description": "Format bilangan bulat (desimal)" },
+        { "option": "%f", "description": "Format bilangan pecahan (floating point)" },
+        { "option": "%x", "description": "Format heksadesimal" },
+        { "option": "%o", "description": "Format oktal" },
+        { "option": "\\n", "description": "Newline (baris baru)" },
+        { "option": "\\t", "description": "Tab (horizontal)" },
+        { "option": "%-10s", "description": "Rata kiri dengan lebar 10 karakter" }
+      ],
+      "examples": "# Format string dan angka\n$ printf \"Nama: %s, Umur: %d\\n\" \"Budi\" 25\nNama: Budi, Umur: 25\n\n# Format angka desimal\n$ printf \"PI = %.4f\\n\" 3.14159\nPI = 3.1416\n\n# Tabel dengan format rata\n$ printf \"%-15s %5s\\n\" \"Nama\" \"Nilai\"\n$ printf \"%-15s %5d\\n\" \"Matematika\" 95\n$ printf \"%-15s %5d\\n\" \"Bahasa\" 88"
+    }
+  ]
+}

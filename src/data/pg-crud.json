@@ -1,0 +1,94 @@
+{
+  "id": "pg-crud",
+  "title": "CRUD Operations",
+  "description": "Operasi dasar SELECT, INSERT, UPDATE, DELETE di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "SELECT",
+      "title": "Mengambil Data",
+      "description": "Mengambil data dari satu atau lebih tabel.",
+      "syntax": "SELECT [DISTINCT] kolom1, kolom2 FROM tabel [WHERE kondisi] [ORDER BY kolom] [LIMIT n] [OFFSET m];",
+      "options": [
+        { "option": "DISTINCT", "description": "Menghilangkan duplikasi" },
+        { "option": "WHERE", "description": "Filter baris berdasarkan kondisi" },
+        { "option": "ORDER BY", "description": "Mengurutkan hasil" },
+        { "option": "LIMIT / FETCH FIRST", "description": "Membatasi jumlah hasil" },
+        { "option": "OFFSET", "description": "Melewati sejumlah baris" },
+        { "option": "GROUP BY", "description": "Mengelompokkan baris" },
+        { "option": "HAVING", "description": "Filter pada grup" }
+      ],
+      "examples": "SELECT * FROM users;\nSELECT name, email FROM users WHERE active = true ORDER BY name;\nSELECT DISTINCT city FROM users;\nSELECT * FROM products ORDER BY price DESC LIMIT 10 OFFSET 20;\nSELECT city, COUNT(*) FROM users GROUP BY city HAVING COUNT(*) > 5;",
+      "notes": "Gunakan FETCH FIRST n ROWS ONLY sebagai alternatif standar SQL untuk LIMIT."
+    },
+    {
+      "name": "INSERT",
+      "title": "Memasukkan Data",
+      "description": "Menambahkan baris baru ke tabel.",
+      "syntax": "INSERT INTO tabel (kolom1, kolom2) VALUES (val1, val2) [RETURNING *];",
+      "options": [
+        { "option": "RETURNING *", "description": "Mengembalikan baris yang baru dimasukkan" },
+        { "option": "ON CONFLICT", "description": "Upsert — update jika konflik" },
+        { "option": "DEFAULT VALUES", "description": "Insert dengan semua default" }
+      ],
+      "examples": "INSERT INTO users (name, email) VALUES ('John', 'john@mail.com');\n\n-- Multiple insert\nINSERT INTO users (name, email) VALUES\n  ('Alice', 'alice@mail.com'),\n  ('Bob', 'bob@mail.com')\nRETURNING id, name;\n\n-- Upsert\nINSERT INTO users (email, name) VALUES ('john@mail.com', 'John Updated')\nON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name;\n\n-- Insert dari SELECT\nINSERT INTO archive SELECT * FROM logs WHERE created_at < '2024-01-01';",
+      "notes": "RETURNING sangat berguna untuk mendapatkan ID/data yang baru diinsert."
+    },
+    {
+      "name": "UPDATE",
+      "title": "Mengubah Data",
+      "description": "Mengubah data yang sudah ada di tabel.",
+      "syntax": "UPDATE tabel SET kolom = nilai [WHERE kondisi] [RETURNING *];",
+      "options": [
+        { "option": "SET kolom = nilai", "description": "Mengatur nilai kolom" },
+        { "option": "WHERE", "description": "Filter baris yang di-update" },
+        { "option": "FROM", "description": "Update dengan join dari tabel lain" },
+        { "option": "RETURNING", "description": "Mengembalikan baris yang diubah" }
+      ],
+      "examples": "UPDATE users SET name = 'Jane' WHERE id = 1;\nUPDATE products SET price = price * 1.1 WHERE category = 'electronics';\n\n-- Update dengan FROM (join)\nUPDATE orders SET status = 'vip'\nFROM users WHERE orders.user_id = users.id AND users.tier = 'premium'\nRETURNING orders.*;",
+      "warning": "Tanpa WHERE, SEMUA baris akan diupdate!"
+    },
+    {
+      "name": "DELETE",
+      "title": "Menghapus Data",
+      "description": "Menghapus baris dari tabel berdasarkan kondisi.",
+      "syntax": "DELETE FROM tabel [WHERE kondisi] [RETURNING *];",
+      "options": [
+        { "option": "WHERE", "description": "Filter baris yang dihapus" },
+        { "option": "USING", "description": "Delete dengan join dari tabel lain" },
+        { "option": "RETURNING", "description": "Mengembalikan baris yang dihapus" }
+      ],
+      "examples": "DELETE FROM users WHERE id = 1;\nDELETE FROM logs WHERE created_at < NOW() - INTERVAL '90 days';\n\n-- Delete dengan USING\nDELETE FROM orders USING users\nWHERE orders.user_id = users.id AND users.banned = true\nRETURNING orders.id;",
+      "warning": "Tanpa WHERE, SEMUA baris akan dihapus!"
+    },
+    {
+      "name": "UPSERT",
+      "title": "Insert atau Update (ON CONFLICT)",
+      "description": "Memasukkan data baru, atau mengupdate jika terjadi konflik unique constraint.",
+      "syntax": "INSERT INTO tabel (kolom) VALUES (val)\nON CONFLICT (kolom_unik) DO UPDATE SET kolom = EXCLUDED.kolom;",
+      "options": [
+        { "option": "ON CONFLICT (kolom)", "description": "Kolom unique yang menjadi penanda konflik" },
+        { "option": "DO UPDATE SET", "description": "Action update saat konflik" },
+        { "option": "DO NOTHING", "description": "Abaikan jika konflik" },
+        { "option": "EXCLUDED", "description": "Referensi ke nilai baru yang coba diinsert" },
+        { "option": "WHERE", "description": "Kondisi tambahan pada DO UPDATE" }
+      ],
+      "examples": "-- Upsert sederhana\nINSERT INTO settings (key, value) VALUES ('theme', 'dark')\nON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;\n\n-- Do nothing jika sudah ada\nINSERT INTO tags (name) VALUES ('postgresql')\nON CONFLICT (name) DO NOTHING;\n\n-- Conditional upsert\nINSERT INTO products (sku, price) VALUES ('ABC', 100)\nON CONFLICT (sku) DO UPDATE SET price = EXCLUDED.price\nWHERE products.price < EXCLUDED.price;",
+      "notes": "Fitur UPSERT (ON CONFLICT) tersedia sejak PostgreSQL 9.5."
+    },
+    {
+      "name": "CTE / WITH",
+      "title": "Common Table Expression",
+      "description": "CTE memungkinkan query bertingkat yang mudah dibaca dan bisa digunakan untuk INSERT/UPDATE/DELETE.",
+      "syntax": "WITH cte_name AS (\n  SELECT ...\n)\nSELECT * FROM cte_name;",
+      "options": [
+        { "option": "WITH", "description": "Mendefinisikan CTE" },
+        { "option": "RECURSIVE", "description": "CTE rekursif untuk data hierarkis" },
+        { "option": "MATERIALIZED", "description": "Paksa CTE dimaterialisasi" },
+        { "option": "NOT MATERIALIZED", "description": "Inline CTE (PG 12+)" }
+      ],
+      "examples": "-- CTE sederhana\nWITH active_users AS (\n  SELECT * FROM users WHERE active = true\n)\nSELECT * FROM active_users WHERE city = 'Jakarta';\n\n-- CTE rekursif (hierarki)\nWITH RECURSIVE tree AS (\n  SELECT id, name, parent_id, 1 AS depth FROM categories WHERE parent_id IS NULL\n  UNION ALL\n  SELECT c.id, c.name, c.parent_id, t.depth + 1\n  FROM categories c JOIN tree t ON c.parent_id = t.id\n)\nSELECT * FROM tree ORDER BY depth;\n\n-- CTE dengan DELETE\nWITH deleted AS (\n  DELETE FROM logs WHERE created_at < '2024-01-01' RETURNING *\n)\nINSERT INTO log_archive SELECT * FROM deleted;",
+      "notes": "CTE sangat powerful di PostgreSQL karena bisa dipakai dengan INSERT/UPDATE/DELETE."
+    }
+  ]
+}

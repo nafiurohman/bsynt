@@ -1,0 +1,89 @@
+{
+  "id": "pg-database",
+  "title": "Database Management",
+  "description": "Membuat, menghapus, dan mengelola database di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE DATABASE",
+      "title": "Membuat Database Baru",
+      "description": "Membuat database baru di PostgreSQL dengan opsi encoding, owner, dan template.",
+      "syntax": "CREATE DATABASE nama_database [WITH] [OWNER = role] [ENCODING = 'UTF8'] [TEMPLATE = template0];",
+      "options": [
+        { "option": "OWNER = role", "description": "Menentukan pemilik database" },
+        { "option": "ENCODING = 'UTF8'", "description": "Mengatur character encoding" },
+        { "option": "TEMPLATE = template0", "description": "Menggunakan template database" },
+        { "option": "LC_COLLATE", "description": "Mengatur collation locale" },
+        { "option": "LC_CTYPE", "description": "Mengatur character classification locale" },
+        { "option": "TABLESPACE", "description": "Menentukan tablespace default" },
+        { "option": "CONNECTION LIMIT", "description": "Membatasi jumlah koneksi" }
+      ],
+      "examples": "-- Membuat database sederhana\nCREATE DATABASE toko_online;\n\n-- Dengan opsi lengkap\nCREATE DATABASE toko_online\n  WITH OWNER = admin\n  ENCODING = 'UTF8'\n  LC_COLLATE = 'id_ID.UTF-8'\n  CONNECTION LIMIT = 100;\n\n-- Dari template\nCREATE DATABASE dev_db TEMPLATE prod_db;",
+      "notes": "Tidak bisa dijalankan dalam transaction block."
+    },
+    {
+      "name": "DROP DATABASE",
+      "title": "Menghapus Database",
+      "description": "Menghapus database beserta semua objek di dalamnya secara permanen.",
+      "syntax": "DROP DATABASE [IF EXISTS] nama_database [WITH (FORCE)];",
+      "options": [
+        { "option": "IF EXISTS", "description": "Tidak error jika database tidak ada" },
+        { "option": "WITH (FORCE)", "description": "Memutus koneksi aktif dan hapus (PG 13+)" }
+      ],
+      "examples": "DROP DATABASE toko_online;\nDROP DATABASE IF EXISTS test_db;\nDROP DATABASE busy_db WITH (FORCE);",
+      "warning": "SEMUA data akan hilang dan tidak bisa di-undo!"
+    },
+    {
+      "name": "ALTER DATABASE",
+      "title": "Mengubah Konfigurasi Database",
+      "description": "Mengubah properti database seperti nama, owner, dan parameter konfigurasi.",
+      "syntax": "ALTER DATABASE nama_database [RENAME TO nama_baru | OWNER TO role | SET parameter = value];",
+      "options": [
+        { "option": "RENAME TO", "description": "Mengganti nama database" },
+        { "option": "OWNER TO", "description": "Mengganti pemilik database" },
+        { "option": "SET parameter", "description": "Mengatur parameter konfigurasi" },
+        { "option": "RESET parameter", "description": "Mengembalikan parameter ke default" },
+        { "option": "SET TABLESPACE", "description": "Memindahkan database ke tablespace lain" }
+      ],
+      "examples": "ALTER DATABASE toko_online RENAME TO ecommerce;\nALTER DATABASE ecommerce OWNER TO admin;\nALTER DATABASE ecommerce SET timezone = 'Asia/Jakarta';\nALTER DATABASE ecommerce SET work_mem = '256MB';",
+      "notes": "RENAME tidak bisa dilakukan saat terhubung ke database tersebut."
+    },
+    {
+      "name": "\\l / pg_database",
+      "title": "Melihat Daftar Database",
+      "description": "Menampilkan semua database yang ada di server PostgreSQL.",
+      "syntax": "\\l  -- di psql\nSELECT datname, datdba, encoding, datcollate FROM pg_database;",
+      "options": [
+        { "option": "\\l+", "description": "Info lengkap termasuk ukuran dan deskripsi" },
+        { "option": "pg_database", "description": "System catalog berisi metadata database" }
+      ],
+      "examples": "-- psql shortcut\n\\l\n\\l+\n\n-- SQL query\nSELECT datname, pg_size_pretty(pg_database_size(datname)) AS size\nFROM pg_database\nORDER BY pg_database_size(datname) DESC;",
+      "notes": "\\l hanya tersedia di psql client."
+    },
+    {
+      "name": "\\c / CONNECT",
+      "title": "Berpindah Database",
+      "description": "Menghubungkan ke database lain di psql.",
+      "syntax": "\\c nama_database [username] [host] [port]",
+      "options": [
+        { "option": "\\c dbname", "description": "Connect ke database" },
+        { "option": "\\c dbname user", "description": "Connect dengan user tertentu" },
+        { "option": "\\conninfo", "description": "Menampilkan info koneksi saat ini" }
+      ],
+      "examples": "\\c toko_online\n\\c ecommerce admin localhost 5432\n\\conninfo",
+      "notes": "Setiap \\c membuat koneksi baru."
+    },
+    {
+      "name": "CREATE SCHEMA",
+      "title": "Membuat Schema",
+      "description": "Schema adalah namespace di dalam database untuk mengelompokkan tabel dan objek lain.",
+      "syntax": "CREATE SCHEMA [IF NOT EXISTS] nama_schema [AUTHORIZATION role];",
+      "options": [
+        { "option": "IF NOT EXISTS", "description": "Tidak error jika sudah ada" },
+        { "option": "AUTHORIZATION", "description": "Menentukan pemilik schema" }
+      ],
+      "examples": "CREATE SCHEMA inventory;\nCREATE SCHEMA IF NOT EXISTS sales AUTHORIZATION admin;\n\n-- Menggunakan schema\nSET search_path TO inventory, public;\nCREATE TABLE inventory.products (id SERIAL PRIMARY KEY, name TEXT);\nSELECT * FROM inventory.products;",
+      "notes": "Schema 'public' adalah default. Gunakan search_path untuk mengatur prioritas pencarian."
+    }
+  ]
+}

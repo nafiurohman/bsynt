@@ -1,0 +1,65 @@
+{
+  "id": "docker-advanced",
+  "title": "Docker Advanced",
+  "description": "Perintah Docker lanjutan: inspect, system, registry, dan maintenance.",
+  "badge": "Docker",
+  "commands": [
+    {
+      "name": "docker inspect",
+      "title": "Inspeksi Detail Container/Image",
+      "description": "Menampilkan informasi lengkap tentang container, image, volume, atau network.",
+      "syntax": "docker inspect <object>",
+      "options": [
+        { "option": "-f / --format", "description": "Filter output dengan Go template" }
+      ],
+      "examples": "docker inspect web\ndocker inspect --format '{{.NetworkSettings.IPAddress}}' web\ndocker inspect --format '{{json .Config.Env}}' web\ndocker inspect nginx:latest",
+      "notes": "Format menggunakan Go template. Output asli dalam JSON."
+    },
+    {
+      "name": "docker system df / prune",
+      "title": "Disk Usage & Cleanup",
+      "description": "Melihat penggunaan disk Docker dan membersihkan resource yang tidak terpakai.",
+      "syntax": "docker system df\ndocker system prune [opsi]",
+      "options": [
+        { "option": "df", "description": "Tampilkan disk usage" },
+        { "option": "df -v", "description": "Tampilkan detail per item" },
+        { "option": "prune", "description": "Hapus semua unused resources" },
+        { "option": "prune -a", "description": "Termasuk unused images" },
+        { "option": "prune --volumes", "description": "Termasuk volumes" }
+      ],
+      "examples": "docker system df\ndocker system df -v\ndocker system prune\ndocker system prune -a --volumes -f",
+      "warning": "docker system prune -a --volumes menghapus SEMUA yang tidak terpakai!"
+    },
+    {
+      "name": "docker cp",
+      "title": "Copy File dari/ke Container",
+      "description": "Menyalin file antara host dan container.",
+      "syntax": "docker cp <src> <dst>\n# src/dst bisa: container:path atau local_path",
+      "options": [],
+      "examples": "# Copy dari container ke host\ndocker cp web:/etc/nginx/nginx.conf ./nginx.conf\n\n# Copy dari host ke container\ndocker cp ./config.json web:/app/config.json\n\n# Copy folder\ndocker cp web:/var/log/nginx ./logs",
+      "notes": "Bisa digunakan pada container yang stopped maupun running."
+    },
+    {
+      "name": "docker stats / top",
+      "title": "Monitoring Container",
+      "description": "Melihat resource usage real-time dari container.",
+      "syntax": "docker stats [container]\ndocker top <container>",
+      "options": [
+        { "option": "stats", "description": "Live CPU, memory, network, I/O" },
+        { "option": "stats --no-stream", "description": "Snapshot sekali" },
+        { "option": "top", "description": "Processes di dalam container" }
+      ],
+      "examples": "docker stats\ndocker stats web db\ndocker stats --no-stream\ndocker top web",
+      "notes": "docker stats sangat berguna untuk monitoring resource container di production."
+    },
+    {
+      "name": "docker commit / save / load",
+      "title": "Export & Import Image",
+      "description": "Menyimpan state container sebagai image baru atau export/import image.",
+      "syntax": "docker commit <container> <image>\ndocker save <image> > file.tar\ndocker load < file.tar",
+      "options": [],
+      "examples": "# Simpan container sebagai image\ndocker commit web myapp:snapshot\n\n# Export image ke file\ndocker save myapp:latest > myapp.tar\ndocker save myapp:latest | gzip > myapp.tar.gz\n\n# Import image dari file\ndocker load < myapp.tar\ngunzip -c myapp.tar.gz | docker load",
+      "notes": "docker save/load untuk image, docker export/import untuk container filesystem."
+    }
+  ]
+}

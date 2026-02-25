@@ -1,0 +1,46 @@
+{
+  "id": "pg-views",
+  "title": "Views",
+  "description": "Membuat dan mengelola views dan materialized views di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE VIEW",
+      "title": "Membuat View",
+      "description": "View adalah query tersimpan yang bisa diakses seperti tabel.",
+      "syntax": "CREATE [OR REPLACE] VIEW nama_view AS SELECT ...;",
+      "options": [
+        { "option": "OR REPLACE", "description": "Replace jika sudah ada" },
+        { "option": "WITH CHECK OPTION", "description": "Validasi INSERT/UPDATE melalui view" },
+        { "option": "WITH LOCAL CHECK OPTION", "description": "Validasi hanya pada view ini" },
+        { "option": "WITH CASCADED CHECK OPTION", "description": "Validasi termasuk view underlying" }
+      ],
+      "examples": "CREATE VIEW active_users AS\nSELECT id, name, email FROM users WHERE active = true;\n\nCREATE OR REPLACE VIEW order_summary AS\nSELECT u.name, COUNT(o.id) AS total_orders, SUM(o.total) AS total_spent\nFROM users u LEFT JOIN orders o ON u.id = o.user_id\nGROUP BY u.name;\n\nSELECT * FROM order_summary;",
+      "notes": "View tidak menyimpan data — query dijalankan setiap kali view diakses."
+    },
+    {
+      "name": "MATERIALIZED VIEW",
+      "title": "Materialized View",
+      "description": "View yang menyimpan hasil query secara fisik — lebih cepat dibaca tapi harus di-refresh.",
+      "syntax": "CREATE MATERIALIZED VIEW nama_view AS SELECT ... [WITH NO DATA];",
+      "options": [
+        { "option": "WITH NO DATA", "description": "Buat struktur tanpa mengisi data" },
+        { "option": "REFRESH MATERIALIZED VIEW", "description": "Update data view" },
+        { "option": "CONCURRENTLY", "description": "Refresh tanpa mengunci view" }
+      ],
+      "examples": "CREATE MATERIALIZED VIEW monthly_stats AS\nSELECT DATE_TRUNC('month', created_at) AS month,\n  COUNT(*) AS total, SUM(total) AS revenue\nFROM orders GROUP BY 1;\n\n-- Refresh data\nREFRESH MATERIALIZED VIEW monthly_stats;\nREFRESH MATERIALIZED VIEW CONCURRENTLY monthly_stats;\n\n-- Index pada materialized view\nCREATE UNIQUE INDEX idx_monthly ON monthly_stats (month);",
+      "notes": "CONCURRENTLY refresh memerlukan UNIQUE INDEX pada materialized view."
+    },
+    {
+      "name": "DROP VIEW",
+      "title": "Menghapus View",
+      "description": "Menghapus view atau materialized view.",
+      "syntax": "DROP VIEW [IF EXISTS] nama_view [CASCADE];",
+      "options": [
+        { "option": "CASCADE", "description": "Hapus juga view yang bergantung" }
+      ],
+      "examples": "DROP VIEW active_users;\nDROP VIEW IF EXISTS order_summary CASCADE;\nDROP MATERIALIZED VIEW IF EXISTS monthly_stats;",
+      "notes": "CASCADE akan menghapus semua view yang bergantung pada view ini."
+    }
+  ]
+}

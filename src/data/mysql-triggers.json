@@ -1,0 +1,38 @@
+{
+  "id": "mysql-triggers",
+  "title": "Triggers",
+  "description": "Membuat dan mengelola trigger di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE TRIGGER",
+      "title": "Membuat Trigger",
+      "description": "Membuat trigger — aksi otomatis saat INSERT, UPDATE, atau DELETE.",
+      "syntax": "CREATE TRIGGER nama_trigger\n{BEFORE|AFTER} {INSERT|UPDATE|DELETE}\nON tabel FOR EACH ROW\nBEGIN\n  -- SQL statements\nEND;",
+      "options": [
+        { "option": "BEFORE", "description": "Sebelum operasi dilakukan" },
+        { "option": "AFTER", "description": "Setelah operasi dilakukan" },
+        { "option": "NEW", "description": "Referensi ke baris baru (INSERT/UPDATE)" },
+        { "option": "OLD", "description": "Referensi ke baris lama (UPDATE/DELETE)" }
+      ],
+      "examples": "-- Log perubahan harga produk\nDELIMITER //\nCREATE TRIGGER log_price_change\nAFTER UPDATE ON products\nFOR EACH ROW\nBEGIN\n  IF OLD.price != NEW.price THEN\n    INSERT INTO price_history (product_id, old_price, new_price, changed_at)\n    VALUES (NEW.id, OLD.price, NEW.price, NOW());\n  END IF;\nEND //\nDELIMITER ;\n\n-- Auto-update stock\nDELIMITER //\nCREATE TRIGGER update_stock_after_order\nAFTER INSERT ON order_items\nFOR EACH ROW\nBEGIN\n  UPDATE products SET stock = stock - NEW.quantity\n  WHERE id = NEW.product_id;\nEND //\nDELIMITER ;\n\n-- Validasi sebelum insert\nDELIMITER //\nCREATE TRIGGER validate_order_total\nBEFORE INSERT ON orders\nFOR EACH ROW\nBEGIN\n  IF NEW.total < 0 THEN\n    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Total cannot be negative';\n  END IF;\nEND //\nDELIMITER ;",
+      "notes": "BEFORE trigger bisa memodifikasi NEW values. AFTER trigger tidak bisa."
+    },
+    {
+      "name": "DROP TRIGGER",
+      "title": "Menghapus Trigger",
+      "description": "Menghapus trigger.",
+      "syntax": "DROP TRIGGER [IF EXISTS] nama_trigger;",
+      "options": [],
+      "examples": "DROP TRIGGER log_price_change;\nDROP TRIGGER IF EXISTS update_stock_after_order;\nSHOW TRIGGERS;"
+    },
+    {
+      "name": "SHOW TRIGGERS",
+      "title": "Tampilkan Trigger",
+      "description": "Menampilkan semua trigger di database.",
+      "syntax": "SHOW TRIGGERS [FROM database] [LIKE 'pattern'];",
+      "options": [],
+      "examples": "SHOW TRIGGERS;\nSHOW TRIGGERS FROM myapp;\nSHOW TRIGGERS LIKE 'log%';"
+    }
+  ]
+}

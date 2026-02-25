@@ -1,0 +1,67 @@
+{
+  "id": "git-stash",
+  "title": "Stash",
+  "description": "Menyimpan sementara perubahan yang belum di-commit agar bisa beralih branch.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git stash",
+      "title": "Menyimpan Perubahan Sementara",
+      "description": "Menyimpan perubahan working directory dan staging area ke stash stack.",
+      "syntax": "git stash [push] [opsi]",
+      "options": [
+        { "option": "push -m \"pesan\"", "description": "Stash dengan pesan deskriptif" },
+        { "option": "-u / --include-untracked", "description": "Termasuk file untracked" },
+        { "option": "-a / --all", "description": "Termasuk file ignored" },
+        { "option": "-p / --patch", "description": "Stash secara interaktif" },
+        { "option": "-k / --keep-index", "description": "Tetap simpan yang sudah di-stage" }
+      ],
+      "examples": "git stash\ngit stash push -m \"WIP: fitur login\"\ngit stash -u\ngit stash -p",
+      "notes": "Stash bekerja seperti stack (LIFO) — yang terakhir disimpan, pertama diambil."
+    },
+    {
+      "name": "git stash list",
+      "title": "Melihat Daftar Stash",
+      "description": "Menampilkan semua stash yang tersimpan.",
+      "syntax": "git stash list",
+      "options": [],
+      "examples": "git stash list\n# Output:\n# stash@{0}: On main: WIP fitur login\n# stash@{1}: On develop: bugfix sementara",
+      "notes": "stash@{0} adalah yang terbaru."
+    },
+    {
+      "name": "git stash apply / pop",
+      "title": "Mengembalikan Stash",
+      "description": "Menerapkan kembali perubahan dari stash.",
+      "syntax": "git stash apply [stash@{n}]\ngit stash pop [stash@{n}]",
+      "options": [
+        { "option": "apply", "description": "Terapkan stash, tetap simpan di list" },
+        { "option": "pop", "description": "Terapkan stash dan hapus dari list" },
+        { "option": "stash@{n}", "description": "Pilih stash tertentu" }
+      ],
+      "examples": "git stash apply\ngit stash pop\ngit stash apply stash@{2}\ngit stash pop stash@{1}",
+      "notes": "Jika terjadi konflik, selesaikan manual lalu git add."
+    },
+    {
+      "name": "git stash drop / clear",
+      "title": "Menghapus Stash",
+      "description": "Menghapus stash tertentu atau semua stash.",
+      "syntax": "git stash drop [stash@{n}]\ngit stash clear",
+      "options": [
+        { "option": "drop stash@{n}", "description": "Hapus stash tertentu" },
+        { "option": "clear", "description": "Hapus SEMUA stash" },
+        { "option": "show stash@{n}", "description": "Lihat diff dari stash" }
+      ],
+      "examples": "git stash drop\ngit stash drop stash@{2}\ngit stash clear\ngit stash show -p stash@{0}  # lihat detail diff",
+      "warning": "git stash clear menghapus semua stash dan TIDAK bisa di-undo!"
+    },
+    {
+      "name": "git stash branch",
+      "title": "Membuat Branch dari Stash",
+      "description": "Membuat branch baru dan menerapkan stash ke branch tersebut.",
+      "syntax": "git stash branch <nama-branch> [stash@{n}]",
+      "options": [],
+      "examples": "git stash branch feature/from-stash\ngit stash branch hotfix stash@{1}",
+      "notes": "Berguna ketika stash konflik dengan perubahan di branch saat ini."
+    }
+  ]
+}

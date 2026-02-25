@@ -1,0 +1,70 @@
+{
+  "id": "pg-user-management",
+  "title": "User & Role Management",
+  "description": "Mengelola user, role, dan hak akses di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "CREATE ROLE",
+      "title": "Membuat Role / User",
+      "description": "Di PostgreSQL, user dan group adalah role. CREATE USER = CREATE ROLE WITH LOGIN.",
+      "syntax": "CREATE ROLE nama [WITH opsi];",
+      "options": [
+        { "option": "LOGIN", "description": "Bisa login (= CREATE USER)" },
+        { "option": "SUPERUSER", "description": "Akses tanpa batas" },
+        { "option": "CREATEDB", "description": "Bisa membuat database" },
+        { "option": "CREATEROLE", "description": "Bisa membuat role lain" },
+        { "option": "PASSWORD 'pass'", "description": "Mengatur password" },
+        { "option": "VALID UNTIL 'timestamp'", "description": "Password expiry" },
+        { "option": "CONNECTION LIMIT n", "description": "Batas koneksi" },
+        { "option": "IN ROLE role", "description": "Menjadi member role lain" }
+      ],
+      "examples": "CREATE ROLE admin WITH LOGIN SUPERUSER PASSWORD 'secret123';\nCREATE USER app_user WITH PASSWORD 'pass123';\nCREATE ROLE readonly;\nCREATE ROLE developer WITH LOGIN CREATEDB PASSWORD 'dev123';",
+      "notes": "CREATE USER adalah alias untuk CREATE ROLE WITH LOGIN."
+    },
+    {
+      "name": "GRANT",
+      "title": "Memberikan Hak Akses",
+      "description": "Memberikan privilege pada objek database kepada role.",
+      "syntax": "GRANT privilege ON objek TO role;",
+      "options": [
+        { "option": "SELECT", "description": "Membaca data" },
+        { "option": "INSERT", "description": "Menambah data" },
+        { "option": "UPDATE", "description": "Mengubah data" },
+        { "option": "DELETE", "description": "Menghapus data" },
+        { "option": "ALL PRIVILEGES", "description": "Semua hak akses" },
+        { "option": "USAGE", "description": "Menggunakan schema/sequence" },
+        { "option": "WITH GRANT OPTION", "description": "Bisa memberikan privilege ke role lain" }
+      ],
+      "examples": "GRANT SELECT ON users TO readonly;\nGRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;\nGRANT USAGE ON SCHEMA public TO app_user;\nGRANT SELECT, INSERT, UPDATE ON orders TO app_user;\n\n-- Grant role ke role lain\nGRANT readonly TO developer;",
+      "notes": "Jangan lupa GRANT USAGE ON SCHEMA agar role bisa mengakses tabel di schema."
+    },
+    {
+      "name": "REVOKE",
+      "title": "Mencabut Hak Akses",
+      "description": "Mencabut privilege yang sudah diberikan.",
+      "syntax": "REVOKE privilege ON objek FROM role;",
+      "options": [],
+      "examples": "REVOKE INSERT ON users FROM app_user;\nREVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM readonly;",
+      "notes": "REVOKE tidak otomatis cascade ke role yang mendapat privilege via GRANT OPTION."
+    },
+    {
+      "name": "ALTER / DROP ROLE",
+      "title": "Mengubah dan Menghapus Role",
+      "description": "Memodifikasi properti role atau menghapusnya.",
+      "syntax": "ALTER ROLE nama [WITH opsi];\nDROP ROLE [IF EXISTS] nama;",
+      "options": [],
+      "examples": "ALTER ROLE app_user WITH PASSWORD 'new_password';\nALTER ROLE developer WITH CREATEDB;\nALTER ROLE admin VALID UNTIL '2025-12-31';\nDROP ROLE IF EXISTS old_user;",
+      "warning": "Tidak bisa menghapus role yang masih memiliki objek. Gunakan REASSIGN OWNED dan DROP OWNED terlebih dahulu."
+    },
+    {
+      "name": "\\du / pg_roles",
+      "title": "Melihat Daftar Role",
+      "description": "Menampilkan semua role dan privilege-nya.",
+      "syntax": "\\du  -- di psql\nSELECT * FROM pg_roles;",
+      "options": [],
+      "examples": "\\du\n\\du+\n\nSELECT rolname, rolsuper, rolcreatedb, rolcanlogin\nFROM pg_roles WHERE rolname NOT LIKE 'pg_%';",
+      "notes": "Role yang dimulai dengan pg_ adalah system role."
+    }
+  ]
+}

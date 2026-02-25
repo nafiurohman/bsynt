@@ -1,0 +1,74 @@
+{
+  "id": "mac-disk-storage",
+  "title": "Disk & Storage",
+  "description": "Perintah untuk mengelola disk dan storage di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "df",
+      "title": "Disk Free",
+      "description": "Menampilkan penggunaan ruang disk.",
+      "syntax": "df [opsi]",
+      "options": [
+        { "option": "-h", "description": "Human-readable (KB, MB, GB)" },
+        { "option": "-H", "description": "SI units (1000 bukan 1024)" }
+      ],
+      "examples": "df -h\ndf -h /\ndf -H /Volumes/*"
+    },
+    {
+      "name": "du",
+      "title": "Disk Usage",
+      "description": "Menampilkan ukuran file/direktori.",
+      "syntax": "du [opsi] [path]",
+      "options": [
+        { "option": "-h", "description": "Human-readable" },
+        { "option": "-s", "description": "Summary (total saja)" },
+        { "option": "-d [n]", "description": "Kedalaman maksimum" }
+      ],
+      "examples": "du -sh ~/Downloads\ndu -hd 1 ~\ndu -sh * | sort -hr | head -20"
+    },
+    {
+      "name": "diskutil",
+      "title": "Disk Utility CLI (macOS)",
+      "description": "Mengelola disk, partisi, dan volume dari command line.",
+      "syntax": "diskutil [verb] [opsi]",
+      "options": [
+        { "option": "list", "description": "List semua disk dan partisi" },
+        { "option": "info [disk]", "description": "Info detail disk" },
+        { "option": "eraseDisk", "description": "Format disk" },
+        { "option": "mount/unmount", "description": "Mount/unmount volume" },
+        { "option": "apfs list", "description": "List container APFS" },
+        { "option": "verifyDisk", "description": "Verifikasi disk" },
+        { "option": "repairDisk", "description": "Perbaiki disk" }
+      ],
+      "examples": "diskutil list\ndiskutil info disk0\ndiskutil unmount /Volumes/USB\ndiskutil eraseDisk APFS \"NewDisk\" disk2\ndiskutil apfs list",
+      "warning": "Hati-hati dengan eraseDisk — akan menghapus semua data di disk!"
+    },
+    {
+      "name": "mount",
+      "title": "Mount",
+      "description": "Mount filesystem.",
+      "syntax": "mount [opsi] [device] [mountpoint]",
+      "options": [
+        { "option": "-t [type]", "description": "Tipe filesystem" }
+      ],
+      "examples": "mount\ndiskutil mount disk2s1\nmount -t nfs server:/share /mnt"
+    },
+    {
+      "name": "tmutil",
+      "title": "Time Machine Utility (macOS)",
+      "description": "Mengelola backup Time Machine dari terminal.",
+      "syntax": "tmutil [command]",
+      "options": [
+        { "option": "startbackup", "description": "Mulai backup" },
+        { "option": "stopbackup", "description": "Hentikan backup" },
+        { "option": "listbackups", "description": "List semua backup" },
+        { "option": "status", "description": "Status backup saat ini" },
+        { "option": "enable/disable", "description": "Aktifkan/nonaktifkan Time Machine" },
+        { "option": "addexclusion [path]", "description": "Exclude path dari backup" }
+      ],
+      "examples": "tmutil startbackup\ntmutil status\ntmutil listbackups\ntmutil addexclusion ~/node_modules\nsudo tmutil enable",
+      "notes": "Membutuhkan sudo untuk beberapa operasi."
+    }
+  ]
+}

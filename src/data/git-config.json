@@ -1,0 +1,85 @@
+{
+  "id": "git-config",
+  "title": "Setup & Konfigurasi",
+  "description": "Mengatur identitas, editor, dan preferensi Git secara global maupun per-repository.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git config --global user.name",
+      "title": "Mengatur Nama User",
+      "description": "Mengatur nama yang akan ditampilkan di setiap commit.",
+      "syntax": "git config --global user.name \"Nama Anda\"",
+      "options": [
+        { "option": "--global", "description": "Berlaku untuk semua repository user" },
+        { "option": "--local", "description": "Berlaku hanya untuk repository ini (default)" },
+        { "option": "--system", "description": "Berlaku untuk semua user di sistem" }
+      ],
+      "examples": "git config --global user.name \"John Doe\"\ngit config --local user.name \"Work Account\"\ngit config user.name  # lihat nilai saat ini",
+      "notes": "Config --local menimpa --global, --global menimpa --system."
+    },
+    {
+      "name": "git config --global user.email",
+      "title": "Mengatur Email User",
+      "description": "Mengatur email yang akan dikaitkan dengan setiap commit.",
+      "syntax": "git config --global user.email \"email@example.com\"",
+      "options": [],
+      "examples": "git config --global user.email \"john@example.com\"\ngit config --local user.email \"john@company.com\"",
+      "notes": "Gunakan email yang terdaftar di GitHub/GitLab agar commit ter-link ke akun."
+    },
+    {
+      "name": "git config --list",
+      "title": "Melihat Semua Konfigurasi",
+      "description": "Menampilkan seluruh konfigurasi Git yang aktif.",
+      "syntax": "git config --list [--show-origin] [--show-scope]",
+      "options": [
+        { "option": "--list", "description": "Tampilkan semua config" },
+        { "option": "--show-origin", "description": "Tampilkan sumber file config" },
+        { "option": "--show-scope", "description": "Tampilkan scope (local/global/system)" },
+        { "option": "--global", "description": "Hanya config global" }
+      ],
+      "examples": "git config --list\ngit config --list --show-origin\ngit config --list --show-scope\ngit config --global --list",
+      "notes": "Berguna untuk debugging ketika config tidak sesuai harapan."
+    },
+    {
+      "name": "git config core.editor",
+      "title": "Mengatur Editor Default",
+      "description": "Mengatur text editor yang digunakan Git untuk pesan commit, rebase interaktif, dll.",
+      "syntax": "git config --global core.editor \"editor\"",
+      "options": [],
+      "examples": "git config --global core.editor \"code --wait\"   # VS Code\ngit config --global core.editor \"vim\"\ngit config --global core.editor \"nano\"\ngit config --global core.editor \"subl -n -w\"    # Sublime",
+      "notes": "Flag --wait pada VS Code membuat Git menunggu sampai file ditutup."
+    },
+    {
+      "name": "git config init.defaultBranch",
+      "title": "Mengatur Default Branch Name",
+      "description": "Mengatur nama branch default saat git init (biasanya 'main').",
+      "syntax": "git config --global init.defaultBranch main",
+      "options": [],
+      "examples": "git config --global init.defaultBranch main\ngit config --global init.defaultBranch develop",
+      "notes": "Sejak Git 2.28, bisa mengganti default dari 'master' ke 'main'."
+    },
+    {
+      "name": "git config alias",
+      "title": "Membuat Alias Command",
+      "description": "Membuat shortcut untuk perintah Git yang sering digunakan.",
+      "syntax": "git config --global alias.nama 'perintah'",
+      "options": [],
+      "examples": "git config --global alias.st 'status'\ngit config --global alias.co 'checkout'\ngit config --global alias.br 'branch'\ngit config --global alias.ci 'commit'\ngit config --global alias.lg 'log --oneline --graph --all'\ngit config --global alias.unstage 'restore --staged'\n\n# Sekarang bisa:\ngit st\ngit lg",
+      "notes": "Alias sangat meningkatkan produktivitas. git lg adalah salah satu yang paling populer."
+    },
+    {
+      "name": "git config credential",
+      "title": "Mengatur Credential Storage",
+      "description": "Menyimpan credential agar tidak perlu login berulang kali.",
+      "syntax": "git config --global credential.helper store|cache|manager",
+      "options": [
+        { "option": "store", "description": "Simpan di file plain text (~/.git-credentials)" },
+        { "option": "cache", "description": "Cache di memori sementara (default 15 menit)" },
+        { "option": "cache --timeout=3600", "description": "Cache selama 1 jam" },
+        { "option": "manager", "description": "Gunakan OS credential manager" }
+      ],
+      "examples": "git config --global credential.helper cache\ngit config --global credential.helper 'cache --timeout=3600'\ngit config --global credential.helper store\n\n# macOS\ngit config --global credential.helper osxkeychain\n# Windows\ngit config --global credential.helper manager-core",
+      "notes": "'store' menyimpan password plain text — gunakan credential manager untuk keamanan."
+    }
+  ]
+}

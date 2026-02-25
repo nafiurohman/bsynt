@@ -1,0 +1,53 @@
+{
+  "id": "mac-scripting",
+  "title": "Shell & AppleScript",
+  "description": "Scripting di macOS: zsh, bash, dan AppleScript.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "zsh-basics",
+      "title": "Zsh Basics",
+      "description": "Dasar-dasar scripting di zsh (default shell macOS).",
+      "syntax": "#!/bin/zsh",
+      "options": [
+        { "option": "$variable", "description": "Variabel" },
+        { "option": "$(command)", "description": "Command substitution" },
+        { "option": "if [[ ]]; then fi", "description": "Kondisi" },
+        { "option": "for i in ...; do done", "description": "Loop" }
+      ],
+      "examples": "#!/bin/zsh\nNAME=\"World\"\necho \"Hello, $NAME!\"\n\nfor f in *.txt; do\n  echo \"Processing: $f\"\ndone\n\nif [[ -f \"config.yml\" ]]; then\n  echo \"Config exists\"\nfi",
+      "notes": "macOS menggunakan zsh sejak Catalina. File config: ~/.zshrc"
+    },
+    {
+      "name": "osascript",
+      "title": "AppleScript (osascript)",
+      "description": "Menjalankan AppleScript dari terminal untuk otomatisasi macOS.",
+      "syntax": "osascript -e 'script' / osascript file.scpt",
+      "options": [
+        { "option": "-e [script]", "description": "Jalankan inline script" },
+        { "option": "-l JavaScript", "description": "Gunakan JavaScript (JXA)" }
+      ],
+      "examples": "osascript -e 'display dialog \"Hello!\"'\nosascript -e 'tell application \"Finder\" to get name of every disk'\nosascript -e 'tell application \"Safari\" to open location \"https://google.com\"'\nosascript -e 'set volume output volume 50'\nosascript -e 'tell application \"System Events\" to sleep'",
+      "notes": "AppleScript bisa mengontrol hampir semua aplikasi macOS."
+    },
+    {
+      "name": "automator",
+      "title": "Automator CLI",
+      "description": "Menjalankan workflow Automator dari terminal.",
+      "syntax": "automator [opsi] workflow.workflow",
+      "options": [
+        { "option": "-i [input]", "description": "Input ke workflow" }
+      ],
+      "examples": "automator ~/Desktop/resize-images.workflow\nautomator -i ~/Pictures/photo.jpg ~/Desktop/watermark.workflow"
+    },
+    {
+      "name": "zsh-functions",
+      "title": "Zsh Functions & Alias",
+      "description": "Membuat fungsi dan alias di zsh.",
+      "syntax": "alias name='command' / function name() { ... }",
+      "options": [],
+      "examples": "# Di ~/.zshrc\nalias ll='ls -la'\nalias gs='git status'\nalias ..='cd ..'\n\n# Fungsi\nfunction mkcd() {\n  mkdir -p \"$1\" && cd \"$1\"\n}\n\nfunction extract() {\n  case $1 in\n    *.tar.gz) tar -xzf $1 ;;\n    *.zip) unzip $1 ;;\n    *.gz) gunzip $1 ;;\n    *) echo \"Unknown format\" ;;\n  esac\n}",
+      "notes": "Jalankan `source ~/.zshrc` setelah mengedit."
+    }
+  ]
+}

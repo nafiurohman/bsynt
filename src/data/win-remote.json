@@ -1,0 +1,71 @@
+{
+  "id": "win-remote",
+  "title": "Remote & SSH (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk remote access, SSH, dan remote management di Windows.",
+  "commands": [
+    {
+      "name": "ssh-win",
+      "title": "ssh — Secure Shell (Windows 10+)",
+      "description": "OpenSSH client bawaan Windows 10+ untuk koneksi remote yang aman.",
+      "syntax": "ssh [opsi] user@host",
+      "options": [
+        {"option": "-p port", "description": "Port tujuan (default 22)"},
+        {"option": "-i keyfile", "description": "File private key"},
+        {"option": "-L local:host:remote", "description": "Local port forwarding"},
+        {"option": "-R remote:host:local", "description": "Remote port forwarding"},
+        {"option": "-D port", "description": "Dynamic port forwarding (SOCKS)"},
+        {"option": "-v", "description": "Verbose mode"},
+        {"option": "-N", "description": "Tanpa menjalankan perintah remote"}
+      ],
+      "examples": "# Koneksi SSH\nssh user@192.168.1.100\n\n# Port tertentu\nssh -p 2222 user@server.com\n\n# Dengan key file\nssh -i C:\\Users\\me\\.ssh\\id_rsa user@server\n\n# Port forwarding\nssh -L 8080:localhost:80 user@server\n\n# Generate SSH key\nssh-keygen -t ed25519 -C \"email@example.com\"\n\n# Copy key ke server\ntype $env:USERPROFILE\\.ssh\\id_ed25519.pub | ssh user@server \"cat >> ~/.ssh/authorized_keys\"\n\n# SCP - Salin file via SSH\nscp file.txt user@server:/home/user/\nscp user@server:/home/user/file.txt C:\\Downloads\\\nscp -r folder user@server:/home/user/"
+    },
+    {
+      "name": "mstsc",
+      "title": "mstsc — Remote Desktop",
+      "description": "Membuka Remote Desktop Connection untuk mengakses komputer Windows lain secara grafis.",
+      "syntax": "mstsc [opsi]",
+      "options": [
+        {"option": "/v:server", "description": "Server tujuan"},
+        {"option": "/w:lebar", "description": "Lebar window"},
+        {"option": "/h:tinggi", "description": "Tinggi window"},
+        {"option": "/f", "description": "Full screen"},
+        {"option": "/admin", "description": "Koneksi admin"},
+        {"option": "/multimon", "description": "Multi monitor"}
+      ],
+      "examples": "# Buka RDP dialog\nmstsc\n\n# Koneksi langsung\nmstsc /v:192.168.1.100\n\n# Full screen\nmstsc /v:server.com /f\n\n# Dengan ukuran window\nmstsc /v:server.com /w:1280 /h:720"
+    },
+    {
+      "name": "winrm-ps",
+      "title": "WinRM & PSRemoting",
+      "description": "Windows Remote Management dan PowerShell Remoting untuk manajemen server jarak jauh.",
+      "syntax": "Enter-PSSession -ComputerName server\nInvoke-Command -ComputerName server -ScriptBlock {cmd}",
+      "options": [
+        {"option": "Enable-PSRemoting", "description": "Aktifkan PS remoting"},
+        {"option": "Enter-PSSession", "description": "Sesi interaktif remote"},
+        {"option": "Exit-PSSession", "description": "Keluar dari sesi remote"},
+        {"option": "Invoke-Command", "description": "Jalankan perintah di remote"},
+        {"option": "-ComputerName", "description": "Nama/IP komputer tujuan"},
+        {"option": "-Credential", "description": "Kredensial yang digunakan"},
+        {"option": "-ScriptBlock", "description": "Perintah yang dijalankan"}
+      ],
+      "examples": "# Aktifkan remoting (di server)\nEnable-PSRemoting -Force\n\n# Sesi interaktif\nEnter-PSSession -ComputerName Server01\n\n# Jalankan perintah remote\nInvoke-Command -ComputerName Server01 -ScriptBlock { Get-Process }\n\n# Multiple server\nInvoke-Command -ComputerName Server01, Server02 -ScriptBlock { Get-Service }\n\n# Dengan kredensial\n$cred = Get-Credential\nEnter-PSSession -ComputerName Server01 -Credential $cred\n\n# Salin file ke remote\nCopy-Item -Path file.txt -Destination C:\\Remote\\ -ToSession $session"
+    },
+    {
+      "name": "net-share",
+      "title": "net share / net use — Network Shares",
+      "description": "Mengelola folder sharing dan koneksi ke shared folder di jaringan.",
+      "syntax": "net share\nnet use",
+      "options": [
+        {"option": "net share", "description": "List semua share"},
+        {"option": "net share nama=path", "description": "Buat share baru"},
+        {"option": "net share nama /delete", "description": "Hapus share"},
+        {"option": "net use", "description": "List koneksi ke share"},
+        {"option": "net use X: \\\\server\\share", "description": "Map network drive"},
+        {"option": "net use X: /delete", "description": "Disconnect network drive"},
+        {"option": "/persistent:yes", "description": "Reconnect saat login"}
+      ],
+      "examples": "# List share lokal\nnet share\n\n# Buat share\nnet share Data=C:\\SharedData /grant:Everyone,READ\n\n# Map network drive\nnet use Z: \\\\server\\share\n\n# Map dengan kredensial\nnet use Z: \\\\server\\share /user:DOMAIN\\username password\n\n# Persistent mapping\nnet use Z: \\\\server\\share /persistent:yes\n\n# Disconnect\nnet use Z: /delete\n\n# PowerShell\nNew-SmbShare -Name \"Data\" -Path \"C:\\SharedData\" -ReadAccess \"Everyone\"\nNew-PSDrive -Name Z -PSProvider FileSystem -Root \\\\server\\share -Persist"
+    }
+  ]
+}

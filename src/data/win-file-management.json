@@ -1,0 +1,114 @@
+{
+  "id": "win-file-management",
+  "title": "File Management (Windows)",
+  "badge": "Windows",
+  "description": "Perintah CMD dan PowerShell untuk mengelola file dan folder di Windows.",
+  "commands": [
+    {
+      "name": "copy-win",
+      "title": "copy — Menyalin File",
+      "description": "Menyalin satu atau lebih file ke lokasi lain di CMD.",
+      "syntax": "copy [opsi] sumber tujuan",
+      "options": [
+        {"option": "/y", "description": "Tidak meminta konfirmasi saat menimpa"},
+        {"option": "/-y", "description": "Meminta konfirmasi saat menimpa"},
+        {"option": "/v", "description": "Verifikasi setelah menyalin"},
+        {"option": "/b", "description": "Menyalin file biner"},
+        {"option": "/a", "description": "Menyalin file ASCII"}
+      ],
+      "examples": "# Salin file\ncopy file.txt D:\\Backup\\\n\n# Salin dengan nama baru\ncopy file.txt file_backup.txt\n\n# Salin semua .txt\ncopy *.txt D:\\Backup\\\n\n# Tanpa konfirmasi\ncopy /y file.txt D:\\Backup\\\n\n# PowerShell: Copy-Item\nCopy-Item file.txt -Destination D:\\Backup\\\nCopy-Item -Path *.txt -Destination D:\\Backup\\ -Recurse"
+    },
+    {
+      "name": "xcopy",
+      "title": "xcopy — Salin Direktori",
+      "description": "Menyalin file dan direktori secara rekursif dengan lebih banyak opsi daripada copy.",
+      "syntax": "xcopy sumber tujuan [opsi]",
+      "options": [
+        {"option": "/s", "description": "Salin subdirektori (kecuali kosong)"},
+        {"option": "/e", "description": "Salin subdirektori termasuk yang kosong"},
+        {"option": "/h", "description": "Salin file hidden dan system"},
+        {"option": "/y", "description": "Tidak meminta konfirmasi timpa"},
+        {"option": "/i", "description": "Anggap tujuan sebagai direktori"},
+        {"option": "/d:tanggal", "description": "Salin file yang diubah setelah tanggal"}
+      ],
+      "examples": "# Salin folder rekursif\nxcopy C:\\Source D:\\Backup /s /e\n\n# Salin termasuk hidden\nxcopy C:\\Source D:\\Backup /s /e /h\n\n# Salin tanpa konfirmasi\nxcopy C:\\Source D:\\Backup /s /e /y",
+      "notes": "Microsoft merekomendasikan robocopy sebagai pengganti xcopy untuk operasi yang lebih kompleks."
+    },
+    {
+      "name": "robocopy",
+      "title": "robocopy — Robust File Copy",
+      "description": "Tool penyalinan file tingkat lanjut bawaan Windows. Jauh lebih powerful dari copy/xcopy.",
+      "syntax": "robocopy sumber tujuan [file] [opsi]",
+      "options": [
+        {"option": "/s", "description": "Salin subdirektori (kecuali kosong)"},
+        {"option": "/e", "description": "Salin subdirektori termasuk kosong"},
+        {"option": "/mir", "description": "Mirror — sinkronisasi penuh (hapus file yang tidak ada di sumber)"},
+        {"option": "/z", "description": "Mode restartable (untuk jaringan)"},
+        {"option": "/mt:n", "description": "Multi-thread, n = jumlah thread (default 8)"},
+        {"option": "/r:n", "description": "Jumlah retry saat gagal"},
+        {"option": "/w:n", "description": "Waktu tunggu antar retry (detik)"},
+        {"option": "/log:file", "description": "Simpan log ke file"},
+        {"option": "/xf pola", "description": "Exclude file berdasarkan pola"},
+        {"option": "/xd folder", "description": "Exclude direktori"},
+        {"option": "/mov", "description": "Pindahkan file (hapus dari sumber)"},
+        {"option": "/move", "description": "Pindahkan file dan folder"}
+      ],
+      "examples": "# Salin folder\nrobocopy C:\\Source D:\\Backup /e\n\n# Mirror (sinkronisasi)\nrobocopy C:\\Source D:\\Backup /mir\n\n# Multi-thread\nrobocopy C:\\Source D:\\Backup /e /mt:16\n\n# Exclude file\nrobocopy C:\\Source D:\\Backup /e /xf *.tmp *.log\n\n# Dengan logging\nrobocopy C:\\Source D:\\Backup /e /log:backup.log\n\n# Network copy dengan retry\nrobocopy \\\\server\\share D:\\Local /e /z /r:3 /w:5",
+      "warning": "Opsi /mir akan MENGHAPUS file di tujuan yang tidak ada di sumber. Hati-hati!"
+    },
+    {
+      "name": "move-win",
+      "title": "move — Memindahkan File",
+      "description": "Memindahkan file atau folder ke lokasi lain. Juga berfungsi untuk rename folder.",
+      "syntax": "move [opsi] sumber tujuan",
+      "options": [
+        {"option": "/y", "description": "Tidak meminta konfirmasi timpa"},
+        {"option": "/-y", "description": "Meminta konfirmasi timpa"}
+      ],
+      "examples": "# Pindahkan file\nmove file.txt D:\\Archive\\\n\n# Rename folder\nmove OldName NewName\n\n# Pindahkan semua .log\nmove *.log D:\\Logs\\\n\n# PowerShell: Move-Item\nMove-Item file.txt -Destination D:\\Archive\\\nMove-Item -Path *.log -Destination D:\\Logs\\"
+    },
+    {
+      "name": "del",
+      "title": "del / erase — Menghapus File",
+      "description": "Menghapus satu atau lebih file. Tidak menghapus folder (gunakan rmdir).",
+      "syntax": "del [opsi] file",
+      "options": [
+        {"option": "/f", "description": "Paksa hapus file read-only"},
+        {"option": "/s", "description": "Hapus dari semua subdirektori"},
+        {"option": "/q", "description": "Quiet mode, tanpa konfirmasi"},
+        {"option": "/a:h", "description": "Hapus file hidden"},
+        {"option": "/p", "description": "Konfirmasi setiap file"}
+      ],
+      "examples": "# Hapus file\ndel file.txt\n\n# Hapus semua .tmp\ndel *.tmp\n\n# Hapus rekursif tanpa konfirmasi\ndel /s /q *.log\n\n# Hapus file read-only\ndel /f file.txt\n\n# PowerShell: Remove-Item\nRemove-Item file.txt\nRemove-Item *.tmp -Force\nRemove-Item -Path folder -Recurse",
+      "warning": "File yang dihapus dengan del tidak masuk Recycle Bin. Tidak bisa di-undo!"
+    },
+    {
+      "name": "mkdir-win",
+      "title": "mkdir / md — Membuat Direktori",
+      "description": "Membuat folder baru. Bisa membuat folder nested sekaligus.",
+      "syntax": "mkdir [path]",
+      "options": [],
+      "examples": "# Buat folder\nmkdir Projects\n\n# Buat folder nested\nmkdir Projects\\Web\\Frontend\n\n# PowerShell: New-Item\nNew-Item -ItemType Directory -Path \"Projects\\Web\""
+    },
+    {
+      "name": "rmdir-win",
+      "title": "rmdir / rd — Menghapus Direktori",
+      "description": "Menghapus folder. Secara default hanya menghapus folder kosong.",
+      "syntax": "rmdir [opsi] folder",
+      "options": [
+        {"option": "/s", "description": "Hapus folder beserta isinya (rekursif)"},
+        {"option": "/q", "description": "Quiet mode, tanpa konfirmasi"}
+      ],
+      "examples": "# Hapus folder kosong\nrmdir EmptyFolder\n\n# Hapus folder beserta isi\nrmdir /s /q OldProject\n\n# PowerShell\nRemove-Item -Path folder -Recurse -Force",
+      "warning": "rmdir /s /q menghapus semua isi folder tanpa konfirmasi!"
+    },
+    {
+      "name": "ren",
+      "title": "ren / rename — Mengubah Nama",
+      "description": "Mengubah nama file atau folder.",
+      "syntax": "ren nama_lama nama_baru",
+      "options": [],
+      "examples": "# Rename file\nren oldfile.txt newfile.txt\n\n# Rename semua ekstensi\nren *.txt *.bak\n\n# Rename folder\nren OldFolder NewFolder\n\n# PowerShell: Rename-Item\nRename-Item oldfile.txt -NewName newfile.txt"
+    }
+  ]
+}

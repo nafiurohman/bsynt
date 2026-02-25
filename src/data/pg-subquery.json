@@ -1,0 +1,56 @@
+{
+  "id": "pg-subquery",
+  "title": "Subquery",
+  "description": "Menggunakan subquery dan correlated subquery di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "Scalar Subquery",
+      "title": "Subquery Skalar",
+      "description": "Subquery yang mengembalikan satu nilai tunggal.",
+      "syntax": "SELECT kolom, (SELECT MAX(price) FROM products) AS max_price FROM tabel;",
+      "options": [],
+      "examples": "SELECT name, salary,\n  salary - (SELECT AVG(salary) FROM employees) AS diff_from_avg\nFROM employees;",
+      "notes": "Error jika subquery mengembalikan lebih dari satu baris."
+    },
+    {
+      "name": "IN / NOT IN",
+      "title": "Subquery dengan IN",
+      "description": "Memeriksa apakah nilai ada dalam hasil subquery.",
+      "syntax": "SELECT * FROM tabel WHERE kolom IN (SELECT kolom FROM tabel2);",
+      "options": [],
+      "examples": "SELECT * FROM users WHERE id IN (SELECT user_id FROM orders WHERE total > 1000);\nSELECT * FROM products WHERE category_id NOT IN (SELECT id FROM categories WHERE active = false);",
+      "warning": "NOT IN bisa bermasalah dengan NULL — gunakan NOT EXISTS sebagai gantinya."
+    },
+    {
+      "name": "EXISTS / NOT EXISTS",
+      "title": "Subquery dengan EXISTS",
+      "description": "Memeriksa apakah subquery mengembalikan setidaknya satu baris.",
+      "syntax": "SELECT * FROM tabel WHERE EXISTS (SELECT 1 FROM tabel2 WHERE kondisi);",
+      "options": [],
+      "examples": "-- User yang punya order\nSELECT * FROM users u WHERE EXISTS (\n  SELECT 1 FROM orders o WHERE o.user_id = u.id\n);\n\n-- User tanpa order (anti-join)\nSELECT * FROM users u WHERE NOT EXISTS (\n  SELECT 1 FROM orders o WHERE o.user_id = u.id\n);",
+      "notes": "EXISTS lebih efisien dari IN untuk dataset besar dan aman terhadap NULL."
+    },
+    {
+      "name": "ANY / ALL",
+      "title": "Subquery dengan ANY dan ALL",
+      "description": "Membandingkan nilai dengan hasil subquery menggunakan ANY atau ALL.",
+      "syntax": "SELECT * FROM tabel WHERE kolom operator ANY/ALL (subquery);",
+      "options": [
+        { "option": "ANY / SOME", "description": "True jika salah satu baris cocok" },
+        { "option": "ALL", "description": "True jika semua baris cocok" }
+      ],
+      "examples": "-- Gaji lebih dari rata-rata di departemen manapun\nSELECT * FROM employees WHERE salary > ANY (\n  SELECT AVG(salary) FROM employees GROUP BY dept_id\n);\n\n-- Gaji lebih dari semua rata-rata departemen\nSELECT * FROM employees WHERE salary > ALL (\n  SELECT AVG(salary) FROM employees GROUP BY dept_id\n);",
+      "notes": "ANY sama dengan SOME."
+    },
+    {
+      "name": "Correlated Subquery",
+      "title": "Correlated Subquery",
+      "description": "Subquery yang mereferensi kolom dari query luar — dijalankan per baris.",
+      "syntax": "SELECT * FROM tabel t1 WHERE kolom > (SELECT AVG(kolom) FROM tabel t2 WHERE t2.group = t1.group);",
+      "options": [],
+      "examples": "-- Employee dengan gaji di atas rata-rata departemennya\nSELECT * FROM employees e\nWHERE salary > (\n  SELECT AVG(salary) FROM employees WHERE dept_id = e.dept_id\n);",
+      "notes": "Bisa lambat pada dataset besar — pertimbangkan CTE atau window function."
+    }
+  ]
+}

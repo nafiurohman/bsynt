@@ -1,0 +1,107 @@
+{
+  "id": "disk-storage",
+  "title": "Disk & Penyimpanan",
+  "description": "Perintah-perintah untuk memantau penggunaan disk, mengelola partisi, dan mengatur penyimpanan di sistem Linux.",
+  "commands": [
+    {
+      "name": "df",
+      "title": "df — Disk Free",
+      "description": "Menampilkan informasi penggunaan ruang disk pada filesystem yang ter-mount.",
+      "syntax": "df [OPSI] [FILE]...",
+      "options": [
+        { "option": "-h", "description": "Menampilkan ukuran dalam format human-readable (KB, MB, GB)" },
+        { "option": "-T", "description": "Menampilkan tipe filesystem" },
+        { "option": "-i", "description": "Menampilkan informasi inode" },
+        { "option": "-a", "description": "Menampilkan semua filesystem termasuk pseudo" },
+        { "option": "-t TYPE", "description": "Menampilkan hanya filesystem tipe tertentu" },
+        { "option": "-x TYPE", "description": "Mengecualikan filesystem tipe tertentu" },
+        { "option": "--total", "description": "Menampilkan total keseluruhan" }
+      ],
+      "examples": "# Menampilkan penggunaan disk\ndf -h\n\n# Dengan tipe filesystem\ndf -hT\n\n# Informasi inode\ndf -hi\n\n# Total keseluruhan\ndf -h --total\n\n# Hanya ext4 filesystem\ndf -t ext4 -h"
+    },
+    {
+      "name": "du",
+      "title": "du — Disk Usage",
+      "description": "Menampilkan estimasi penggunaan ruang disk oleh file dan direktori.",
+      "syntax": "du [OPSI] [FILE/DIR]...",
+      "options": [
+        { "option": "-h", "description": "Format human-readable" },
+        { "option": "-s", "description": "Menampilkan hanya total (summary)" },
+        { "option": "-a", "description": "Menampilkan untuk semua file, bukan hanya direktori" },
+        { "option": "-c", "description": "Menampilkan grand total di akhir" },
+        { "option": "-d N", "description": "Membatasi kedalaman tampilan" },
+        { "option": "--max-depth=N", "description": "Sama dengan -d N" },
+        { "option": "--exclude=POLA", "description": "Mengecualikan file sesuai pola" }
+      ],
+      "examples": "# Melihat ukuran direktori\ndu -sh /home/user/\n\n# Melihat ukuran sub-direktori\ndu -h --max-depth=1 /home/user/\n\n# 10 direktori terbesar\ndu -h /home/ | sort -rh | head -10\n\n# Total penggunaan\ndu -shc /var/log/ /var/cache/"
+    },
+    {
+      "name": "mount",
+      "title": "mount — Mount Filesystem",
+      "description": "Memasang (mount) filesystem pada titik mount tertentu sehingga dapat diakses oleh sistem.",
+      "syntax": "mount [OPSI] DEVICE MOUNTPOINT",
+      "options": [
+        { "option": "-t TYPE", "description": "Menentukan tipe filesystem (ext4, ntfs, vfat, dll)" },
+        { "option": "-o OPSI", "description": "Menentukan opsi mount (ro, rw, noexec, nosuid)" },
+        { "option": "-a", "description": "Mount semua filesystem di /etc/fstab" },
+        { "option": "-r", "description": "Mount sebagai read-only" },
+        { "option": "-w", "description": "Mount sebagai read-write" },
+        { "option": "-l", "description": "Menampilkan label filesystem" }
+      ],
+      "examples": "# Mount partisi\nsudo mount /dev/sdb1 /mnt/usb\n\n# Mount dengan tipe filesystem\nsudo mount -t ntfs /dev/sdb1 /mnt/windows\n\n# Mount read-only\nsudo mount -r /dev/sdb1 /mnt/data\n\n# Mount ISO file\nsudo mount -o loop image.iso /mnt/iso\n\n# Melihat semua mount point\nmount | column -t"
+    },
+    {
+      "name": "umount",
+      "title": "umount — Unmount Filesystem",
+      "description": "Melepas (unmount) filesystem yang sudah ter-mount dari titik mount.",
+      "syntax": "umount [OPSI] DEVICE|MOUNTPOINT",
+      "options": [
+        { "option": "-f", "description": "Memaksa unmount (force)" },
+        { "option": "-l", "description": "Lazy unmount — melepas saat tidak lagi digunakan" },
+        { "option": "-R", "description": "Unmount secara rekursif" }
+      ],
+      "examples": "# Unmount filesystem\nsudo umount /mnt/usb\n\n# Unmount berdasarkan device\nsudo umount /dev/sdb1\n\n# Force unmount\nsudo umount -f /mnt/network\n\n# Lazy unmount\nsudo umount -l /mnt/busy"
+    },
+    {
+      "name": "fdisk",
+      "title": "fdisk — Partition Editor",
+      "description": "Utilitas interaktif untuk mengelola tabel partisi disk (MBR). Untuk GPT gunakan gdisk.",
+      "syntax": "fdisk [OPSI] DEVICE",
+      "options": [
+        { "option": "-l", "description": "Menampilkan tabel partisi semua disk" },
+        { "option": "-u", "description": "Menampilkan ukuran dalam sektor" },
+        { "option": "n (interaktif)", "description": "Membuat partisi baru" },
+        { "option": "d (interaktif)", "description": "Menghapus partisi" },
+        { "option": "t (interaktif)", "description": "Mengubah tipe partisi" },
+        { "option": "p (interaktif)", "description": "Menampilkan tabel partisi" },
+        { "option": "w (interaktif)", "description": "Menulis perubahan dan keluar" }
+      ],
+      "examples": "# Melihat semua partisi\nsudo fdisk -l\n\n# Melihat partisi disk tertentu\nsudo fdisk -l /dev/sda\n\n# Mengelola partisi (interaktif)\nsudo fdisk /dev/sdb"
+    },
+    {
+      "name": "lsblk",
+      "title": "lsblk — List Block Devices",
+      "description": "Menampilkan informasi tentang semua block device (disk, partisi) dalam format tree.",
+      "syntax": "lsblk [OPSI] [DEVICE]",
+      "options": [
+        { "option": "-f", "description": "Menampilkan informasi filesystem (tipe, label, UUID, mountpoint)" },
+        { "option": "-l", "description": "Menampilkan dalam format list (bukan tree)" },
+        { "option": "-o KOLOM", "description": "Memilih kolom yang ditampilkan" },
+        { "option": "-p", "description": "Menampilkan path device lengkap" },
+        { "option": "-a", "description": "Menampilkan semua device termasuk yang kosong" }
+      ],
+      "examples": "# Menampilkan semua block device\nlsblk\n\n# Dengan informasi filesystem\nlsblk -f\n\n# Kolom tertentu\nlsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE"
+    },
+    {
+      "name": "blkid",
+      "title": "blkid — Block Device Attributes",
+      "description": "Menampilkan atribut block device seperti UUID, tipe filesystem, dan label.",
+      "syntax": "blkid [OPSI] [DEVICE]",
+      "options": [
+        { "option": "-s TAG", "description": "Menampilkan hanya tag tertentu (UUID, TYPE, LABEL)" },
+        { "option": "-o FORMAT", "description": "Mengatur format output (value, list, full)" }
+      ],
+      "examples": "# Menampilkan semua atribut\nsudo blkid\n\n# Hanya UUID\nsudo blkid -s UUID\n\n# Device tertentu\nsudo blkid /dev/sda1"
+    }
+  ]
+}

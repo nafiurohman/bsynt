@@ -1,0 +1,75 @@
+{
+  "id": "mysql-user-management",
+  "title": "User Management",
+  "description": "Mengelola user, privilege, dan keamanan di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE USER",
+      "title": "Membuat User",
+      "description": "Membuat akun user baru di MySQL.",
+      "syntax": "CREATE USER 'username'@'host' IDENTIFIED BY 'password';",
+      "options": [
+        { "option": "'user'@'localhost'", "description": "Akses lokal saja" },
+        { "option": "'user'@'%'", "description": "Akses dari mana saja" },
+        { "option": "'user'@'192.168.1.%'", "description": "Akses dari subnet" },
+        { "option": "IDENTIFIED WITH mysql_native_password BY 'pwd'", "description": "Authentication plugin tertentu" }
+      ],
+      "examples": "CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'SecureP@ss123';\nCREATE USER 'api_user'@'%' IDENTIFIED BY 'ApiP@ss456';\nCREATE USER 'readonly'@'192.168.1.%' IDENTIFIED BY 'ReadOnly789';",
+      "notes": "Selalu gunakan password yang kuat. Batasi host access sesuai kebutuhan."
+    },
+    {
+      "name": "GRANT",
+      "title": "Memberikan Privilege",
+      "description": "Memberikan hak akses ke user.",
+      "syntax": "GRANT privilege ON database.table TO 'user'@'host';",
+      "options": [
+        { "option": "ALL PRIVILEGES", "description": "Semua hak akses" },
+        { "option": "SELECT", "description": "Hanya baca" },
+        { "option": "INSERT, UPDATE, DELETE", "description": "Baca-tulis" },
+        { "option": "CREATE, ALTER, DROP", "description": "DDL" },
+        { "option": "EXECUTE", "description": "Jalankan procedure/function" },
+        { "option": "WITH GRANT OPTION", "description": "Bisa memberikan privilege ke user lain" }
+      ],
+      "examples": "GRANT ALL PRIVILEGES ON myapp.* TO 'app_user'@'localhost';\nGRANT SELECT ON myapp.* TO 'readonly'@'%';\nGRANT SELECT, INSERT, UPDATE ON myapp.orders TO 'api_user'@'%';\nGRANT EXECUTE ON PROCEDURE myapp.GetUserOrders TO 'api_user'@'%';\nFLUSH PRIVILEGES;",
+      "notes": "Jalankan FLUSH PRIVILEGES setelah mengubah privilege."
+    },
+    {
+      "name": "REVOKE",
+      "title": "Mencabut Privilege",
+      "description": "Mencabut hak akses dari user.",
+      "syntax": "REVOKE privilege ON database.table FROM 'user'@'host';",
+      "options": [],
+      "examples": "REVOKE INSERT ON myapp.* FROM 'readonly'@'%';\nREVOKE ALL PRIVILEGES ON myapp.* FROM 'old_user'@'localhost';\nFLUSH PRIVILEGES;"
+    },
+    {
+      "name": "SHOW GRANTS",
+      "title": "Tampilkan Privilege",
+      "description": "Menampilkan privilege yang dimiliki user.",
+      "syntax": "SHOW GRANTS FOR 'user'@'host';",
+      "options": [],
+      "examples": "SHOW GRANTS FOR 'app_user'@'localhost';\nSHOW GRANTS FOR CURRENT_USER;\nSELECT user, host FROM mysql.user;"
+    },
+    {
+      "name": "DROP USER",
+      "title": "Menghapus User",
+      "description": "Menghapus akun user dari MySQL.",
+      "syntax": "DROP USER [IF EXISTS] 'user'@'host';",
+      "options": [],
+      "examples": "DROP USER 'old_user'@'localhost';\nDROP USER IF EXISTS 'test_user'@'%';"
+    },
+    {
+      "name": "ALTER USER",
+      "title": "Mengubah User",
+      "description": "Mengubah properti user (password, dll).",
+      "syntax": "ALTER USER 'user'@'host' IDENTIFIED BY 'new_password';",
+      "options": [
+        { "option": "IDENTIFIED BY", "description": "Ubah password" },
+        { "option": "ACCOUNT LOCK", "description": "Kunci akun" },
+        { "option": "ACCOUNT UNLOCK", "description": "Buka kunci akun" },
+        { "option": "PASSWORD EXPIRE", "description": "Expire password" }
+      ],
+      "examples": "ALTER USER 'app_user'@'localhost' IDENTIFIED BY 'NewP@ss123';\nALTER USER 'old_user'@'localhost' ACCOUNT LOCK;\nALTER USER 'old_user'@'localhost' ACCOUNT UNLOCK;"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "id": "git-status-log",
+  "title": "Status & Informasi",
+  "description": "Melihat status repository, riwayat commit, dan perbedaan file.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git status",
+      "title": "Melihat Status Repository",
+      "description": "Menampilkan status working directory dan staging area.",
+      "syntax": "git status [opsi]",
+      "options": [
+        { "option": "-s / --short", "description": "Format singkat" },
+        { "option": "-b / --branch", "description": "Tampilkan info branch" },
+        { "option": "--ignored", "description": "Tampilkan file yang di-ignore" }
+      ],
+      "examples": "git status\ngit status -s\ngit status -sb",
+      "notes": "M = modified, A = added, D = deleted, ? = untracked, U = conflict."
+    },
+    {
+      "name": "git log",
+      "title": "Melihat Riwayat Commit",
+      "description": "Menampilkan history commit dari terbaru ke terlama.",
+      "syntax": "git log [opsi]",
+      "options": [
+        { "option": "--oneline", "description": "Satu baris per commit" },
+        { "option": "--graph", "description": "Visualisasi branch/merge" },
+        { "option": "--all", "description": "Semua branch" },
+        { "option": "--author=\"nama\"", "description": "Filter by author" },
+        { "option": "--since=\"2024-01-01\"", "description": "Filter by date" },
+        { "option": "--grep=\"keyword\"", "description": "Search commit message" },
+        { "option": "-n N", "description": "Limit N commit" },
+        { "option": "--stat", "description": "Tampilkan file yang berubah" },
+        { "option": "-p / --patch", "description": "Tampilkan diff setiap commit" },
+        { "option": "--pretty=format:\"...\"", "description": "Custom format" }
+      ],
+      "examples": "git log\ngit log --oneline\ngit log --oneline --graph --all\ngit log --author=\"John\" --since=\"2024-01-01\"\ngit log --grep=\"fix\" --oneline\ngit log -5 --stat\ngit log --pretty=format:\"%h %an %ar %s\"",
+      "notes": "git log --oneline --graph --all adalah salah satu perintah paling berguna."
+    },
+    {
+      "name": "git show",
+      "title": "Detail Commit Tertentu",
+      "description": "Menampilkan informasi detail dan diff dari sebuah commit.",
+      "syntax": "git show <commit> [opsi]",
+      "options": [
+        { "option": "--stat", "description": "Ringkasan file yang berubah" },
+        { "option": "--name-only", "description": "Hanya nama file" },
+        { "option": "--format=short", "description": "Format singkat" }
+      ],
+      "examples": "git show HEAD\ngit show abc1234\ngit show HEAD~2\ngit show v1.0\ngit show HEAD:src/main.ts  # lihat file di commit tertentu",
+      "notes": "HEAD~n artinya n commit sebelum HEAD."
+    },
+    {
+      "name": "git diff",
+      "title": "Melihat Perubahan",
+      "description": "Menampilkan perbedaan antara berbagai state (working, staged, commit).",
+      "syntax": "git diff [opsi] [commit] [-- file]",
+      "options": [
+        { "option": "(tanpa opsi)", "description": "Working directory vs staging" },
+        { "option": "--staged / --cached", "description": "Staging vs last commit" },
+        { "option": "HEAD", "description": "Working directory vs last commit" },
+        { "option": "commit1..commit2", "description": "Antar dua commit" },
+        { "option": "--stat", "description": "Ringkasan perubahan" },
+        { "option": "--name-only", "description": "Hanya nama file" },
+        { "option": "--word-diff", "description": "Diff per kata" }
+      ],
+      "examples": "git diff\ngit diff --staged\ngit diff HEAD\ngit diff main..feature\ngit diff --stat HEAD~3\ngit diff -- src/App.tsx",
+      "notes": "git diff tanpa argumen hanya menunjukkan perubahan yang BELUM di-stage."
+    },
+    {
+      "name": "git shortlog",
+      "title": "Ringkasan Commit per Author",
+      "description": "Menampilkan commit yang dikelompokkan berdasarkan author.",
+      "syntax": "git shortlog [opsi]",
+      "options": [
+        { "option": "-s", "description": "Hanya jumlah commit" },
+        { "option": "-n", "description": "Sort by jumlah commit" },
+        { "option": "-e", "description": "Tampilkan email" }
+      ],
+      "examples": "git shortlog\ngit shortlog -sn\ngit shortlog -sne",
+      "notes": "Berguna untuk melihat kontributor project."
+    }
+  ]
+}

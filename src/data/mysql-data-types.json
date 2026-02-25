@@ -1,0 +1,103 @@
+{
+  "id": "mysql-data-types",
+  "title": "Data Types",
+  "description": "Referensi lengkap tipe data di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "integer-types",
+      "title": "Tipe Integer",
+      "description": "Tipe data bilangan bulat di MySQL.",
+      "syntax": "TINYINT / SMALLINT / MEDIUMINT / INT / BIGINT",
+      "options": [
+        { "option": "TINYINT", "description": "-128 sampai 127 (1 byte)" },
+        { "option": "SMALLINT", "description": "-32768 sampai 32767 (2 bytes)" },
+        { "option": "MEDIUMINT", "description": "-8388608 sampai 8388607 (3 bytes)" },
+        { "option": "INT", "description": "-2147483648 sampai 2147483647 (4 bytes)" },
+        { "option": "BIGINT", "description": "±9.2 x 10^18 (8 bytes)" },
+        { "option": "UNSIGNED", "description": "Hanya bilangan positif (range 2x)" },
+        { "option": "BOOLEAN", "description": "Alias untuk TINYINT(1)" }
+      ],
+      "examples": "id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY\nage TINYINT UNSIGNED\nquantity SMALLINT DEFAULT 0\nprice_cents BIGINT\nis_active BOOLEAN DEFAULT TRUE",
+      "notes": "Gunakan UNSIGNED jika nilai selalu positif untuk menghemat ruang."
+    },
+    {
+      "name": "decimal-types",
+      "title": "Tipe Desimal & Float",
+      "description": "Tipe data bilangan desimal.",
+      "syntax": "DECIMAL(M,D) / FLOAT / DOUBLE",
+      "options": [
+        { "option": "DECIMAL(M,D)", "description": "Presisi tetap: M digit total, D desimal" },
+        { "option": "FLOAT", "description": "Floating point presisi tunggal (4 bytes)" },
+        { "option": "DOUBLE", "description": "Floating point presisi ganda (8 bytes)" },
+        { "option": "NUMERIC", "description": "Sinonim DECIMAL" }
+      ],
+      "examples": "price DECIMAL(10,2)  -- Contoh: 99999999.99\ntax_rate DECIMAL(5,4)  -- Contoh: 0.0750\nlatitude DOUBLE\nrating FLOAT",
+      "notes": "Selalu gunakan DECIMAL untuk uang/keuangan, BUKAN FLOAT/DOUBLE (masalah presisi).",
+      "warning": "FLOAT dan DOUBLE bisa kehilangan presisi! Jangan gunakan untuk data keuangan."
+    },
+    {
+      "name": "string-types",
+      "title": "Tipe String",
+      "description": "Tipe data teks di MySQL.",
+      "syntax": "CHAR / VARCHAR / TEXT / ENUM / SET",
+      "options": [
+        { "option": "CHAR(n)", "description": "String panjang tetap (0-255)" },
+        { "option": "VARCHAR(n)", "description": "String panjang variabel (0-65535)" },
+        { "option": "TINYTEXT", "description": "Maks 255 byte" },
+        { "option": "TEXT", "description": "Maks 65535 byte (~64KB)" },
+        { "option": "MEDIUMTEXT", "description": "Maks 16MB" },
+        { "option": "LONGTEXT", "description": "Maks 4GB" },
+        { "option": "ENUM('val1','val2',...)", "description": "Salah satu dari daftar nilai" },
+        { "option": "SET('val1','val2',...)", "description": "Satu atau lebih dari daftar nilai" }
+      ],
+      "examples": "country_code CHAR(2)  -- 'ID', 'US'\nusername VARCHAR(50)\nbio TEXT\nstatus ENUM('active','inactive','banned')\ntags SET('php','mysql','javascript')",
+      "notes": "VARCHAR lebih efisien untuk string panjang variabel. CHAR untuk panjang tetap (kode negara, dsb)."
+    },
+    {
+      "name": "date-types",
+      "title": "Tipe Tanggal & Waktu",
+      "description": "Tipe data untuk menyimpan tanggal dan waktu.",
+      "syntax": "DATE / TIME / DATETIME / TIMESTAMP / YEAR",
+      "options": [
+        { "option": "DATE", "description": "'YYYY-MM-DD' (3 bytes)" },
+        { "option": "TIME", "description": "'HH:MM:SS' (3 bytes)" },
+        { "option": "DATETIME", "description": "'YYYY-MM-DD HH:MM:SS' (8 bytes)" },
+        { "option": "TIMESTAMP", "description": "Epoch-based, auto timezone (4 bytes)" },
+        { "option": "YEAR", "description": "Tahun 4 digit (1 byte)" }
+      ],
+      "examples": "birth_date DATE\nlogin_time TIME\ncreated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\nupdated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\nevent_date DATETIME\ngraduation_year YEAR",
+      "notes": "TIMESTAMP otomatis dikonversi ke UTC saat disimpan. DATETIME menyimpan as-is."
+    },
+    {
+      "name": "json-type",
+      "title": "Tipe JSON",
+      "description": "Tipe data JSON native di MySQL (5.7+).",
+      "syntax": "JSON",
+      "options": [
+        { "option": "->", "description": "Extract JSON value (sebagai JSON)" },
+        { "option": "->>", "description": "Extract JSON value (sebagai text)" },
+        { "option": "JSON_EXTRACT()", "description": "Extract value dari path" },
+        { "option": "JSON_SET()", "description": "Set value di path" }
+      ],
+      "examples": "metadata JSON\nsettings JSON DEFAULT '{}'\n\n-- Insert\nINSERT INTO products (name, attrs) VALUES ('Laptop', '{\"color\": \"silver\", \"ram\": 16}');\n\n-- Query\nSELECT name, attrs->>'$.color' AS color FROM products;\nSELECT * FROM products WHERE attrs->'$.ram' > 8;\nSELECT JSON_EXTRACT(attrs, '$.color') FROM products;",
+      "notes": "JSON type melakukan validasi format saat insert. Bisa di-index dengan generated columns."
+    },
+    {
+      "name": "binary-types",
+      "title": "Tipe Binary & BLOB",
+      "description": "Tipe data untuk menyimpan data biner.",
+      "syntax": "BINARY / VARBINARY / BLOB",
+      "options": [
+        { "option": "BINARY(n)", "description": "Binary panjang tetap" },
+        { "option": "VARBINARY(n)", "description": "Binary panjang variabel" },
+        { "option": "TINYBLOB", "description": "Maks 255 bytes" },
+        { "option": "BLOB", "description": "Maks 64KB" },
+        { "option": "MEDIUMBLOB", "description": "Maks 16MB" },
+        { "option": "LONGBLOB", "description": "Maks 4GB" }
+      ],
+      "examples": "uuid BINARY(16)\nfile_data MEDIUMBLOB\nthumbnail BLOB",
+      "notes": "Untuk file besar, pertimbangkan menyimpan di filesystem dan simpan path di database."
+    }
+  ]
+}

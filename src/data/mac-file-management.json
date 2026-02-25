@@ -1,0 +1,102 @@
+{
+  "id": "mac-file-management",
+  "title": "File Management",
+  "description": "Perintah untuk mengelola file dan direktori di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "cp",
+      "title": "Copy",
+      "description": "Menyalin file atau direktori.",
+      "syntax": "cp [opsi] sumber tujuan",
+      "options": [
+        { "option": "-r", "description": "Rekursif (untuk direktori)" },
+        { "option": "-v", "description": "Verbose, tampilkan proses" },
+        { "option": "-i", "description": "Konfirmasi sebelum overwrite" },
+        { "option": "-n", "description": "Jangan overwrite file yang ada" },
+        { "option": "-p", "description": "Pertahankan atribut file" }
+      ],
+      "examples": "cp file.txt backup.txt\ncp -r folder/ folder_backup/\ncp -iv *.pdf ~/Documents/",
+      "notes": "Gunakan `ditto` untuk copy yang lebih kuat di macOS."
+    },
+    {
+      "name": "mv",
+      "title": "Move / Rename",
+      "description": "Memindahkan atau mengubah nama file/direktori.",
+      "syntax": "mv [opsi] sumber tujuan",
+      "options": [
+        { "option": "-i", "description": "Konfirmasi sebelum overwrite" },
+        { "option": "-v", "description": "Verbose" },
+        { "option": "-n", "description": "Jangan overwrite" }
+      ],
+      "examples": "mv old.txt new.txt\nmv file.txt ~/Documents/\nmv -i *.jpg ~/Pictures/",
+      "notes": "mv juga digunakan untuk rename file."
+    },
+    {
+      "name": "rm",
+      "title": "Remove",
+      "description": "Menghapus file atau direktori.",
+      "syntax": "rm [opsi] file...",
+      "options": [
+        { "option": "-r", "description": "Rekursif (hapus direktori)" },
+        { "option": "-f", "description": "Force, tanpa konfirmasi" },
+        { "option": "-i", "description": "Konfirmasi setiap file" },
+        { "option": "-v", "description": "Verbose" }
+      ],
+      "examples": "rm file.txt\nrm -rf old_project/\nrm -i *.tmp",
+      "warning": "rm -rf sangat berbahaya! File yang dihapus tidak masuk Trash."
+    },
+    {
+      "name": "mkdir",
+      "title": "Make Directory",
+      "description": "Membuat direktori baru.",
+      "syntax": "mkdir [opsi] nama_dir",
+      "options": [
+        { "option": "-p", "description": "Buat parent directory jika belum ada" },
+        { "option": "-v", "description": "Verbose" }
+      ],
+      "examples": "mkdir project\nmkdir -p src/components/ui\nmkdir -pv ~/Projects/{web,mobile,api}",
+      "notes": "Brace expansion {} berguna untuk membuat banyak direktori sekaligus."
+    },
+    {
+      "name": "touch",
+      "title": "Touch",
+      "description": "Membuat file kosong atau memperbarui timestamp.",
+      "syntax": "touch [opsi] file...",
+      "options": [
+        { "option": "-a", "description": "Ubah access time saja" },
+        { "option": "-m", "description": "Ubah modification time saja" },
+        { "option": "-t [[CC]YY]MMDDhhmm[.SS]", "description": "Set waktu spesifik" }
+      ],
+      "examples": "touch newfile.txt\ntouch -t 202301011200 file.txt\ntouch file1.txt file2.txt file3.txt"
+    },
+    {
+      "name": "ln",
+      "title": "Link",
+      "description": "Membuat hard link atau symbolic link.",
+      "syntax": "ln [opsi] target link_name",
+      "options": [
+        { "option": "-s", "description": "Buat symbolic link (symlink)" },
+        { "option": "-f", "description": "Force, timpa link yang ada" },
+        { "option": "-v", "description": "Verbose" }
+      ],
+      "examples": "ln -s /usr/local/bin/python3 /usr/local/bin/python\nln -sf ~/dotfiles/.zshrc ~/.zshrc\nln file.txt hardlink.txt",
+      "notes": "Symlink (-s) lebih umum digunakan daripada hard link."
+    },
+    {
+      "name": "ditto",
+      "title": "Ditto (macOS)",
+      "description": "Copy file/direktori dengan mempertahankan metadata macOS (resource forks, HFS+ metadata).",
+      "syntax": "ditto [opsi] sumber tujuan",
+      "options": [
+        { "option": "-v", "description": "Verbose" },
+        { "option": "-V", "description": "Very verbose" },
+        { "option": "--rsrc", "description": "Sertakan resource forks" },
+        { "option": "-c -k", "description": "Buat archive zip" },
+        { "option": "-x -k", "description": "Extract archive zip" }
+      ],
+      "examples": "ditto ~/Documents/project ~/Backup/project\nditto -ck --sequesterRsrc folder archive.zip\nditto -xk archive.zip ./extracted/",
+      "notes": "ditto adalah alternatif cp yang lebih baik di macOS karena mempertahankan metadata."
+    }
+  ]
+}

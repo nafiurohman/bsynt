@@ -1,0 +1,37 @@
+{
+  "id": "git-init-clone",
+  "title": "Membuat & Clone Repository",
+  "description": "Menginisialisasi repository baru atau menyalin repository yang sudah ada.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git init",
+      "title": "Inisialisasi Repository Baru",
+      "description": "Membuat repository Git baru di direktori saat ini.",
+      "syntax": "git init [nama-folder] [--bare] [--initial-branch=main]",
+      "options": [
+        { "option": "--bare", "description": "Membuat bare repository (tanpa working directory, untuk server)" },
+        { "option": "--initial-branch=main", "description": "Menentukan nama branch awal" },
+        { "option": "-q / --quiet", "description": "Minimal output" }
+      ],
+      "examples": "# Inisialisasi di folder saat ini\ngit init\n\n# Inisialisasi di folder baru\ngit init my-project\n\n# Bare repo (untuk server/remote)\ngit init --bare my-project.git",
+      "notes": "git init membuat folder .git/ yang berisi semua metadata repository."
+    },
+    {
+      "name": "git clone",
+      "title": "Menyalin Repository",
+      "description": "Mengunduh repository lengkap dari remote (GitHub, GitLab, dll).",
+      "syntax": "git clone <url> [nama-folder] [opsi]",
+      "options": [
+        { "option": "--depth n", "description": "Shallow clone — hanya n commit terakhir" },
+        { "option": "--branch nama", "description": "Clone branch tertentu" },
+        { "option": "--single-branch", "description": "Hanya clone satu branch" },
+        { "option": "--recurse-submodules", "description": "Clone termasuk submodule" },
+        { "option": "--bare", "description": "Clone sebagai bare repository" },
+        { "option": "-o nama", "description": "Nama remote (default: origin)" }
+      ],
+      "examples": "# Clone biasa\ngit clone https://github.com/user/repo.git\n\n# Clone ke folder tertentu\ngit clone https://github.com/user/repo.git my-folder\n\n# Shallow clone (cepat untuk repo besar)\ngit clone --depth 1 https://github.com/user/repo.git\n\n# Clone branch tertentu\ngit clone --branch develop --single-branch https://github.com/user/repo.git\n\n# Clone dengan SSH\ngit clone git@github.com:user/repo.git",
+      "notes": "Shallow clone (--depth 1) sangat berguna untuk CI/CD agar lebih cepat."
+    }
+  ]
+}

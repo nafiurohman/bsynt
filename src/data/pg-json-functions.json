@@ -1,0 +1,76 @@
+{
+  "id": "pg-json-functions",
+  "title": "JSON Functions",
+  "description": "Fungsi-fungsi untuk query, manipulasi, dan transformasi data JSON/JSONB di PostgreSQL.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "-> / ->> / #> / #>>",
+      "title": "JSON Access Operators",
+      "description": "Mengakses elemen dalam JSON/JSONB.",
+      "syntax": "json -> key  (return JSON)\njson ->> key (return text)\njson #> path (return JSON dari path)\njson #>> path (return text dari path)",
+      "options": [
+        { "option": "->", "description": "Akses key/index, return JSON" },
+        { "option": "->>", "description": "Akses key/index, return text" },
+        { "option": "#>", "description": "Akses nested path, return JSON" },
+        { "option": "#>>", "description": "Akses nested path, return text" }
+      ],
+      "examples": "SELECT data->'name' FROM users;           -- return JSON: \"John\"\nSELECT data->>'name' FROM users;          -- return text: John\nSELECT data#>'{address,city}' FROM users; -- nested JSON\nSELECT data#>>'{address,city}' FROM users;-- nested text\nSELECT data->0 FROM json_arrays;          -- array element",
+      "notes": "Gunakan ->> untuk mendapatkan text yang bisa digunakan dalam WHERE clause."
+    },
+    {
+      "name": "@> / <@ / ? / ?| / ?&",
+      "title": "JSONB Containment & Existence",
+      "description": "Operator untuk mengecek keberadaan key atau nilai dalam JSONB.",
+      "syntax": "jsonb @> jsonb  (contains)\njsonb ? key    (key exists)\njsonb ?| keys  (any key exists)\njsonb ?& keys  (all keys exist)",
+      "options": [
+        { "option": "@>", "description": "JSONB contains" },
+        { "option": "<@", "description": "JSONB contained by" },
+        { "option": "?", "description": "Key exists" },
+        { "option": "?|", "description": "Any key exists" },
+        { "option": "?&", "description": "All keys exist" }
+      ],
+      "examples": "-- Contains\nSELECT * FROM configs WHERE data @> '{\"theme\": \"dark\"}';\n\n-- Key exists\nSELECT * FROM configs WHERE data ? 'notifications';\n\n-- Any key exists\nSELECT * FROM configs WHERE data ?| ARRAY['theme', 'lang'];\n\n-- All keys exist\nSELECT * FROM configs WHERE data ?& ARRAY['theme', 'lang'];",
+      "notes": "Semua operator ini mendukung GIN index untuk performa optimal."
+    },
+    {
+      "name": "jsonb_set / jsonb_insert",
+      "title": "Memodifikasi JSONB",
+      "description": "Mengubah, menambah, atau menghapus elemen dalam JSONB.",
+      "syntax": "jsonb_set(target, path, new_value [, create_missing])\njsonb_insert(target, path, new_value [, insert_after])",
+      "options": [
+        { "option": "jsonb_set", "description": "Set/replace value di path" },
+        { "option": "jsonb_insert", "description": "Insert value di path (array)" },
+        { "option": "- key", "description": "Hapus key dari JSONB" },
+        { "option": "#- path", "description": "Hapus element di path" },
+        { "option": "||", "description": "Merge/concatenate JSONB" }
+      ],
+      "examples": "-- Set value\nUPDATE configs SET data = jsonb_set(data, '{theme}', '\"light\"');\n\n-- Set nested value\nUPDATE users SET profile = jsonb_set(profile, '{address,city}', '\"Jakarta\"');\n\n-- Hapus key\nUPDATE configs SET data = data - 'old_key';\n\n-- Merge\nUPDATE configs SET data = data || '{\"new_key\": \"value\"}'::jsonb;\n\n-- Hapus nested\nUPDATE users SET profile = profile #- '{address,zip}';",
+      "notes": "JSONB immutable — setiap operasi membuat JSONB baru."
+    },
+    {
+      "name": "jsonb_each / jsonb_array_elements",
+      "title": "Expanding JSONB",
+      "description": "Mengubah JSONB object/array menjadi baris-baris tabel.",
+      "syntax": "jsonb_each(jsonb) / jsonb_each_text(jsonb)\njsonb_array_elements(jsonb) / jsonb_array_elements_text(jsonb)",
+      "options": [
+        { "option": "jsonb_each", "description": "Expand object ke key-value rows" },
+        { "option": "jsonb_each_text", "description": "Sama tapi value sebagai text" },
+        { "option": "jsonb_array_elements", "description": "Expand array ke rows" },
+        { "option": "jsonb_object_keys", "description": "Hanya keys" },
+        { "option": "jsonb_to_record", "description": "Konversi ke record" }
+      ],
+      "examples": "-- Expand object\nSELECT key, value FROM jsonb_each('{\"a\":1,\"b\":2}'::jsonb);\n\n-- Expand array\nSELECT * FROM jsonb_array_elements('[1,2,3]'::jsonb);\n\n-- Practical: search in JSONB array\nSELECT * FROM users\nWHERE EXISTS (\n  SELECT 1 FROM jsonb_array_elements_text(profile->'hobbies') h\n  WHERE h.value ILIKE '%music%'\n);\n\n-- JSONB to record\nSELECT * FROM jsonb_to_record('{\"name\":\"John\",\"age\":30}'::jsonb)\nAS x(name TEXT, age INT);",
+      "notes": "jsonb_array_elements setara dengan unnest untuk JSONB arrays."
+    },
+    {
+      "name": "jsonb_build / row_to_json",
+      "title": "Membuat JSON dari Data",
+      "description": "Membangun JSON object/array dari data kolom atau baris.",
+      "syntax": "jsonb_build_object(key1, val1, key2, val2)\njsonb_build_array(val1, val2)\nrow_to_json(record)\nto_jsonb(value)",
+      "options": [],
+      "examples": "SELECT jsonb_build_object('name', name, 'email', email) FROM users;\nSELECT jsonb_build_array(1, 'two', 3);\nSELECT row_to_json(u) FROM users u;\nSELECT to_jsonb(u.*) FROM users u;\n\n-- API-style response\nSELECT jsonb_build_object(\n  'status', 'success',\n  'data', jsonb_agg(to_jsonb(u.*)),\n  'count', count(*)\n) FROM users u WHERE active = true;",
+      "notes": "row_to_json dan to_jsonb sangat berguna untuk membuat API response langsung dari SQL."
+    }
+  ]
+}

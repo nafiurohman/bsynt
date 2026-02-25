@@ -1,0 +1,60 @@
+{
+  "id": "pg-window-functions",
+  "title": "Window Functions",
+  "description": "Window functions untuk analisis data tanpa mengurangi jumlah baris hasil query.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "ROW_NUMBER / RANK / DENSE_RANK",
+      "title": "Ranking Functions",
+      "description": "Memberikan nomor urut atau ranking pada setiap baris.",
+      "syntax": "ROW_NUMBER() OVER (PARTITION BY kolom ORDER BY kolom)",
+      "options": [
+        { "option": "ROW_NUMBER()", "description": "Nomor urut unik (1,2,3,4,5)" },
+        { "option": "RANK()", "description": "Ranking dengan gap (1,2,2,4,5)" },
+        { "option": "DENSE_RANK()", "description": "Ranking tanpa gap (1,2,2,3,4)" },
+        { "option": "NTILE(n)", "description": "Membagi ke n bucket" }
+      ],
+      "examples": "SELECT name, department, salary,\n  ROW_NUMBER() OVER (ORDER BY salary DESC) AS row_num,\n  RANK() OVER (ORDER BY salary DESC) AS rank,\n  DENSE_RANK() OVER (ORDER BY salary DESC) AS dense_rank\nFROM employees;\n\n-- Top 3 per department\nSELECT * FROM (\n  SELECT *, ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rn\n  FROM employees\n) sub WHERE rn <= 3;",
+      "notes": "PARTITION BY opsional — tanpanya, ranking berlaku untuk semua baris."
+    },
+    {
+      "name": "LAG / LEAD",
+      "title": "Akses Baris Sebelum/Sesudah",
+      "description": "Mengakses nilai dari baris sebelumnya (LAG) atau berikutnya (LEAD).",
+      "syntax": "LAG(kolom, offset, default) OVER (ORDER BY kolom)\nLEAD(kolom, offset, default) OVER (ORDER BY kolom)",
+      "options": [
+        { "option": "offset", "description": "Jumlah baris ke belakang/depan (default 1)" },
+        { "option": "default", "description": "Nilai jika tidak ada baris" }
+      ],
+      "examples": "SELECT date, revenue,\n  LAG(revenue) OVER (ORDER BY date) AS prev_revenue,\n  revenue - LAG(revenue) OVER (ORDER BY date) AS growth\nFROM daily_sales;\n\nSELECT name, salary,\n  LEAD(salary) OVER (ORDER BY salary) AS next_salary\nFROM employees;",
+      "notes": "Sangat berguna untuk menghitung perubahan dari periode sebelumnya."
+    },
+    {
+      "name": "SUM / AVG OVER",
+      "title": "Running Total & Moving Average",
+      "description": "Menghitung running total, cumulative sum, atau moving average.",
+      "syntax": "SUM(kolom) OVER (ORDER BY kolom ROWS BETWEEN ... AND ...)",
+      "options": [
+        { "option": "ROWS UNBOUNDED PRECEDING", "description": "Dari awal sampai baris saat ini" },
+        { "option": "ROWS BETWEEN n PRECEDING AND CURRENT ROW", "description": "Sliding window" },
+        { "option": "RANGE BETWEEN", "description": "Window berdasarkan nilai, bukan posisi" }
+      ],
+      "examples": "-- Running total\nSELECT date, amount,\n  SUM(amount) OVER (ORDER BY date) AS running_total\nFROM transactions;\n\n-- Moving average 7 hari\nSELECT date, revenue,\n  AVG(revenue) OVER (ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS ma_7day\nFROM daily_sales;\n\n-- Persentase dari total\nSELECT category, revenue,\n  ROUND(revenue * 100.0 / SUM(revenue) OVER (), 2) AS pct\nFROM category_sales;",
+      "notes": "Frame clause (ROWS BETWEEN) sangat powerful untuk analisis time-series."
+    },
+    {
+      "name": "FIRST_VALUE / LAST_VALUE / NTH_VALUE",
+      "title": "Mengambil Nilai Tertentu dari Window",
+      "description": "Mengambil nilai pertama, terakhir, atau ke-N dari window.",
+      "syntax": "FIRST_VALUE(kolom) OVER (PARTITION BY ... ORDER BY ...)",
+      "options": [
+        { "option": "FIRST_VALUE", "description": "Nilai pertama dalam window" },
+        { "option": "LAST_VALUE", "description": "Nilai terakhir dalam window" },
+        { "option": "NTH_VALUE(kolom, n)", "description": "Nilai ke-N" }
+      ],
+      "examples": "SELECT name, department, salary,\n  FIRST_VALUE(name) OVER (PARTITION BY department ORDER BY salary DESC) AS highest_paid,\n  LAST_VALUE(name) OVER (\n    PARTITION BY department ORDER BY salary DESC\n    ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING\n  ) AS lowest_paid\nFROM employees;",
+      "notes": "LAST_VALUE memerlukan frame clause explisit — default hanya sampai CURRENT ROW."
+    }
+  ]
+}

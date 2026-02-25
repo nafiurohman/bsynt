@@ -1,0 +1,63 @@
+{
+  "id": "git-staging-commit",
+  "title": "Staging & Commit",
+  "description": "Menambahkan perubahan ke staging area dan membuat commit.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git add",
+      "title": "Menambahkan ke Staging Area",
+      "description": "Menambahkan file yang berubah ke staging area untuk commit berikutnya.",
+      "syntax": "git add <file|pattern|.>",
+      "options": [
+        { "option": ".", "description": "Semua file di direktori saat ini dan subdirektori" },
+        { "option": "-A / --all", "description": "Semua file (termasuk deleted) dari root project" },
+        { "option": "-p / --patch", "description": "Stage secara interaktif per chunk" },
+        { "option": "-u", "description": "Hanya file yang sudah tracked (tidak termasuk untracked)" },
+        { "option": "-n / --dry-run", "description": "Simulasi tanpa benar-benar menambahkan" }
+      ],
+      "examples": "git add file.txt\ngit add src/\ngit add .\ngit add -A\ngit add *.js\ngit add -p  # stage chunk by chunk",
+      "notes": "git add -p sangat berguna untuk membuat commit yang fokus dan atomic."
+    },
+    {
+      "name": "git restore --staged",
+      "title": "Menghapus dari Staging Area",
+      "description": "Mengeluarkan file dari staging area tanpa menghapus perubahan.",
+      "syntax": "git restore --staged <file>",
+      "options": [],
+      "examples": "git restore --staged file.txt\ngit restore --staged .\ngit restore --staged src/",
+      "notes": "Perintah lama: git reset HEAD file.txt (masih bisa dipakai)."
+    },
+    {
+      "name": "git commit",
+      "title": "Membuat Commit",
+      "description": "Menyimpan snapshot dari staging area ke history repository.",
+      "syntax": "git commit [opsi]",
+      "options": [
+        { "option": "-m \"pesan\"", "description": "Commit dengan pesan langsung" },
+        { "option": "-am \"pesan\"", "description": "Stage semua tracked files + commit" },
+        { "option": "--amend", "description": "Mengubah commit terakhir" },
+        { "option": "--amend --no-edit", "description": "Amend tanpa mengubah pesan" },
+        { "option": "--allow-empty", "description": "Commit tanpa perubahan" },
+        { "option": "-v / --verbose", "description": "Tampilkan diff di editor" },
+        { "option": "--fixup=<commit>", "description": "Commit untuk autosquash" }
+      ],
+      "examples": "git commit -m \"feat: tambah fitur login\"\ngit commit -am \"fix: perbaiki bug navigasi\"\n\n# Amend commit terakhir\ngit commit --amend -m \"pesan baru\"\ngit commit --amend --no-edit  # tambah file ke commit terakhir\n\n# Commit kosong (untuk trigger CI)\ngit commit --allow-empty -m \"trigger deploy\"",
+      "notes": "Gunakan Conventional Commits: feat:, fix:, docs:, refactor:, test:, chore:"
+    },
+    {
+      "name": "git commit --amend",
+      "title": "Mengubah Commit Terakhir",
+      "description": "Memodifikasi commit terakhir — menambahkan file, mengubah pesan, dll.",
+      "syntax": "git commit --amend [opsi]",
+      "options": [
+        { "option": "-m \"pesan baru\"", "description": "Ganti pesan commit" },
+        { "option": "--no-edit", "description": "Tidak mengubah pesan" },
+        { "option": "--author=\"Nama <email>\"", "description": "Ganti author" },
+        { "option": "--date=\"2024-01-01\"", "description": "Ganti tanggal commit" }
+      ],
+      "examples": "# Lupa menambahkan file\ngit add forgotten_file.txt\ngit commit --amend --no-edit\n\n# Ganti pesan\ngit commit --amend -m \"fix: typo di README\"",
+      "warning": "Jangan amend commit yang sudah di-push ke remote! (kecuali force push)."
+    }
+  ]
+}

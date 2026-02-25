@@ -1,0 +1,139 @@
+{
+  "id": "compression",
+  "title": "Kompresi & Arsip",
+  "description": "Perintah-perintah untuk mengompres, mengekstrak, dan mengelola file arsip di terminal Linux.",
+  "commands": [
+    {
+      "name": "tar",
+      "title": "tar — Tape Archive",
+      "description": "Membuat dan mengekstrak file arsip tar. Merupakan alat arsip paling umum di Linux yang dapat dikombinasikan dengan berbagai algoritma kompresi.",
+      "syntax": "tar [opsi] [nama-arsip] [file/direktori...]",
+      "options": [
+        { "option": "-c", "description": "Membuat arsip baru (create)" },
+        { "option": "-x", "description": "Mengekstrak isi arsip (extract)" },
+        { "option": "-t", "description": "Menampilkan daftar isi arsip (list)" },
+        { "option": "-z", "description": "Menggunakan kompresi gzip (.tar.gz)" },
+        { "option": "-j", "description": "Menggunakan kompresi bzip2 (.tar.bz2)" },
+        { "option": "-J", "description": "Menggunakan kompresi xz (.tar.xz)" },
+        { "option": "-f", "description": "Menentukan nama file arsip (wajib)" },
+        { "option": "-v", "description": "Menampilkan proses secara detail (verbose)" },
+        { "option": "-C", "description": "Menentukan direktori tujuan ekstraksi" },
+        { "option": "-p", "description": "Mempertahankan hak akses file asli" },
+        { "option": "--exclude=", "description": "Mengecualikan file atau pola tertentu" },
+        { "option": "-r", "description": "Menambahkan file ke arsip (append)" },
+        { "option": "--strip-components=", "description": "Menghapus N komponen direktori awal saat ekstraksi" }
+      ],
+      "examples": "# Membuat arsip tar.gz\ntar -czvf backup.tar.gz /home/user/dokumen/\n\n# Mengekstrak arsip tar.gz\ntar -xzvf backup.tar.gz\n\n# Mengekstrak ke direktori tertentu\ntar -xzvf backup.tar.gz -C /tmp/hasil/\n\n# Melihat isi arsip tanpa mengekstrak\ntar -tzvf backup.tar.gz\n\n# Membuat arsip tar.bz2\ntar -cjvf backup.tar.bz2 /home/user/dokumen/\n\n# Membuat arsip tar.xz\ntar -cJvf backup.tar.xz /home/user/dokumen/\n\n# Dengan mengecualikan pola tertentu\ntar -czvf backup.tar.gz --exclude='*.log' --exclude='.git' /home/user/proyek/",
+      "notes": "Opsi -f harus selalu diikuti oleh nama file arsip."
+    },
+    {
+      "name": "gzip",
+      "title": "gzip — Kompresi Gzip",
+      "description": "Mengompres file menggunakan algoritma Lempel-Ziv (LZ77). Secara default menggantikan file asli dengan versi terkompresi berekstensi .gz.",
+      "syntax": "gzip [opsi] [file...]",
+      "options": [
+        { "option": "-d", "description": "Mengekstrak file terkompresi (decompress)" },
+        { "option": "-k", "description": "Mempertahankan file asli setelah kompresi" },
+        { "option": "-r", "description": "Mengompres file dalam direktori secara rekursif" },
+        { "option": "-v", "description": "Menampilkan informasi kompresi (verbose)" },
+        { "option": "-l", "description": "Menampilkan informasi file terkompresi" },
+        { "option": "-1 sampai -9", "description": "Mengatur level kompresi (1=tercepat, 9=terkecil)" },
+        { "option": "-c", "description": "Menulis output ke stdout (mempertahankan file asli)" }
+      ],
+      "examples": "# Mengompres file\ngzip file.txt\n\n# Mengompres dengan mempertahankan file asli\ngzip -k file.txt\n\n# Kompresi maksimal\ngzip -9 file.txt\n\n# Mengekstrak\ngzip -d file.txt.gz\n\n# Melihat info kompresi\ngzip -l file.txt.gz"
+    },
+    {
+      "name": "gunzip",
+      "title": "gunzip — Dekompres Gzip",
+      "description": "Mengekstrak file yang dikompresi dengan gzip. Merupakan shortcut untuk gzip -d.",
+      "syntax": "gunzip [opsi] [file.gz...]",
+      "options": [
+        { "option": "-k", "description": "Mempertahankan file .gz setelah ekstraksi" },
+        { "option": "-v", "description": "Menampilkan informasi proses" },
+        { "option": "-r", "description": "Mengekstrak secara rekursif" },
+        { "option": "-c", "description": "Menulis output ke stdout" },
+        { "option": "-t", "description": "Menguji integritas file" }
+      ],
+      "examples": "# Mengekstrak file gzip\ngunzip file.txt.gz\n\n# Mempertahankan file asli\ngunzip -k file.txt.gz\n\n# Menguji integritas\ngunzip -t backup.tar.gz"
+    },
+    {
+      "name": "bzip2",
+      "title": "bzip2 — Kompresi Bzip2",
+      "description": "Mengompres file menggunakan algoritma Burrows-Wheeler. Memberikan rasio kompresi lebih baik dari gzip tetapi lebih lambat.",
+      "syntax": "bzip2 [opsi] [file...]",
+      "options": [
+        { "option": "-d", "description": "Mengekstrak file terkompresi" },
+        { "option": "-k", "description": "Mempertahankan file asli" },
+        { "option": "-v", "description": "Menampilkan informasi kompresi" },
+        { "option": "-1 sampai -9", "description": "Mengatur level kompresi" },
+        { "option": "-t", "description": "Menguji integritas file" }
+      ],
+      "examples": "# Mengompres file\nbzip2 file.txt\n\n# Mempertahankan file asli\nbzip2 -k file.txt\n\n# Mengekstrak\nbzip2 -d file.txt.bz2\nbunzip2 file.txt.bz2"
+    },
+    {
+      "name": "xz",
+      "title": "xz — Kompresi XZ",
+      "description": "Mengompres file dengan algoritma LZMA2. Memberikan rasio kompresi terbaik namun paling lambat.",
+      "syntax": "xz [opsi] [file...]",
+      "options": [
+        { "option": "-d", "description": "Mengekstrak file terkompresi" },
+        { "option": "-k", "description": "Mempertahankan file asli" },
+        { "option": "-v", "description": "Menampilkan informasi kompresi" },
+        { "option": "-0 sampai -9", "description": "Mengatur level kompresi (default: 6)" },
+        { "option": "-e", "description": "Mode extreme (kompresi lebih lambat tapi lebih kecil)" },
+        { "option": "-T N", "description": "Menggunakan N thread untuk kompresi parallel" }
+      ],
+      "examples": "# Mengompres file\nxz file.txt\n\n# Kompresi extreme dengan multi-thread\nxz -9e -T4 large_file.tar\n\n# Mengekstrak\nxz -d file.txt.xz\nunxz file.txt.xz"
+    },
+    {
+      "name": "zip",
+      "title": "zip — Membuat Arsip ZIP",
+      "description": "Membuat arsip dalam format ZIP yang kompatibel lintas platform (Windows, macOS, Linux).",
+      "syntax": "zip [opsi] arsip.zip file...",
+      "options": [
+        { "option": "-r", "description": "Menambahkan direktori beserta isinya secara rekursif" },
+        { "option": "-e", "description": "Mengenkripsi arsip dengan password" },
+        { "option": "-v", "description": "Menampilkan proses detail" },
+        { "option": "-q", "description": "Mode senyap" },
+        { "option": "-0 sampai -9", "description": "Level kompresi (0=store, 9=maksimal)" },
+        { "option": "-u", "description": "Update file yang sudah ada di arsip" },
+        { "option": "-d", "description": "Menghapus file dari arsip" },
+        { "option": "-x pola", "description": "Mengecualikan file yang cocok dengan pola" }
+      ],
+      "examples": "# Membuat arsip ZIP\nzip arsip.zip file1.txt file2.txt\n\n# Mengarsipkan direktori secara rekursif\nzip -r proyek.zip proyek/\n\n# Arsip dengan password\nzip -re rahasia.zip dokumen/\n\n# Mengecualikan file tertentu\nzip -r proyek.zip proyek/ -x '*.git*' '*.log'"
+    },
+    {
+      "name": "unzip",
+      "title": "unzip — Mengekstrak Arsip ZIP",
+      "description": "Mengekstrak file dari arsip format ZIP.",
+      "syntax": "unzip [opsi] arsip.zip",
+      "options": [
+        { "option": "-d DIR", "description": "Mengekstrak ke direktori tertentu" },
+        { "option": "-l", "description": "Menampilkan daftar isi arsip tanpa mengekstrak" },
+        { "option": "-o", "description": "Menimpa file tanpa konfirmasi" },
+        { "option": "-n", "description": "Tidak menimpa file yang sudah ada" },
+        { "option": "-q", "description": "Mode senyap" },
+        { "option": "-t", "description": "Menguji integritas arsip" },
+        { "option": "-p", "description": "Mengekstrak ke stdout" }
+      ],
+      "examples": "# Mengekstrak arsip\nunzip arsip.zip\n\n# Mengekstrak ke direktori tertentu\nunzip arsip.zip -d /tmp/hasil/\n\n# Melihat isi arsip\nunzip -l arsip.zip\n\n# Menguji integritas\nunzip -t arsip.zip"
+    },
+    {
+      "name": "7z",
+      "title": "7z — 7-Zip Archive",
+      "description": "Utilitas kompresi yang mendukung banyak format arsip termasuk 7z, ZIP, TAR, GZIP, BZIP2, dan lainnya.",
+      "syntax": "7z [perintah] [opsi] arsip [file...]",
+      "options": [
+        { "option": "a", "description": "Menambahkan file ke arsip (add)" },
+        { "option": "x", "description": "Mengekstrak dengan path lengkap" },
+        { "option": "e", "description": "Mengekstrak tanpa path (semua file di satu tempat)" },
+        { "option": "l", "description": "Menampilkan daftar isi arsip" },
+        { "option": "t", "description": "Menguji integritas arsip" },
+        { "option": "-p", "description": "Mengatur password" },
+        { "option": "-mx=N", "description": "Mengatur level kompresi (0-9)" },
+        { "option": "-mhe=on", "description": "Mengenkripsi nama file (header)" }
+      ],
+      "examples": "# Membuat arsip 7z\n7z a arsip.7z file1.txt file2.txt\n\n# Mengarsipkan direktori\n7z a proyek.7z proyek/\n\n# Mengekstrak arsip\n7z x arsip.7z\n\n# Arsip dengan password dan enkripsi header\n7z a -p -mhe=on rahasia.7z dokumen/\n\n# Kompresi ultra\n7z a -mx=9 ultra.7z data/"
+    }
+  ]
+}

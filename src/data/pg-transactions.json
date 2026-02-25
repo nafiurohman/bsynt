@@ -1,0 +1,58 @@
+{
+  "id": "pg-transactions",
+  "title": "Transactions",
+  "description": "Mengelola transaksi database untuk menjaga konsistensi data.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "BEGIN / COMMIT / ROLLBACK",
+      "title": "Dasar Transaksi",
+      "description": "Memulai, mengkonfirmasi, atau membatalkan transaksi.",
+      "syntax": "BEGIN;\n-- SQL statements\nCOMMIT; -- atau ROLLBACK;",
+      "options": [
+        { "option": "BEGIN / START TRANSACTION", "description": "Memulai transaksi" },
+        { "option": "COMMIT / END", "description": "Mengkonfirmasi transaksi" },
+        { "option": "ROLLBACK / ABORT", "description": "Membatalkan transaksi" }
+      ],
+      "examples": "BEGIN;\nUPDATE accounts SET balance = balance - 1000 WHERE id = 1;\nUPDATE accounts SET balance = balance + 1000 WHERE id = 2;\nCOMMIT;\n\n-- Membatalkan\nBEGIN;\nDELETE FROM important_data;\nROLLBACK; -- data tidak terhapus",
+      "notes": "Di luar transaction eksplisit, setiap statement adalah auto-commit."
+    },
+    {
+      "name": "SAVEPOINT",
+      "title": "Savepoint dalam Transaksi",
+      "description": "Membuat titik simpan dalam transaksi agar bisa rollback sebagian.",
+      "syntax": "SAVEPOINT nama;\nROLLBACK TO SAVEPOINT nama;\nRELEASE SAVEPOINT nama;",
+      "options": [],
+      "examples": "BEGIN;\nINSERT INTO orders (user_id, total) VALUES (1, 50000);\nSAVEPOINT sp1;\nINSERT INTO order_items (order_id, product_id) VALUES (1, 999); -- error misalnya\nROLLBACK TO SAVEPOINT sp1; -- hanya rollback item, order tetap\nCOMMIT;",
+      "notes": "RELEASE SAVEPOINT menghapus savepoint tapi TIDAK melakukan commit."
+    },
+    {
+      "name": "Isolation Level",
+      "title": "Transaction Isolation Level",
+      "description": "Mengatur tingkat isolasi transaksi untuk kontrol concurrency.",
+      "syntax": "BEGIN ISOLATION LEVEL level;\nSET TRANSACTION ISOLATION LEVEL level;",
+      "options": [
+        { "option": "READ COMMITTED", "description": "Default — baca data yang sudah di-commit" },
+        { "option": "REPEATABLE READ", "description": "Snapshot di awal transaction" },
+        { "option": "SERIALIZABLE", "description": "Paling ketat — seolah serial execution" },
+        { "option": "READ UNCOMMITTED", "description": "Sama dengan READ COMMITTED di PostgreSQL" }
+      ],
+      "examples": "BEGIN ISOLATION LEVEL SERIALIZABLE;\nSELECT * FROM inventory WHERE product_id = 1;\n-- di transaction lain tidak bisa mengubah data ini\nUPDATE inventory SET stock = stock - 1 WHERE product_id = 1;\nCOMMIT;\n\n-- Lihat level saat ini\nSHOW transaction_isolation;",
+      "notes": "SERIALIZABLE bisa menyebabkan serialization failure — aplikasi harus retry."
+    },
+    {
+      "name": "Advisory Locks",
+      "title": "Advisory Locks",
+      "description": "Lock yang dikelola aplikasi, bukan pada baris/tabel tertentu.",
+      "syntax": "SELECT pg_advisory_lock(key);\nSELECT pg_advisory_unlock(key);",
+      "options": [
+        { "option": "pg_advisory_lock(key)", "description": "Session-level lock (blocking)" },
+        { "option": "pg_try_advisory_lock(key)", "description": "Non-blocking, return boolean" },
+        { "option": "pg_advisory_xact_lock(key)", "description": "Transaction-level lock" },
+        { "option": "pg_advisory_unlock(key)", "description": "Release lock" }
+      ],
+      "examples": "-- Pastikan hanya satu process yang menjalankan job\nSELECT pg_try_advisory_lock(12345);\n-- Jika return true, jalankan job\n-- ...\nSELECT pg_advisory_unlock(12345);",
+      "notes": "Advisory locks berguna untuk koordinasi antar-proses tanpa lock tabel."
+    }
+  ]
+}

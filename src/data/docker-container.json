@@ -1,0 +1,97 @@
+{
+  "id": "docker-container",
+  "title": "Container Management",
+  "description": "Membuat, menjalankan, menghentikan, dan mengelola container Docker.",
+  "badge": "Docker",
+  "commands": [
+    {
+      "name": "docker run",
+      "title": "Membuat dan Menjalankan Container",
+      "description": "Membuat container baru dari image dan menjalankannya.",
+      "syntax": "docker run [opsi] image [command]",
+      "options": [
+        { "option": "-d / --detach", "description": "Jalankan di background" },
+        { "option": "-it", "description": "Interactive mode dengan terminal" },
+        { "option": "--name nama", "description": "Beri nama container" },
+        { "option": "-p host:container", "description": "Mapping port" },
+        { "option": "-v host:container", "description": "Mount volume" },
+        { "option": "-e VAR=value", "description": "Set environment variable" },
+        { "option": "--env-file file", "description": "Load env dari file" },
+        { "option": "--rm", "description": "Hapus container setelah stop" },
+        { "option": "--restart policy", "description": "Restart policy (always, unless-stopped, on-failure)" },
+        { "option": "--network nama", "description": "Hubungkan ke network" },
+        { "option": "-w /path", "description": "Set working directory" },
+        { "option": "--memory / -m", "description": "Batas memori" },
+        { "option": "--cpus", "description": "Batas CPU" }
+      ],
+      "examples": "# Run sederhana\ndocker run hello-world\n\n# Web server\ndocker run -d --name web -p 8080:80 nginx\n\n# Interactive\ndocker run -it ubuntu bash\n\n# Dengan volume dan env\ndocker run -d --name db \\\n  -e POSTGRES_PASSWORD=secret \\\n  -v pgdata:/var/lib/postgresql/data \\\n  -p 5432:5432 \\\n  postgres:16\n\n# Auto-remove\ndocker run --rm -it node:20 node -e \"console.log('hello')\"",
+      "notes": "-it = -i (interactive) + -t (pseudo-TTY). Hampir selalu dipakai bersamaan."
+    },
+    {
+      "name": "docker ps",
+      "title": "Melihat Container yang Berjalan",
+      "description": "Menampilkan daftar container yang aktif atau semua container.",
+      "syntax": "docker ps [opsi]",
+      "options": [
+        { "option": "-a / --all", "description": "Tampilkan semua container (termasuk stopped)" },
+        { "option": "-q / --quiet", "description": "Hanya tampilkan ID" },
+        { "option": "--filter / -f", "description": "Filter berdasarkan kondisi" },
+        { "option": "--format", "description": "Custom output format" },
+        { "option": "-n N", "description": "Tampilkan N container terakhir" }
+      ],
+      "examples": "docker ps\ndocker ps -a\ndocker ps -q\ndocker ps --filter status=exited\ndocker ps --format \"table {{.ID}}\\t{{.Names}}\\t{{.Status}}\"",
+      "notes": "docker ps -aq berguna untuk mendapatkan semua container ID untuk batch operation."
+    },
+    {
+      "name": "docker stop / start / restart",
+      "title": "Menghentikan & Menjalankan Ulang",
+      "description": "Mengontrol lifecycle container.",
+      "syntax": "docker stop <container>\ndocker start <container>\ndocker restart <container>",
+      "options": [
+        { "option": "-t / --time N", "description": "Timeout sebelum kill (detik)" }
+      ],
+      "examples": "docker stop web\ndocker start web\ndocker restart web\ndocker stop -t 30 web\n\n# Stop semua container\ndocker stop $(docker ps -q)",
+      "notes": "docker stop mengirim SIGTERM, lalu SIGKILL setelah timeout (default 10 detik)."
+    },
+    {
+      "name": "docker rm",
+      "title": "Menghapus Container",
+      "description": "Menghapus satu atau lebih container.",
+      "syntax": "docker rm [opsi] <container>",
+      "options": [
+        { "option": "-f / --force", "description": "Hapus paksa (termasuk running)" },
+        { "option": "-v", "description": "Hapus juga anonymous volume" }
+      ],
+      "examples": "docker rm web\ndocker rm -f web\n\n# Hapus semua container stopped\ndocker container prune\n\n# Hapus semua container\ndocker rm -f $(docker ps -aq)",
+      "warning": "docker rm -f langsung menghentikan dan menghapus container!"
+    },
+    {
+      "name": "docker exec",
+      "title": "Menjalankan Command di Container",
+      "description": "Menjalankan perintah di dalam container yang sedang berjalan.",
+      "syntax": "docker exec [opsi] <container> <command>",
+      "options": [
+        { "option": "-it", "description": "Interactive terminal" },
+        { "option": "-e VAR=value", "description": "Set environment variable" },
+        { "option": "-w /path", "description": "Set working directory" },
+        { "option": "-u user", "description": "Jalankan sebagai user tertentu" }
+      ],
+      "examples": "# Masuk ke shell container\ndocker exec -it web bash\ndocker exec -it web sh\n\n# Jalankan perintah\ndocker exec web cat /etc/nginx/nginx.conf\ndocker exec -it db psql -U postgres\n\n# Sebagai root\ndocker exec -u root web apt update",
+      "notes": "exec hanya bisa pada container yang sedang running."
+    },
+    {
+      "name": "docker logs",
+      "title": "Melihat Log Container",
+      "description": "Menampilkan output log (stdout/stderr) dari container.",
+      "syntax": "docker logs [opsi] <container>",
+      "options": [
+        { "option": "-f / --follow", "description": "Stream log secara real-time" },
+        { "option": "--tail N", "description": "Tampilkan N baris terakhir" },
+        { "option": "-t / --timestamps", "description": "Tampilkan timestamp" },
+        { "option": "--since time", "description": "Log sejak waktu tertentu" }
+      ],
+      "examples": "docker logs web\ndocker logs -f web\ndocker logs --tail 100 web\ndocker logs --since 1h web\ndocker logs -t web",
+      "notes": "Untuk log yang besar, gunakan --tail untuk membatasi output."
+    }
+  ]
+}

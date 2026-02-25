@@ -1,0 +1,48 @@
+{
+  "id": "git-undo-reset",
+  "title": "Undo & Reset",
+  "description": "Membatalkan perubahan, mengembalikan file, dan mereset commit.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git restore",
+      "title": "Mengembalikan File",
+      "description": "Mengembalikan file ke versi terakhir yang di-commit atau staged.",
+      "syntax": "git restore <file> [opsi]",
+      "options": [
+        { "option": "(tanpa opsi)", "description": "Kembalikan working directory ke versi staged/committed" },
+        { "option": "--staged", "description": "Unstage file (keluarkan dari staging)" },
+        { "option": "--source=commit", "description": "Kembalikan ke versi commit tertentu" },
+        { "option": "--worktree", "description": "Kembalikan working directory (default)" }
+      ],
+      "examples": "git restore file.txt\ngit restore .\ngit restore --staged file.txt\ngit restore --source=HEAD~2 file.txt\ngit restore --source=main -- src/App.tsx",
+      "notes": "git restore menggantikan fungsi git checkout -- file."
+    },
+    {
+      "name": "git reset",
+      "title": "Mereset ke Commit Sebelumnya",
+      "description": "Memindahkan HEAD dan opsional mereset staging/working directory.",
+      "syntax": "git reset [--soft|--mixed|--hard] <commit>",
+      "options": [
+        { "option": "--soft", "description": "Pindah HEAD saja, staging & working tetap" },
+        { "option": "--mixed", "description": "Pindah HEAD + reset staging (default)" },
+        { "option": "--hard", "description": "Pindah HEAD + reset staging + reset working" }
+      ],
+      "examples": "# Unstage file\ngit reset file.txt\n\n# Undo commit terakhir, simpan perubahan di staging\ngit reset --soft HEAD~1\n\n# Undo commit terakhir, simpan perubahan di working\ngit reset --mixed HEAD~1\n\n# Hapus commit terakhir sepenuhnya\ngit reset --hard HEAD~1\n\n# Reset ke commit tertentu\ngit reset --hard abc1234",
+      "warning": "git reset --hard menghapus perubahan SECARA PERMANEN! Gunakan git stash dulu."
+    },
+    {
+      "name": "git revert",
+      "title": "Membatalkan Commit (Aman)",
+      "description": "Membuat commit baru yang membatalkan perubahan dari commit tertentu. Aman untuk shared branch.",
+      "syntax": "git revert <commit> [opsi]",
+      "options": [
+        { "option": "--no-commit / -n", "description": "Revert tanpa auto-commit" },
+        { "option": "--no-edit", "description": "Tidak buka editor untuk pesan" },
+        { "option": "--mainline 1", "description": "Revert merge commit" }
+      ],
+      "examples": "git revert HEAD\ngit revert abc1234\ngit revert HEAD~3..HEAD  # revert 3 commit terakhir\ngit revert --no-commit HEAD~2..HEAD  # revert tapi jangan commit dulu",
+      "notes": "Gunakan revert (bukan reset) untuk membatalkan commit yang sudah di-push."
+    }
+  ]
+}

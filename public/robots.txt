@@ -1,0 +1,12 @@
+# BSynt - Command & Syntax Documentation
+# https://bsynt.beznproject.web.id
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://bsynt.beznproject.web.id/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

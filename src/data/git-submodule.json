@@ -1,0 +1,39 @@
+{
+  "id": "git-submodule",
+  "title": "Submodule & Cleaning",
+  "description": "Mengelola submodule dan membersihkan file yang tidak terlacak.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git submodule",
+      "title": "Mengelola Submodule",
+      "description": "Submodule memungkinkan menyertakan repository Git lain di dalam repository utama.",
+      "syntax": "git submodule <command>",
+      "options": [
+        { "option": "add <url> [path]", "description": "Menambah submodule baru" },
+        { "option": "update --init --recursive", "description": "Inisialisasi dan update semua submodule" },
+        { "option": "update --remote", "description": "Update ke commit terbaru di remote" },
+        { "option": "status", "description": "Lihat status submodule" },
+        { "option": "foreach <command>", "description": "Jalankan perintah di setiap submodule" }
+      ],
+      "examples": "git submodule add https://github.com/lib/utils.git libs/utils\ngit submodule update --init --recursive\ngit submodule update --remote\ngit submodule foreach git pull origin main\n\n# Clone repo dengan submodule\ngit clone --recurse-submodules https://github.com/user/repo.git",
+      "notes": "Submodule menyimpan referensi ke commit tertentu, bukan branch."
+    },
+    {
+      "name": "git clean",
+      "title": "Membersihkan File Untracked",
+      "description": "Menghapus file yang tidak di-track oleh Git.",
+      "syntax": "git clean [opsi]",
+      "options": [
+        { "option": "-n / --dry-run", "description": "Simulasi — tampilkan file yang akan dihapus" },
+        { "option": "-f / --force", "description": "Hapus file untracked" },
+        { "option": "-d", "description": "Termasuk direktori untracked" },
+        { "option": "-x", "description": "Termasuk file yang di-.gitignore" },
+        { "option": "-X", "description": "HANYA file yang di-.gitignore" },
+        { "option": "-i", "description": "Mode interaktif" }
+      ],
+      "examples": "git clean -n    # lihat dulu\ngit clean -f    # hapus file\ngit clean -fd   # hapus file dan direktori\ngit clean -fdx  # hapus termasuk yang di-gitignore\ngit clean -fX   # hapus hanya yang di-gitignore (build artifacts)",
+      "warning": "git clean -f menghapus file SECARA PERMANEN! Selalu gunakan -n dulu."
+    }
+  ]
+}

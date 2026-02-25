@@ -1,0 +1,91 @@
+{
+  "id": "win-scripting",
+  "title": "Batch & PowerShell Scripting",
+  "badge": "Windows",
+  "description": "Dasar-dasar scripting di Windows menggunakan Batch Script (.bat/.cmd) dan PowerShell (.ps1).",
+  "commands": [
+    {
+      "name": "batch-basics",
+      "title": "Batch Script — Dasar",
+      "description": "Dasar-dasar Batch script (.bat/.cmd) untuk otomasi tugas di CMD.",
+      "syntax": "@echo off\nrem Script commands here",
+      "options": [
+        {"option": "@echo off", "description": "Sembunyikan echo perintah"},
+        {"option": "rem", "description": "Komentar"},
+        {"option": ":: komentar", "description": "Komentar alternatif"},
+        {"option": "pause", "description": "Tunggu tombol ditekan"},
+        {"option": "exit /b", "description": "Keluar dari script"},
+        {"option": "call script.bat", "description": "Panggil script lain"},
+        {"option": "%1 %2", "description": "Parameter posisi"},
+        {"option": "%~dp0", "description": "Direktori script saat ini"}
+      ],
+      "examples": "@echo off\nrem === Script Backup ===\necho Mulai backup...\n\nset SOURCE=C:\\Data\nset DEST=D:\\Backup\nset DATE=%date:~-4,4%%date:~-7,2%%date:~-10,2%\n\nrobocopy %SOURCE% %DEST%\\%DATE% /e /mt:8\n\nif %errorlevel% leq 3 (\n    echo Backup berhasil!\n) else (\n    echo Backup GAGAL!\n    exit /b 1\n)\n\npause"
+    },
+    {
+      "name": "batch-variables",
+      "title": "Batch — Variabel & Kondisi",
+      "description": "Variabel, kondisi if/else, dan operasi string di Batch script.",
+      "syntax": "set variable=value\nif kondisi (perintah)",
+      "options": [
+        {"option": "set VAR=value", "description": "Set variabel"},
+        {"option": "set /a VAR=expr", "description": "Set variabel numerik (aritmatika)"},
+        {"option": "set /p VAR=prompt", "description": "Input dari user"},
+        {"option": "%VAR%", "description": "Akses variabel"},
+        {"option": "if exist", "description": "Cek file/folder ada"},
+        {"option": "if defined", "description": "Cek variabel terdefinisi"},
+        {"option": "if /i", "description": "Perbandingan case insensitive"},
+        {"option": "if errorlevel", "description": "Cek exit code"}
+      ],
+      "examples": "@echo off\nrem === Variabel ===\nset NAME=John\nset /a AGE=25+5\nset /p INPUT=Masukkan nama: \n\necho Nama: %NAME%, Umur: %AGE%\n\nrem === Kondisi ===\nif exist C:\\Data (\n    echo Folder ditemukan\n) else (\n    echo Folder tidak ada\n    mkdir C:\\Data\n)\n\nif /i \"%INPUT%\"==\"admin\" (\n    echo Selamat datang, Admin!\n) else (\n    echo Selamat datang, %INPUT%!\n)\n\nrem === Aritmatika ===\nset /a RESULT=10*5+3\necho Hasil: %RESULT%"
+    },
+    {
+      "name": "batch-loops",
+      "title": "Batch — Loop & Iterasi",
+      "description": "Perintah loop di Batch script untuk iterasi file, angka, dan output perintah.",
+      "syntax": "for %%var in (set) do perintah",
+      "options": [
+        {"option": "for %%i in (set)", "description": "Iterasi item"},
+        {"option": "for /l %%i in (start,step,end)", "description": "Loop angka"},
+        {"option": "for /r %%i in (pola)", "description": "Loop file rekursif"},
+        {"option": "for /d %%i in (pola)", "description": "Loop direktori"},
+        {"option": "for /f %%i in (sumber)", "description": "Loop baris dari file/perintah"}
+      ],
+      "examples": "@echo off\nrem === Loop file ===\nfor %%f in (*.txt) do echo File: %%f\n\nrem === Loop angka 1-10 ===\nfor /l %%i in (1,1,10) do echo Nomor: %%i\n\nrem === Loop rekursif ===\nfor /r C:\\Data %%f in (*.log) do del \"%%f\"\n\nrem === Loop dari output perintah ===\nfor /f \"tokens=1,2\" %%a in ('tasklist /nh') do (\n    echo Proses: %%a, PID: %%b\n)\n\nrem === Loop dari file ===\nfor /f \"tokens=*\" %%line in (data.txt) do (\n    echo %%line\n)",
+      "notes": "Di script (.bat) gunakan %%var, di CMD langsung gunakan %var."
+    },
+    {
+      "name": "ps-basics",
+      "title": "PowerShell Script — Dasar",
+      "description": "Dasar-dasar PowerShell scripting (.ps1) untuk otomasi modern di Windows.",
+      "syntax": "# PowerShell Script\n$variabel = \"nilai\"",
+      "options": [
+        {"option": "$var = value", "description": "Variabel"},
+        {"option": "[int]$var", "description": "Variabel dengan tipe"},
+        {"option": "param()", "description": "Parameter script"},
+        {"option": "function Name {}", "description": "Definisi fungsi"},
+        {"option": "#", "description": "Komentar baris"},
+        {"option": "<# #>", "description": "Komentar blok"},
+        {"option": "Write-Host", "description": "Output ke konsol"},
+        {"option": "Write-Output", "description": "Output ke pipeline"}
+      ],
+      "examples": "# === Script dasar ===\nparam(\n    [string]$Name = \"World\",\n    [int]$Count = 1\n)\n\nfunction Say-Hello {\n    param([string]$To)\n    Write-Host \"Hello, $To!\" -ForegroundColor Green\n}\n\nfor ($i = 0; $i -lt $Count; $i++) {\n    Say-Hello -To $Name\n}\n\n# === Array & Hashtable ===\n$fruits = @(\"Apple\", \"Banana\", \"Cherry\")\n$config = @{\n    Server = \"localhost\"\n    Port = 8080\n    Debug = $true\n}\n\nforeach ($fruit in $fruits) {\n    Write-Host $fruit\n}\n\n$config.GetEnumerator() | ForEach-Object {\n    Write-Host \"$($_.Key) = $($_.Value)\"\n}"
+    },
+    {
+      "name": "ps-advanced",
+      "title": "PowerShell — Kontrol & Error Handling",
+      "description": "Kontrol alur, error handling, dan fitur lanjutan PowerShell.",
+      "syntax": "if (kondisi) { } elseif (kondisi) { } else { }\ntry { } catch { } finally { }",
+      "options": [
+        {"option": "if/elseif/else", "description": "Kondisional"},
+        {"option": "switch", "description": "Switch statement"},
+        {"option": "for", "description": "Loop dengan counter"},
+        {"option": "foreach", "description": "Loop koleksi"},
+        {"option": "while", "description": "Loop while"},
+        {"option": "do...while", "description": "Loop do while"},
+        {"option": "try/catch/finally", "description": "Error handling"},
+        {"option": "-ErrorAction Stop", "description": "Jadikan error sebagai exception"}
+      ],
+      "examples": "# === Kondisional ===\n$os = (Get-CimInstance Win32_OperatingSystem).Caption\nif ($os -like \"*Windows 11*\") {\n    Write-Host \"Windows 11\"\n} elseif ($os -like \"*Windows 10*\") {\n    Write-Host \"Windows 10\"\n} else {\n    Write-Host \"OS lain: $os\"\n}\n\n# === Switch ===\nswitch ($dayOfWeek) {\n    'Monday'    { 'Senin' }\n    'Tuesday'   { 'Selasa' }\n    default     { 'Hari lain' }\n}\n\n# === Error Handling ===\ntry {\n    $content = Get-Content \"nofile.txt\" -ErrorAction Stop\n    Write-Host \"Berhasil dibaca\"\n} catch [System.IO.FileNotFoundException] {\n    Write-Host \"File tidak ditemukan: $($_.Exception.Message)\"\n} catch {\n    Write-Host \"Error: $($_.Exception.Message)\"\n} finally {\n    Write-Host \"Selesai.\"\n}\n\n# === Pipeline Processing ===\nGet-ChildItem -Recurse -File |\n    Where-Object { $_.Length -gt 1MB } |\n    Sort-Object Length -Descending |\n    Select-Object Name, @{N='SizeMB';E={[math]::Round($_.Length/1MB,2)}} |\n    Format-Table -AutoSize"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "win-file-search",
+  "title": "File Search (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mencari file dan folder di Windows menggunakan CMD, PowerShell, dan where.",
+  "commands": [
+    {
+      "name": "where-win",
+      "title": "where — Mencari Executable",
+      "description": "Mencari lokasi file executable di PATH. Setara dengan which/whereis di Linux.",
+      "syntax": "where [opsi] pola",
+      "options": [
+        {"option": "/r dir", "description": "Cari rekursif dari direktori tertentu"},
+        {"option": "/q", "description": "Quiet mode (return exit code saja)"},
+        {"option": "/f", "description": "Tampilkan dalam tanda kutip"},
+        {"option": "/t", "description": "Tampilkan ukuran dan tanggal"}
+      ],
+      "examples": "# Cari executable\nwhere python\nwhere node\n\n# Cari rekursif\nwhere /r C:\\ *.exe\n\n# Cari dengan info ukuran\nwhere /t python\n\n# Cek apakah ada (quiet)\nwhere /q git && echo Found || echo Not Found"
+    },
+    {
+      "name": "dir-search",
+      "title": "dir /s — Pencarian File Rekursif",
+      "description": "Menggunakan dir dengan opsi /s untuk mencari file secara rekursif di semua subdirektori.",
+      "syntax": "dir [path\\]pola /s [opsi]",
+      "options": [
+        {"option": "/s", "description": "Cari di semua subdirektori"},
+        {"option": "/b", "description": "Tampilkan path lengkap saja"},
+        {"option": "/a:h", "description": "Cari file hidden"},
+        {"option": "/a:d", "description": "Cari folder saja"},
+        {"option": "/a:-d", "description": "Cari file saja (bukan folder)"}
+      ],
+      "examples": "# Cari file .txt\ndir /s *.txt\n\n# Cari file dengan path lengkap\ndir /s /b *.log\n\n# Cari dari drive C\ndir C:\\ /s /b *.config\n\n# Cari folder saja\ndir /s /b /a:d node_modules"
+    },
+    {
+      "name": "get-childitem-search",
+      "title": "Get-ChildItem — Pencarian PowerShell",
+      "description": "Cmdlet PowerShell yang powerful untuk mencari file dengan filter, wildcard, dan rekursi.",
+      "syntax": "Get-ChildItem [path] [opsi]",
+      "options": [
+        {"option": "-Recurse", "description": "Cari rekursif"},
+        {"option": "-Filter", "description": "Filter berdasarkan nama (lebih cepat dari -Include)"},
+        {"option": "-Include", "description": "Include pattern (memerlukan -Recurse atau wildcard path)"},
+        {"option": "-Exclude", "description": "Exclude pattern"},
+        {"option": "-Force", "description": "Tampilkan file hidden/system"},
+        {"option": "-File", "description": "Hanya file"},
+        {"option": "-Directory", "description": "Hanya folder"},
+        {"option": "-Depth n", "description": "Kedalaman rekursi maksimal"},
+        {"option": "-Name", "description": "Tampilkan nama/path relatif saja"}
+      ],
+      "examples": "# Cari file .log rekursif\nGet-ChildItem -Recurse -Filter *.log\n\n# Cari file besar (>100MB)\nGet-ChildItem -Recurse | Where-Object {$_.Length -gt 100MB}\n\n# Cari file diubah hari ini\nGet-ChildItem -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).Date}\n\n# Cari file termasuk hidden\nGet-ChildItem -Recurse -Force -Filter *.txt\n\n# Hanya folder\nGet-ChildItem -Directory -Recurse\n\n# Dengan kedalaman terbatas\nGet-ChildItem -Recurse -Depth 2 -Filter *.json"
+    },
+    {
+      "name": "forfiles",
+      "title": "forfiles — Cari & Eksekusi",
+      "description": "Mencari file berdasarkan kriteria dan menjalankan perintah pada file yang ditemukan.",
+      "syntax": "forfiles [opsi]",
+      "options": [
+        {"option": "/p path", "description": "Path pencarian"},
+        {"option": "/s", "description": "Cari rekursif"},
+        {"option": "/m pola", "description": "Pola pencarian (wildcard)"},
+        {"option": "/d +/-n", "description": "Filter berdasarkan tanggal (hari)"},
+        {"option": "/c \"cmd\"", "description": "Perintah yang dijalankan per file"},
+        {"option": "@file", "description": "Variable: nama file"},
+        {"option": "@path", "description": "Variable: path lengkap"},
+        {"option": "@fsize", "description": "Variable: ukuran file"},
+        {"option": "@fdate", "description": "Variable: tanggal file"}
+      ],
+      "examples": "# Cari file lebih dari 30 hari\nforfiles /s /d -30 /c \"cmd /c echo @path\"\n\n# Hapus file .tmp lebih dari 7 hari\nforfiles /p C:\\Temp /s /m *.tmp /d -7 /c \"cmd /c del @path\"\n\n# List file dengan info\nforfiles /s /m *.log /c \"cmd /c echo @file @fsize @fdate\"\n\n# Cari file hari ini\nforfiles /s /d +0 /c \"cmd /c echo @path\"",
+      "notes": "forfiles sangat berguna untuk maintenance otomatis seperti menghapus file lama."
+    }
+  ]
+}

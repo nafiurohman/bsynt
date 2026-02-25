@@ -1,0 +1,87 @@
+{
+  "id": "win-navigasi-dasar",
+  "title": "Navigasi Dasar (Windows)",
+  "badge": "Windows",
+  "description": "Perintah dasar CMD dan PowerShell untuk navigasi direktori dan operasi dasar di Windows.",
+  "commands": [
+    {
+      "name": "cd-win",
+      "title": "cd — Change Directory",
+      "description": "Berpindah antar direktori di CMD dan PowerShell. Sama seperti Linux tapi menggunakan backslash.",
+      "syntax": "cd [path]",
+      "options": [
+        {"option": "cd \\", "description": "Pindah ke root drive"},
+        {"option": "cd ..", "description": "Naik satu level direktori"},
+        {"option": "cd /d D:\\folder", "description": "Pindah ke drive lain (CMD)"},
+        {"option": "cd ~", "description": "Pindah ke home directory (PowerShell)"},
+        {"option": "cd $env:USERPROFILE", "description": "Pindah ke folder user (PowerShell)"}
+      ],
+      "examples": "# Pindah ke folder\ncd C:\\Users\\Admin\\Documents\n\n# Naik satu level\ncd ..\n\n# Pindah ke drive D (CMD)\ncd /d D:\\Projects\n\n# Pindah ke home (PowerShell)\ncd ~\n\n# Pindah ke root\ncd \\",
+      "notes": "Di CMD, gunakan cd /d untuk berpindah antar drive. Di PowerShell, cd langsung bisa pindah drive."
+    },
+    {
+      "name": "dir",
+      "title": "dir — List Directory",
+      "description": "Menampilkan daftar file dan folder dalam direktori. Setara dengan ls di Linux.",
+      "syntax": "dir [path] [opsi]",
+      "options": [
+        {"option": "/a", "description": "Tampilkan semua file termasuk hidden"},
+        {"option": "/s", "description": "Tampilkan semua file di subdirektori (rekursif)"},
+        {"option": "/b", "description": "Tampilan ringkas (nama saja)"},
+        {"option": "/o:n", "description": "Urutkan berdasarkan nama"},
+        {"option": "/o:s", "description": "Urutkan berdasarkan ukuran"},
+        {"option": "/o:d", "description": "Urutkan berdasarkan tanggal"},
+        {"option": "/p", "description": "Tampilkan per halaman"},
+        {"option": "/w", "description": "Tampilkan dalam format lebar"},
+        {"option": "/q", "description": "Tampilkan pemilik file"},
+        {"option": "/ah", "description": "Tampilkan hanya file hidden"}
+      ],
+      "examples": "# List semua file\ndir\n\n# List termasuk hidden\ndir /a\n\n# List rekursif\ndir /s\n\n# List nama saja\ndir /b\n\n# List diurutkan berdasarkan ukuran\ndir /o:s\n\n# List file .txt saja\ndir *.txt\n\n# PowerShell: Get-ChildItem\nGet-ChildItem\nGet-ChildItem -Force\nGet-ChildItem -Recurse",
+      "notes": "Di PowerShell, dir adalah alias dari Get-ChildItem. Bisa juga pakai ls atau gci."
+    },
+    {
+      "name": "cls",
+      "title": "cls — Clear Screen",
+      "description": "Membersihkan layar terminal CMD atau PowerShell.",
+      "syntax": "cls",
+      "options": [],
+      "examples": "# Bersihkan layar\ncls\n\n# PowerShell: Clear-Host\nClear-Host",
+      "notes": "Di PowerShell, cls adalah alias dari Clear-Host."
+    },
+    {
+      "name": "echo-win",
+      "title": "echo — Tampilkan Teks",
+      "description": "Menampilkan pesan ke layar atau menulis ke file.",
+      "syntax": "echo [pesan]",
+      "options": [
+        {"option": "echo.", "description": "Menampilkan baris kosong"},
+        {"option": "echo off", "description": "Mematikan echo di batch script"},
+        {"option": "echo on", "description": "Mengaktifkan echo di batch script"}
+      ],
+      "examples": "# Tampilkan pesan\necho Hello World\n\n# Baris kosong\necho.\n\n# Tulis ke file\necho Hello > file.txt\n\n# Append ke file\necho World >> file.txt\n\n# PowerShell: Write-Output\nWrite-Output \"Hello World\"\nWrite-Host \"Hello World\" -ForegroundColor Green"
+    },
+    {
+      "name": "doskey",
+      "title": "doskey — Command History & Alias",
+      "description": "Mengelola history perintah dan membuat alias di CMD.",
+      "syntax": "doskey [opsi]",
+      "options": [
+        {"option": "/history", "description": "Menampilkan riwayat perintah"},
+        {"option": "/reinstall", "description": "Menghapus riwayat perintah"},
+        {"option": "nama=perintah", "description": "Membuat alias"}
+      ],
+      "examples": "# Lihat history\ndoskey /history\n\n# Buat alias\ndoskey ls=dir\ndoskey ll=dir /a\n\n# Hapus history\ndoskey /reinstall\n\n# PowerShell: Get-History\nGet-History\nInvoke-History 5"
+    },
+    {
+      "name": "tree-win",
+      "title": "tree — Tampilkan Struktur Direktori",
+      "description": "Menampilkan struktur direktori dalam bentuk pohon visual.",
+      "syntax": "tree [path] [opsi]",
+      "options": [
+        {"option": "/f", "description": "Tampilkan file di setiap folder"},
+        {"option": "/a", "description": "Gunakan karakter ASCII"}
+      ],
+      "examples": "# Tampilkan struktur folder\ntree\n\n# Tampilkan dengan file\ntree /f\n\n# Simpan ke file\ntree /f > struktur.txt\n\n# Folder tertentu\ntree C:\\Projects /f"
+    }
+  ]
+}

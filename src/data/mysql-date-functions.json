@@ -1,0 +1,74 @@
+{
+  "id": "mysql-date-functions",
+  "title": "Date & Time Functions",
+  "description": "Fungsi-fungsi untuk manipulasi tanggal dan waktu di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "NOW-CURDATE",
+      "title": "NOW / CURDATE / CURTIME",
+      "description": "Mengambil tanggal dan waktu saat ini.",
+      "syntax": "NOW() / CURDATE() / CURTIME() / CURRENT_TIMESTAMP()",
+      "options": [],
+      "examples": "SELECT NOW();  -- '2024-01-15 10:30:00'\nSELECT CURDATE();  -- '2024-01-15'\nSELECT CURTIME();  -- '10:30:00'\nSELECT UNIX_TIMESTAMP();  -- epoch timestamp\nSELECT FROM_UNIXTIME(1705312200);"
+    },
+    {
+      "name": "DATE_FORMAT",
+      "title": "DATE_FORMAT",
+      "description": "Memformat tanggal ke string dengan format tertentu.",
+      "syntax": "DATE_FORMAT(date, format)",
+      "options": [
+        { "option": "%Y", "description": "Tahun 4 digit (2024)" },
+        { "option": "%m", "description": "Bulan 2 digit (01-12)" },
+        { "option": "%d", "description": "Tanggal 2 digit (01-31)" },
+        { "option": "%H", "description": "Jam 24h (00-23)" },
+        { "option": "%i", "description": "Menit (00-59)" },
+        { "option": "%s", "description": "Detik (00-59)" },
+        { "option": "%W", "description": "Nama hari (Monday)" },
+        { "option": "%M", "description": "Nama bulan (January)" },
+        { "option": "%e", "description": "Tanggal tanpa leading zero" }
+      ],
+      "examples": "SELECT DATE_FORMAT(NOW(), '%d/%m/%Y');  -- '15/01/2024'\nSELECT DATE_FORMAT(created_at, '%W, %d %M %Y') FROM orders;\nSELECT DATE_FORMAT(created_at, '%Y-%m') AS month FROM orders GROUP BY month;"
+    },
+    {
+      "name": "DATE_ADD-SUB",
+      "title": "DATE_ADD / DATE_SUB",
+      "description": "Menambah atau mengurangi interval dari tanggal.",
+      "syntax": "DATE_ADD(date, INTERVAL n unit) / DATE_SUB(date, INTERVAL n unit)",
+      "options": [
+        { "option": "SECOND", "description": "Detik" },
+        { "option": "MINUTE", "description": "Menit" },
+        { "option": "HOUR", "description": "Jam" },
+        { "option": "DAY", "description": "Hari" },
+        { "option": "WEEK", "description": "Minggu" },
+        { "option": "MONTH", "description": "Bulan" },
+        { "option": "YEAR", "description": "Tahun" }
+      ],
+      "examples": "SELECT DATE_ADD(NOW(), INTERVAL 7 DAY);\nSELECT DATE_SUB(CURDATE(), INTERVAL 1 MONTH);\nSELECT * FROM orders WHERE created_at > DATE_SUB(NOW(), INTERVAL 30 DAY);\nSELECT * FROM subscriptions WHERE expires_at < DATE_ADD(NOW(), INTERVAL 7 DAY);"
+    },
+    {
+      "name": "DATEDIFF",
+      "title": "DATEDIFF / TIMESTAMPDIFF",
+      "description": "Menghitung selisih antara dua tanggal.",
+      "syntax": "DATEDIFF(date1, date2) / TIMESTAMPDIFF(unit, date1, date2)",
+      "options": [],
+      "examples": "SELECT DATEDIFF('2024-12-31', '2024-01-01');  -- 365\nSELECT DATEDIFF(NOW(), created_at) AS days_since FROM orders;\nSELECT TIMESTAMPDIFF(HOUR, created_at, NOW()) AS hours_ago FROM orders;\nSELECT TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) AS age FROM users;"
+    },
+    {
+      "name": "EXTRACT",
+      "title": "EXTRACT / YEAR / MONTH / DAY",
+      "description": "Mengekstrak bagian dari tanggal.",
+      "syntax": "EXTRACT(unit FROM date) / YEAR(date) / MONTH(date) / DAY(date)",
+      "options": [],
+      "examples": "SELECT EXTRACT(YEAR FROM created_at) AS year FROM orders;\nSELECT YEAR(created_at), MONTH(created_at) FROM orders;\nSELECT DAYNAME(created_at) AS day_name FROM orders;\nSELECT MONTHNAME(created_at) AS month_name FROM orders;\nSELECT DAYOFWEEK(created_at) FROM orders;  -- 1=Sunday"
+    },
+    {
+      "name": "STR_TO_DATE",
+      "title": "STR_TO_DATE",
+      "description": "Mengubah string menjadi tanggal.",
+      "syntax": "STR_TO_DATE(str, format)",
+      "options": [],
+      "examples": "SELECT STR_TO_DATE('15/01/2024', '%d/%m/%Y');\nSELECT STR_TO_DATE('January 15, 2024', '%M %d, %Y');\nINSERT INTO events (event_date) VALUES (STR_TO_DATE('2024-06-15 14:30', '%Y-%m-%d %H:%i'));"
+    }
+  ]
+}

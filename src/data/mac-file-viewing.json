@@ -1,0 +1,96 @@
+{
+  "id": "mac-file-viewing",
+  "title": "File Viewing",
+  "description": "Perintah untuk melihat dan membaca konten file di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "cat",
+      "title": "Concatenate",
+      "description": "Menampilkan isi file ke terminal.",
+      "syntax": "cat [opsi] file...",
+      "options": [
+        { "option": "-n", "description": "Tampilkan nomor baris" },
+        { "option": "-b", "description": "Nomor baris (skip baris kosong)" },
+        { "option": "-s", "description": "Gabungkan baris kosong berurutan" },
+        { "option": "-e", "description": "Tampilkan karakter akhir baris ($)" }
+      ],
+      "examples": "cat file.txt\ncat -n script.sh\ncat file1.txt file2.txt > gabungan.txt",
+      "notes": "Untuk file besar, gunakan `less` agar bisa di-scroll."
+    },
+    {
+      "name": "less",
+      "title": "Less Pager",
+      "description": "Menampilkan file dengan navigasi scroll.",
+      "syntax": "less [opsi] file",
+      "options": [
+        { "option": "-N", "description": "Tampilkan nomor baris" },
+        { "option": "-S", "description": "Jangan wrap baris panjang" },
+        { "option": "/pattern", "description": "Cari teks dalam file" },
+        { "option": "q", "description": "Keluar dari less" }
+      ],
+      "examples": "less /var/log/system.log\nless -N config.yml\ncat largefile.txt | less",
+      "notes": "Navigasi: Space (halaman bawah), b (halaman atas), / (cari), n (hasil berikutnya)."
+    },
+    {
+      "name": "head",
+      "title": "Head",
+      "description": "Menampilkan bagian awal file.",
+      "syntax": "head [opsi] file",
+      "options": [
+        { "option": "-n [N]", "description": "Tampilkan N baris pertama" },
+        { "option": "-c [N]", "description": "Tampilkan N byte pertama" }
+      ],
+      "examples": "head file.txt\nhead -n 20 log.txt\nhead -c 100 data.bin"
+    },
+    {
+      "name": "tail",
+      "title": "Tail",
+      "description": "Menampilkan bagian akhir file.",
+      "syntax": "tail [opsi] file",
+      "options": [
+        { "option": "-n [N]", "description": "Tampilkan N baris terakhir" },
+        { "option": "-f", "description": "Follow — tampilkan update real-time" },
+        { "option": "-F", "description": "Follow + retry jika file di-rotate" }
+      ],
+      "examples": "tail -n 50 /var/log/system.log\ntail -f /var/log/system.log\ntail -F ~/Library/Logs/app.log",
+      "notes": "tail -f sangat berguna untuk monitoring log secara real-time."
+    },
+    {
+      "name": "wc",
+      "title": "Word Count",
+      "description": "Menghitung jumlah baris, kata, dan byte.",
+      "syntax": "wc [opsi] file",
+      "options": [
+        { "option": "-l", "description": "Hitung baris" },
+        { "option": "-w", "description": "Hitung kata" },
+        { "option": "-c", "description": "Hitung byte" },
+        { "option": "-m", "description": "Hitung karakter" }
+      ],
+      "examples": "wc file.txt\nwc -l *.swift\ncat README.md | wc -w"
+    },
+    {
+      "name": "file",
+      "title": "File Type",
+      "description": "Mengidentifikasi tipe file.",
+      "syntax": "file [opsi] file...",
+      "options": [
+        { "option": "-i", "description": "Tampilkan MIME type" },
+        { "option": "-b", "description": "Tanpa nama file (brief)" }
+      ],
+      "examples": "file image.png\nfile -i document.pdf\nfile *",
+      "notes": "Berguna untuk mengecek tipe file tanpa extension."
+    },
+    {
+      "name": "mdls",
+      "title": "Metadata List (macOS)",
+      "description": "Menampilkan metadata Spotlight dari file.",
+      "syntax": "mdls [opsi] file",
+      "options": [
+        { "option": "-name [attr]", "description": "Tampilkan atribut tertentu saja" }
+      ],
+      "examples": "mdls photo.jpg\nmdls -name kMDItemContentType file.pdf\nmdls -name kMDItemPixelHeight image.png",
+      "notes": "Khusus macOS. Menampilkan metadata yang diindeks oleh Spotlight."
+    }
+  ]
+}

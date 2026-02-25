@@ -1,0 +1,77 @@
+{
+  "id": "win-file-permission",
+  "title": "File Permission (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola hak akses file dan folder menggunakan icacls dan attrib di Windows.",
+  "commands": [
+    {
+      "name": "icacls",
+      "title": "icacls — Kelola ACL File",
+      "description": "Menampilkan dan mengubah Access Control Lists (ACL) pada file dan folder Windows.",
+      "syntax": "icacls path [opsi]",
+      "options": [
+        {"option": "/grant user:perm", "description": "Memberikan permission ke user"},
+        {"option": "/deny user:perm", "description": "Menolak permission untuk user"},
+        {"option": "/remove user", "description": "Menghapus ACL entry user"},
+        {"option": "/reset", "description": "Reset ACL ke inherited permissions"},
+        {"option": "/t", "description": "Terapkan ke semua file/folder di bawahnya (rekursif)"},
+        {"option": "/c", "description": "Lanjutkan meskipun ada error"},
+        {"option": "/save file", "description": "Simpan ACL ke file"},
+        {"option": "/restore file", "description": "Restore ACL dari file"},
+        {"option": "(F)", "description": "Full control"},
+        {"option": "(M)", "description": "Modify"},
+        {"option": "(RX)", "description": "Read & Execute"},
+        {"option": "(R)", "description": "Read only"},
+        {"option": "(W)", "description": "Write only"}
+      ],
+      "examples": "# Lihat permission\nicacls C:\\Data\n\n# Berikan full control\nicacls C:\\Data /grant User:(F)\n\n# Berikan read ke semua subfolder\nicacls C:\\Data /grant User:(R) /t\n\n# Tolak akses\nicacls C:\\Data /deny User:(F)\n\n# Hapus permission user\nicacls C:\\Data /remove User\n\n# Reset ke inherited\nicacls C:\\Data /reset /t\n\n# Simpan ACL\nicacls C:\\Data /save acl_backup.txt /t\n\n# Restore ACL\nicacls C:\\ /restore acl_backup.txt",
+      "notes": "Permission Windows menggunakan model ACL yang berbeda dari chmod di Linux. Setiap file bisa memiliki banyak entry ACL."
+    },
+    {
+      "name": "attrib",
+      "title": "attrib — Atribut File",
+      "description": "Menampilkan atau mengubah atribut file Windows (Hidden, Read-only, System, Archive).",
+      "syntax": "attrib [+/-atribut] [file] [opsi]",
+      "options": [
+        {"option": "+r", "description": "Set read-only"},
+        {"option": "-r", "description": "Hapus read-only"},
+        {"option": "+h", "description": "Set hidden"},
+        {"option": "-h", "description": "Hapus hidden"},
+        {"option": "+s", "description": "Set system"},
+        {"option": "-s", "description": "Hapus system"},
+        {"option": "+a", "description": "Set archive"},
+        {"option": "-a", "description": "Hapus archive"},
+        {"option": "/s", "description": "Terapkan ke file di subdirektori"},
+        {"option": "/d", "description": "Terapkan juga ke folder"}
+      ],
+      "examples": "# Lihat atribut\nattrib file.txt\n\n# Set read-only\nattrib +r important.docx\n\n# Hapus read-only\nattrib -r important.docx\n\n# Sembunyikan file\nattrib +h secret.txt\n\n# Tampilkan file hidden\nattrib -h secret.txt\n\n# Set hidden & system (super hidden)\nattrib +h +s folder\n\n# Hapus semua atribut rekursif\nattrib -r -h -s /s /d C:\\Folder\\*.*"
+    },
+    {
+      "name": "takeown",
+      "title": "takeown — Ambil Kepemilikan",
+      "description": "Mengambil kepemilikan file atau folder. Berguna saat tidak bisa mengakses file karena masalah permission.",
+      "syntax": "takeown [opsi]",
+      "options": [
+        {"option": "/f file", "description": "File atau folder target"},
+        {"option": "/r", "description": "Rekursif (termasuk subdirektori)"},
+        {"option": "/d Y", "description": "Default jawaban Yes untuk prompt"},
+        {"option": "/a", "description": "Berikan kepemilikan ke grup Administrators"}
+      ],
+      "examples": "# Ambil kepemilikan file\ntakeown /f C:\\LockedFile.txt\n\n# Ambil kepemilikan folder rekursif\ntakeown /f C:\\LockedFolder /r /d Y\n\n# Berikan ke Administrators\ntakeown /f C:\\System /a /r /d Y\n\n# Lalu berikan full control\nicacls C:\\LockedFolder /grant %username%:(F) /t",
+      "warning": "Mengubah kepemilikan file system bisa menyebabkan masalah. Hati-hati dengan folder Windows dan Program Files."
+    },
+    {
+      "name": "get-acl-ps",
+      "title": "Get-Acl / Set-Acl — ACL PowerShell",
+      "description": "Cmdlet PowerShell untuk melihat dan mengubah ACL file dan folder.",
+      "syntax": "Get-Acl path\nSet-Acl path -AclObject acl",
+      "options": [
+        {"option": "Get-Acl", "description": "Menampilkan ACL (Access Control List)"},
+        {"option": "Set-Acl", "description": "Mengatur ACL"},
+        {"option": ".Access", "description": "Property untuk melihat detail access rules"},
+        {"option": ".Owner", "description": "Property untuk melihat pemilik"}
+      ],
+      "examples": "# Lihat ACL\nGet-Acl C:\\Data | Format-List\n\n# Lihat pemilik\n(Get-Acl C:\\Data).Owner\n\n# Lihat access rules\n(Get-Acl C:\\Data).Access\n\n# Salin ACL dari file lain\n$acl = Get-Acl C:\\Reference\nSet-Acl C:\\Target -AclObject $acl\n\n# Tambah permission baru\n$acl = Get-Acl C:\\Data\n$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(\"User\",\"FullControl\",\"Allow\")\n$acl.SetAccessRule($rule)\nSet-Acl C:\\Data -AclObject $acl"
+    }
+  ]
+}

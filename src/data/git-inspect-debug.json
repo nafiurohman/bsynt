@@ -1,0 +1,50 @@
+{
+  "id": "git-inspect-debug",
+  "title": "Inspect & Debug",
+  "description": "Tools untuk menginspeksi dan men-debug code menggunakan Git.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git blame",
+      "title": "Melihat Author Setiap Baris",
+      "description": "Menampilkan siapa yang terakhir mengubah setiap baris file.",
+      "syntax": "git blame <file> [opsi]",
+      "options": [
+        { "option": "-L start,end", "description": "Hanya baris tertentu" },
+        { "option": "-e", "description": "Tampilkan email" },
+        { "option": "-w", "description": "Abaikan perubahan whitespace" },
+        { "option": "--since=\"date\"", "description": "Hanya perubahan setelah tanggal" }
+      ],
+      "examples": "git blame src/App.tsx\ngit blame -L 10,20 src/App.tsx\ngit blame -w src/main.ts",
+      "notes": "Berguna untuk menemukan kapan dan siapa yang memperkenalkan bug."
+    },
+    {
+      "name": "git bisect",
+      "title": "Mencari Commit yang Menyebabkan Bug",
+      "description": "Binary search untuk menemukan commit yang memperkenalkan bug.",
+      "syntax": "git bisect start\ngit bisect bad [commit]\ngit bisect good [commit]\ngit bisect reset",
+      "options": [
+        { "option": "start", "description": "Mulai proses bisect" },
+        { "option": "bad", "description": "Tandai commit saat ini sebagai bermasalah" },
+        { "option": "good", "description": "Tandai commit sebagai baik" },
+        { "option": "reset", "description": "Selesai bisect, kembali ke branch awal" },
+        { "option": "skip", "description": "Skip commit yang tidak bisa ditest" },
+        { "option": "run <script>", "description": "Otomatis bisect dengan script" }
+      ],
+      "examples": "git bisect start\ngit bisect bad          # commit saat ini bermasalah\ngit bisect good v1.0    # v1.0 masih baik\n# Git checkout ke tengah, test manual\ngit bisect good  # atau bad\n# Ulangi sampai ketemu\ngit bisect reset\n\n# Otomatis dengan script\ngit bisect start HEAD v1.0\ngit bisect run npm test",
+      "notes": "Bisect sangat efisien — O(log n) untuk menemukan commit bermasalah."
+    },
+    {
+      "name": "git log -S / -G",
+      "title": "Mencari Perubahan Code",
+      "description": "Mencari commit yang menambah atau menghapus string/pattern tertentu.",
+      "syntax": "git log -S \"string\" / git log -G \"regex\"",
+      "options": [
+        { "option": "-S \"string\"", "description": "Cari commit yang mengubah jumlah kemunculan string (pickaxe)" },
+        { "option": "-G \"regex\"", "description": "Cari commit yang diff-nya cocok regex" }
+      ],
+      "examples": "git log -S \"function login\" --oneline\ngit log -G \"TODO|FIXME\" --oneline\ngit log -S \"API_KEY\" -p  # tampilkan diff",
+      "notes": "-S (pickaxe) mencari perubahan jumlah kemunculan, -G mencari di diff line."
+    }
+  ]
+}

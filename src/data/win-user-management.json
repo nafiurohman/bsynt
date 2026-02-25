@@ -1,0 +1,68 @@
+{
+  "id": "win-user-management",
+  "title": "User Management (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola user, grup, dan akun di Windows.",
+  "commands": [
+    {
+      "name": "net-user",
+      "title": "net user — Kelola Akun User",
+      "description": "Mengelola akun user lokal di Windows.",
+      "syntax": "net user [username] [password] [opsi]",
+      "options": [
+        {"option": "net user", "description": "List semua user"},
+        {"option": "net user nama", "description": "Info detail user"},
+        {"option": "net user nama pass /add", "description": "Buat user baru"},
+        {"option": "net user nama /delete", "description": "Hapus user"},
+        {"option": "net user nama *", "description": "Ganti password (prompt)"},
+        {"option": "/active:yes|no", "description": "Aktifkan/nonaktifkan user"},
+        {"option": "/fullname:\"Nama\"", "description": "Set nama lengkap"},
+        {"option": "/passwordchg:yes|no", "description": "Izinkan ganti password"},
+        {"option": "/expires:tanggal", "description": "Tanggal kadaluarsa akun"},
+        {"option": "/times:waktu", "description": "Waktu login yang diizinkan"}
+      ],
+      "examples": "# List semua user\nnet user\n\n# Info user\nnet user Administrator\n\n# Buat user baru\nnet user john P@ssw0rd /add\n\n# Buat user dengan detail\nnet user john P@ssw0rd /add /fullname:\"John Doe\" /comment:\"Developer\"\n\n# Hapus user\nnet user john /delete\n\n# Nonaktifkan user\nnet user john /active:no\n\n# Ganti password\nnet user john NewP@ss\n\n# PowerShell: Local Users\nGet-LocalUser\nNew-LocalUser -Name \"john\" -Password (ConvertTo-SecureString \"P@ss\" -AsPlainText -Force)\nRemove-LocalUser -Name \"john\""
+    },
+    {
+      "name": "net-localgroup",
+      "title": "net localgroup — Kelola Grup",
+      "description": "Mengelola grup lokal dan keanggotaan grup di Windows.",
+      "syntax": "net localgroup [grup] [user] [opsi]",
+      "options": [
+        {"option": "net localgroup", "description": "List semua grup"},
+        {"option": "net localgroup grup", "description": "Anggota grup"},
+        {"option": "net localgroup grup user /add", "description": "Tambah user ke grup"},
+        {"option": "net localgroup grup user /delete", "description": "Hapus user dari grup"},
+        {"option": "net localgroup grup /add", "description": "Buat grup baru"}
+      ],
+      "examples": "# List semua grup\nnet localgroup\n\n# Anggota grup Administrators\nnet localgroup Administrators\n\n# Tambah user ke Administrators\nnet localgroup Administrators john /add\n\n# Hapus dari grup\nnet localgroup Administrators john /delete\n\n# Buat grup baru\nnet localgroup Developers /add\n\n# PowerShell\nGet-LocalGroup\nGet-LocalGroupMember -Group \"Administrators\"\nAdd-LocalGroupMember -Group \"Administrators\" -Member \"john\""
+    },
+    {
+      "name": "whoami-win",
+      "title": "whoami — Identitas User Saat Ini",
+      "description": "Menampilkan informasi user yang sedang login.",
+      "syntax": "whoami [opsi]",
+      "options": [
+        {"option": "whoami", "description": "Tampilkan nama user"},
+        {"option": "/user", "description": "Tampilkan user SID"},
+        {"option": "/groups", "description": "Tampilkan grup membership"},
+        {"option": "/priv", "description": "Tampilkan privileges"},
+        {"option": "/all", "description": "Tampilkan semua informasi"}
+      ],
+      "examples": "# Siapa saya\nwhoami\n\n# User SID\nwhoami /user\n\n# Grup yang diikuti\nwhoami /groups\n\n# Privileges\nwhoami /priv\n\n# Semua info\nwhoami /all"
+    },
+    {
+      "name": "runas",
+      "title": "runas — Jalankan Sebagai User Lain",
+      "description": "Menjalankan program dengan kredensial user lain. Setara dengan su/sudo di Linux.",
+      "syntax": "runas /user:username program",
+      "options": [
+        {"option": "/user:username", "description": "User yang digunakan"},
+        {"option": "/savecred", "description": "Simpan kredensial"},
+        {"option": "/env", "description": "Gunakan environment saat ini"},
+        {"option": "/noprofile", "description": "Jangan load user profile"}
+      ],
+      "examples": "# Jalankan sebagai admin\nrunas /user:Administrator cmd\n\n# Jalankan dengan domain user\nrunas /user:DOMAIN\\admin cmd\n\n# Simpan kredensial\nrunas /user:admin /savecred program.exe\n\n# PowerShell: Run as admin\nStart-Process powershell -Verb RunAs\nStart-Process cmd -Verb RunAs"
+    }
+  ]
+}

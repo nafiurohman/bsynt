@@ -1,0 +1,87 @@
+{
+  "id": "mysql-table",
+  "title": "Table Management",
+  "description": "Perintah untuk membuat, mengubah, dan mengelola tabel di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE TABLE",
+      "title": "Membuat Tabel",
+      "description": "Membuat tabel baru dengan definisi kolom dan constraint.",
+      "syntax": "CREATE TABLE [IF NOT EXISTS] nama_tabel (\n  kolom1 tipe [constraint],\n  kolom2 tipe [constraint],\n  ...\n) [ENGINE=InnoDB];",
+      "options": [
+        { "option": "IF NOT EXISTS", "description": "Cegah error jika tabel sudah ada" },
+        { "option": "ENGINE=InnoDB", "description": "Storage engine (default)" },
+        { "option": "AUTO_INCREMENT=n", "description": "Set nilai awal auto increment" },
+        { "option": "COMMENT 'text'", "description": "Komentar tabel" }
+      ],
+      "examples": "CREATE TABLE users (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  username VARCHAR(50) NOT NULL UNIQUE,\n  email VARCHAR(100) NOT NULL UNIQUE,\n  password_hash VARCHAR(255) NOT NULL,\n  full_name VARCHAR(100),\n  role ENUM('admin','user','moderator') DEFAULT 'user',\n  is_active BOOLEAN DEFAULT TRUE,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n) ENGINE=InnoDB;\n\nCREATE TABLE orders (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  total DECIMAL(10,2) NOT NULL,\n  status ENUM('pending','paid','shipped','delivered','cancelled') DEFAULT 'pending',\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n);",
+      "notes": "InnoDB adalah engine default yang mendukung transaksi dan foreign key."
+    },
+    {
+      "name": "ALTER TABLE",
+      "title": "Mengubah Tabel",
+      "description": "Mengubah struktur tabel yang sudah ada.",
+      "syntax": "ALTER TABLE nama_tabel [aksi];",
+      "options": [
+        { "option": "ADD COLUMN col tipe", "description": "Tambah kolom baru" },
+        { "option": "DROP COLUMN col", "description": "Hapus kolom" },
+        { "option": "MODIFY COLUMN col tipe", "description": "Ubah tipe kolom" },
+        { "option": "CHANGE col new_col tipe", "description": "Rename dan ubah kolom" },
+        { "option": "ADD INDEX (col)", "description": "Tambah index" },
+        { "option": "ADD FOREIGN KEY", "description": "Tambah foreign key" },
+        { "option": "RENAME TO new_name", "description": "Rename tabel" }
+      ],
+      "examples": "ALTER TABLE users ADD COLUMN phone VARCHAR(20);\nALTER TABLE users DROP COLUMN phone;\nALTER TABLE users MODIFY COLUMN email VARCHAR(200);\nALTER TABLE users CHANGE full_name display_name VARCHAR(150);\nALTER TABLE users ADD INDEX idx_email (email);\nALTER TABLE orders ADD FOREIGN KEY (user_id) REFERENCES users(id);\nALTER TABLE users RENAME TO members;"
+    },
+    {
+      "name": "DROP TABLE",
+      "title": "Menghapus Tabel",
+      "description": "Menghapus tabel beserta seluruh datanya.",
+      "syntax": "DROP TABLE [IF EXISTS] nama_tabel;",
+      "options": [
+        { "option": "IF EXISTS", "description": "Cegah error jika tidak ada" },
+        { "option": "CASCADE", "description": "Hapus dependency (bukan di MySQL)" }
+      ],
+      "examples": "DROP TABLE users;\nDROP TABLE IF EXISTS temp_data;\nDROP TABLE orders, order_items;",
+      "warning": "Menghapus tabel bersifat permanen!"
+    },
+    {
+      "name": "TRUNCATE TABLE",
+      "title": "Mengosongkan Tabel",
+      "description": "Menghapus semua baris dari tabel dengan cepat.",
+      "syntax": "TRUNCATE TABLE nama_tabel;",
+      "options": [],
+      "examples": "TRUNCATE TABLE logs;\nTRUNCATE TABLE session_data;",
+      "notes": "TRUNCATE lebih cepat dari DELETE karena tidak log per-baris. AUTO_INCREMENT di-reset."
+    },
+    {
+      "name": "DESCRIBE",
+      "title": "Deskripsi Tabel",
+      "description": "Menampilkan struktur kolom tabel.",
+      "syntax": "DESCRIBE nama_tabel; / DESC nama_tabel; / SHOW COLUMNS FROM nama_tabel;",
+      "options": [],
+      "examples": "DESCRIBE users;\nDESC orders;\nSHOW COLUMNS FROM users;\nSHOW FULL COLUMNS FROM users;"
+    },
+    {
+      "name": "SHOW TABLES",
+      "title": "Tampilkan Tabel",
+      "description": "Menampilkan semua tabel di database aktif.",
+      "syntax": "SHOW TABLES [LIKE 'pattern'];",
+      "options": [
+        { "option": "LIKE 'pattern'", "description": "Filter nama tabel" },
+        { "option": "FULL", "description": "Tampilkan tipe (BASE TABLE/VIEW)" }
+      ],
+      "examples": "SHOW TABLES;\nSHOW TABLES LIKE 'user%';\nSHOW FULL TABLES;\nSHOW TABLE STATUS;"
+    },
+    {
+      "name": "SHOW CREATE TABLE",
+      "title": "Tampilkan DDL Tabel",
+      "description": "Menampilkan statement CREATE TABLE lengkap.",
+      "syntax": "SHOW CREATE TABLE nama_tabel;",
+      "options": [],
+      "examples": "SHOW CREATE TABLE users;\nSHOW CREATE TABLE orders;",
+      "notes": "Berguna untuk melihat definisi lengkap termasuk index, constraint, dan engine."
+    }
+  ]
+}

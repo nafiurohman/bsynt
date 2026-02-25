@@ -1,0 +1,69 @@
+{
+  "id": "mysql-database",
+  "title": "Database Management",
+  "description": "Perintah untuk membuat, mengelola, dan menghapus database di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE DATABASE",
+      "title": "Membuat Database",
+      "description": "Membuat database baru di MySQL.",
+      "syntax": "CREATE DATABASE [IF NOT EXISTS] nama_db [opsi];",
+      "options": [
+        { "option": "IF NOT EXISTS", "description": "Cegah error jika database sudah ada" },
+        { "option": "CHARACTER SET [charset]", "description": "Set character set (utf8mb4, latin1)" },
+        { "option": "COLLATE [collation]", "description": "Set collation (utf8mb4_unicode_ci)" }
+      ],
+      "examples": "CREATE DATABASE myapp;\nCREATE DATABASE IF NOT EXISTS myapp;\nCREATE DATABASE myapp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\nCREATE DATABASE ecommerce DEFAULT CHARACTER SET utf8mb4;",
+      "notes": "Selalu gunakan utf8mb4 untuk mendukung emoji dan karakter Unicode penuh."
+    },
+    {
+      "name": "DROP DATABASE",
+      "title": "Menghapus Database",
+      "description": "Menghapus database beserta seluruh isinya.",
+      "syntax": "DROP DATABASE [IF EXISTS] nama_db;",
+      "options": [
+        { "option": "IF EXISTS", "description": "Cegah error jika database tidak ada" }
+      ],
+      "examples": "DROP DATABASE myapp;\nDROP DATABASE IF EXISTS test_db;",
+      "warning": "Perintah ini menghapus semua tabel dan data secara permanen! Tidak bisa di-undo."
+    },
+    {
+      "name": "USE",
+      "title": "Pilih Database",
+      "description": "Memilih database aktif untuk digunakan.",
+      "syntax": "USE nama_db;",
+      "options": [],
+      "examples": "USE myapp;\nUSE ecommerce;"
+    },
+    {
+      "name": "SHOW DATABASES",
+      "title": "Tampilkan Semua Database",
+      "description": "Menampilkan daftar semua database di server.",
+      "syntax": "SHOW DATABASES [LIKE 'pattern'];",
+      "options": [
+        { "option": "LIKE 'pattern'", "description": "Filter berdasarkan pattern" }
+      ],
+      "examples": "SHOW DATABASES;\nSHOW DATABASES LIKE 'my%';\nSHOW DATABASES LIKE '%test%';"
+    },
+    {
+      "name": "ALTER DATABASE",
+      "title": "Ubah Database",
+      "description": "Mengubah properti database.",
+      "syntax": "ALTER DATABASE nama_db [opsi];",
+      "options": [
+        { "option": "CHARACTER SET [charset]", "description": "Ubah character set" },
+        { "option": "COLLATE [collation]", "description": "Ubah collation" }
+      ],
+      "examples": "ALTER DATABASE myapp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\nALTER DATABASE legacy DEFAULT CHARACTER SET utf8mb4;"
+    },
+    {
+      "name": "SELECT DATABASE()",
+      "title": "Database Aktif",
+      "description": "Menampilkan database yang sedang aktif.",
+      "syntax": "SELECT DATABASE();",
+      "options": [],
+      "examples": "SELECT DATABASE();"
+    }
+  ]
+}

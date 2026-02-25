@@ -1,0 +1,45 @@
+{
+  "id": "mysql-views",
+  "title": "Views",
+  "description": "Membuat dan mengelola view (tabel virtual) di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "CREATE VIEW",
+      "title": "Membuat View",
+      "description": "Membuat view (query tersimpan sebagai tabel virtual).",
+      "syntax": "CREATE [OR REPLACE] VIEW nama_view AS SELECT ...;",
+      "options": [
+        { "option": "OR REPLACE", "description": "Timpa view jika sudah ada" },
+        { "option": "WITH CHECK OPTION", "description": "Pastikan INSERT/UPDATE melalui view memenuhi WHERE" },
+        { "option": "ALGORITHM = MERGE|TEMPTABLE", "description": "Algoritma eksekusi view" }
+      ],
+      "examples": "CREATE VIEW active_users AS\nSELECT id, username, email, created_at\nFROM users\nWHERE is_active = TRUE;\n\nCREATE OR REPLACE VIEW order_summary AS\nSELECT u.username, COUNT(o.id) AS total_orders, SUM(o.total) AS total_spent\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nGROUP BY u.id;\n\nCREATE VIEW recent_orders AS\nSELECT * FROM orders WHERE created_at > DATE_SUB(NOW(), INTERVAL 30 DAY)\nWITH CHECK OPTION;",
+      "notes": "View tidak menyimpan data — hanya menyimpan query."
+    },
+    {
+      "name": "SELECT VIEW",
+      "title": "Menggunakan View",
+      "description": "Query view seperti tabel biasa.",
+      "syntax": "SELECT * FROM nama_view [WHERE ...];",
+      "options": [],
+      "examples": "SELECT * FROM active_users;\nSELECT * FROM order_summary WHERE total_orders > 10;\nSELECT * FROM active_users WHERE email LIKE '%@gmail.com';"
+    },
+    {
+      "name": "DROP VIEW",
+      "title": "Menghapus View",
+      "description": "Menghapus view.",
+      "syntax": "DROP VIEW [IF EXISTS] nama_view;",
+      "options": [],
+      "examples": "DROP VIEW active_users;\nDROP VIEW IF EXISTS order_summary;"
+    },
+    {
+      "name": "SHOW VIEWS",
+      "title": "Tampilkan View",
+      "description": "Menampilkan daftar view di database.",
+      "syntax": "SHOW FULL TABLES WHERE Table_type = 'VIEW';",
+      "options": [],
+      "examples": "SHOW FULL TABLES WHERE Table_type = 'VIEW';\nSHOW CREATE VIEW active_users;"
+    }
+  ]
+}

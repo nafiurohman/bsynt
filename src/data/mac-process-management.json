@@ -1,0 +1,86 @@
+{
+  "id": "mac-process-management",
+  "title": "Process Management",
+  "description": "Perintah untuk mengelola proses di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "ps",
+      "title": "Process Status",
+      "description": "Menampilkan daftar proses yang sedang berjalan.",
+      "syntax": "ps [opsi]",
+      "options": [
+        { "option": "aux", "description": "Semua proses, format detail" },
+        { "option": "-e", "description": "Semua proses" },
+        { "option": "-f", "description": "Full format" },
+        { "option": "-p [pid]", "description": "Proses tertentu" }
+      ],
+      "examples": "ps aux\nps aux | grep node\nps -p 1234\nps -eo pid,ppid,%cpu,%mem,comm | sort -k3 -nr | head"
+    },
+    {
+      "name": "top",
+      "title": "Top",
+      "description": "Monitor proses secara real-time.",
+      "syntax": "top [opsi]",
+      "options": [
+        { "option": "-o [col]", "description": "Urutkan berdasarkan kolom (cpu, mem, pid)" },
+        { "option": "-l [n]", "description": "Logging mode, n kali update" },
+        { "option": "-n [n]", "description": "Tampilkan n proses" },
+        { "option": "-s [n]", "description": "Update interval (detik)" }
+      ],
+      "examples": "top\ntop -o cpu\ntop -l 1 -n 10 -s 0\ntop -o mem",
+      "notes": "Di macOS, top memiliki opsi berbeda dari Linux. Gunakan `htop` untuk interface lebih baik."
+    },
+    {
+      "name": "kill",
+      "title": "Kill",
+      "description": "Mengirim sinyal ke proses.",
+      "syntax": "kill [sinyal] PID",
+      "options": [
+        { "option": "-9", "description": "SIGKILL (force kill)" },
+        { "option": "-15", "description": "SIGTERM (graceful, default)" },
+        { "option": "-l", "description": "List semua sinyal" }
+      ],
+      "examples": "kill 1234\nkill -9 1234\nkill -15 1234\nkillall Safari",
+      "warning": "kill -9 tidak memberi kesempatan proses untuk cleanup."
+    },
+    {
+      "name": "killall",
+      "title": "Kill All",
+      "description": "Menghentikan semua proses berdasarkan nama.",
+      "syntax": "killall [opsi] nama_proses",
+      "options": [
+        { "option": "-9", "description": "Force kill" },
+        { "option": "-v", "description": "Verbose" }
+      ],
+      "examples": "killall Safari\nkillall -9 node\nkillall Finder",
+      "notes": "`killall Finder` akan merestart Finder."
+    },
+    {
+      "name": "lsof",
+      "title": "List Open Files",
+      "description": "Menampilkan file dan port yang terbuka oleh proses.",
+      "syntax": "lsof [opsi]",
+      "options": [
+        { "option": "-i [port]", "description": "File network (port tertentu)" },
+        { "option": "-p [pid]", "description": "File oleh proses tertentu" },
+        { "option": "-c [name]", "description": "File oleh nama proses" }
+      ],
+      "examples": "lsof -i :3000\nlsof -i :8080\nlsof -p 1234\nlsof -c node",
+      "notes": "Sangat berguna untuk mencari proses yang menggunakan port tertentu."
+    },
+    {
+      "name": "activity-monitor",
+      "title": "Activity Monitor CLI",
+      "description": "Alternatif CLI untuk monitoring aktivitas sistem.",
+      "syntax": "top -l 1 -s 0 / vm_stat / iostat",
+      "options": [
+        { "option": "vm_stat", "description": "Statistik virtual memory" },
+        { "option": "iostat", "description": "Statistik I/O" },
+        { "option": "nettop", "description": "Network traffic per proses" }
+      ],
+      "examples": "vm_stat\niostat -c 5\nsudo nettop -m tcp",
+      "notes": "nettop membutuhkan sudo dan berguna untuk monitoring network per proses."
+    }
+  ]
+}

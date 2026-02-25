@@ -1,0 +1,62 @@
+{
+  "id": "win-registry",
+  "title": "Registry & System Config",
+  "badge": "Windows",
+  "description": "Perintah untuk mengelola Windows Registry dan konfigurasi sistem dari command line.",
+  "commands": [
+    {
+      "name": "reg",
+      "title": "reg — Registry Editor CLI",
+      "description": "Mengelola Windows Registry dari command line. Alternatif dari regedit GUI.",
+      "syntax": "reg [operasi] [key] [opsi]",
+      "options": [
+        {"option": "query", "description": "Membaca nilai registry"},
+        {"option": "add", "description": "Menambah atau mengubah key/value"},
+        {"option": "delete", "description": "Menghapus key atau value"},
+        {"option": "export", "description": "Ekspor key ke file .reg"},
+        {"option": "import", "description": "Import dari file .reg"},
+        {"option": "/v nama", "description": "Nama value"},
+        {"option": "/t tipe", "description": "Tipe data: REG_SZ, REG_DWORD, REG_BINARY, REG_EXPAND_SZ, REG_MULTI_SZ"},
+        {"option": "/d data", "description": "Data value"},
+        {"option": "/s", "description": "Rekursif (untuk query)"},
+        {"option": "/f", "description": "Force tanpa konfirmasi"}
+      ],
+      "examples": "# Baca registry\nreg query HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\n\n# Baca value tertentu\nreg query HKCU\\Environment /v PATH\n\n# Tambah value\nreg add HKCU\\SOFTWARE\\MyApp /v Setting1 /t REG_SZ /d \"value\" /f\n\n# Tambah DWORD\nreg add HKCU\\SOFTWARE\\MyApp /v Enabled /t REG_DWORD /d 1 /f\n\n# Hapus value\nreg delete HKCU\\SOFTWARE\\MyApp /v Setting1 /f\n\n# Ekspor\nreg export HKCU\\SOFTWARE\\MyApp backup.reg\n\n# Import\nreg import backup.reg\n\n# PowerShell\nGet-ItemProperty -Path 'HKCU:\\SOFTWARE\\MyApp'\nSet-ItemProperty -Path 'HKCU:\\SOFTWARE\\MyApp' -Name 'Setting1' -Value 'value'\nNew-Item -Path 'HKCU:\\SOFTWARE\\MyApp' -Force",
+      "warning": "Mengubah registry yang salah bisa menyebabkan sistem tidak stabil atau gagal boot. Selalu backup registry sebelum mengubah!"
+    },
+    {
+      "name": "bcdedit",
+      "title": "bcdedit — Boot Configuration",
+      "description": "Mengelola konfigurasi boot Windows (Boot Configuration Data).",
+      "syntax": "bcdedit [opsi]",
+      "options": [
+        {"option": "bcdedit", "description": "Tampilkan konfigurasi boot"},
+        {"option": "/enum", "description": "Tampilkan semua entry"},
+        {"option": "/set", "description": "Ubah nilai entry"},
+        {"option": "/copy", "description": "Salin entry"},
+        {"option": "/delete", "description": "Hapus entry"},
+        {"option": "/export file", "description": "Ekspor BCD"},
+        {"option": "/import file", "description": "Import BCD"},
+        {"option": "/timeout detik", "description": "Set timeout menu boot"}
+      ],
+      "examples": "# Lihat konfigurasi boot\nbcdedit\n\n# Set timeout\nbcdedit /timeout 10\n\n# Enable Safe Mode\nbcdedit /set {current} safeboot minimal\n\n# Disable Safe Mode\nbcdedit /deletevalue {current} safeboot\n\n# Backup BCD\nbcdedit /export C:\\BCD_Backup\n\n# Restore BCD\nbcdedit /import C:\\BCD_Backup",
+      "warning": "Mengubah BCD yang salah bisa membuat Windows tidak bisa boot. Selalu buat backup terlebih dahulu!"
+    },
+    {
+      "name": "sfc-dism",
+      "title": "sfc & DISM — Perbaiki Sistem",
+      "description": "Tool untuk memverifikasi dan memperbaiki file sistem Windows yang rusak.",
+      "syntax": "sfc /scannow\nDISM /Online /Cleanup-Image [opsi]",
+      "options": [
+        {"option": "sfc /scannow", "description": "Scan dan perbaiki file sistem"},
+        {"option": "sfc /verifyonly", "description": "Scan tanpa perbaiki"},
+        {"option": "DISM /CheckHealth", "description": "Cek kesehatan image cepat"},
+        {"option": "DISM /ScanHealth", "description": "Scan kesehatan menyeluruh"},
+        {"option": "DISM /RestoreHealth", "description": "Perbaiki image dari Windows Update"},
+        {"option": "DISM /Source", "description": "Sumber file repair (ISO/WIM)"}
+      ],
+      "examples": "# Scan dan perbaiki file sistem\nsfc /scannow\n\n# Cek kesehatan image\nDISM /Online /Cleanup-Image /CheckHealth\n\n# Scan menyeluruh\nDISM /Online /Cleanup-Image /ScanHealth\n\n# Perbaiki image\nDISM /Online /Cleanup-Image /RestoreHealth\n\n# Perbaiki dengan sumber offline\nDISM /Online /Cleanup-Image /RestoreHealth /Source:D:\\sources\\install.wim\n\n# Urutan yang direkomendasikan:\n# 1. DISM dulu\nDISM /Online /Cleanup-Image /RestoreHealth\n# 2. Lalu SFC\nsfc /scannow",
+      "notes": "Jalankan DISM terlebih dahulu sebelum SFC untuk hasil terbaik. Kedua perintah membutuhkan admin privileges."
+    }
+  ]
+}

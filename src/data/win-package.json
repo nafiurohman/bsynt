@@ -1,0 +1,64 @@
+{
+  "id": "win-package",
+  "title": "Package Manager (Windows)",
+  "badge": "Windows",
+  "description": "Package manager di Windows: winget, choco (Chocolatey), dan scoop untuk instalasi software.",
+  "commands": [
+    {
+      "name": "winget",
+      "title": "winget — Windows Package Manager",
+      "description": "Package manager resmi Microsoft bawaan Windows 10/11 untuk menginstal dan mengelola software.",
+      "syntax": "winget [perintah] [opsi]",
+      "options": [
+        {"option": "install paket", "description": "Instal paket"},
+        {"option": "uninstall paket", "description": "Hapus paket"},
+        {"option": "upgrade", "description": "List paket yang bisa diupgrade"},
+        {"option": "upgrade --all", "description": "Upgrade semua paket"},
+        {"option": "search kata", "description": "Cari paket"},
+        {"option": "show paket", "description": "Info detail paket"},
+        {"option": "list", "description": "List paket terinstal"},
+        {"option": "--accept-package-agreements", "description": "Auto accept agreements"},
+        {"option": "--accept-source-agreements", "description": "Auto accept source"},
+        {"option": "-e --id", "description": "Match exact ID"},
+        {"option": "--source winget", "description": "Sumber: winget atau msstore"}
+      ],
+      "examples": "# Cari paket\nwinget search firefox\n\n# Instal\nwinget install Mozilla.Firefox\nwinget install Microsoft.VisualStudioCode\nwinget install Git.Git\n\n# Instal tanpa prompt\nwinget install Mozilla.Firefox --accept-package-agreements --accept-source-agreements\n\n# Upgrade semua\nwinget upgrade --all\n\n# Hapus paket\nwinget uninstall Mozilla.Firefox\n\n# List terinstal\nwinget list\n\n# Ekspor/import daftar paket\nwinget export -o packages.json\nwinget import -i packages.json"
+    },
+    {
+      "name": "choco",
+      "title": "choco — Chocolatey",
+      "description": "Package manager populer untuk Windows. Perlu diinstal terpisah dari chocolatey.org.",
+      "syntax": "choco [perintah] [paket] [opsi]",
+      "options": [
+        {"option": "install paket", "description": "Instal paket"},
+        {"option": "uninstall paket", "description": "Hapus paket"},
+        {"option": "upgrade paket", "description": "Upgrade paket"},
+        {"option": "upgrade all", "description": "Upgrade semua paket"},
+        {"option": "search kata", "description": "Cari paket"},
+        {"option": "list --local-only", "description": "List paket terinstal"},
+        {"option": "info paket", "description": "Info paket"},
+        {"option": "-y", "description": "Auto confirm"}
+      ],
+      "examples": "# Instal Chocolatey (PowerShell admin)\nSet-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))\n\n# Instal paket\nchoco install googlechrome -y\nchoco install nodejs -y\nchoco install python3 -y\n\n# Upgrade semua\nchoco upgrade all -y\n\n# Cari paket\nchoco search editor\n\n# List terinstal\nchoco list --local-only\n\n# Hapus\nchoco uninstall paket -y"
+    },
+    {
+      "name": "scoop",
+      "title": "scoop — Scoop Installer",
+      "description": "Package manager minimalis untuk Windows. Tidak memerlukan admin dan menginstal ke user directory.",
+      "syntax": "scoop [perintah] [paket]",
+      "options": [
+        {"option": "install paket", "description": "Instal paket"},
+        {"option": "uninstall paket", "description": "Hapus paket"},
+        {"option": "update", "description": "Update scoop dan bucket info"},
+        {"option": "update *", "description": "Update semua paket"},
+        {"option": "search kata", "description": "Cari paket"},
+        {"option": "list", "description": "List paket terinstal"},
+        {"option": "bucket add nama", "description": "Tambah bucket (repository)"},
+        {"option": "info paket", "description": "Info paket"},
+        {"option": "cleanup *", "description": "Bersihkan versi lama"}
+      ],
+      "examples": "# Instal Scoop\nirm get.scoop.sh | iex\n\n# Tambah bucket extras\nscoop bucket add extras\n\n# Instal paket\nscoop install git\nscoop install nodejs\nscoop install vscode\n\n# Update semua\nscoop update *\n\n# Cari paket\nscoop search editor\n\n# Bersihkan versi lama\nscoop cleanup *",
+      "notes": "Scoop menginstal ke ~/scoop/ dan tidak butuh admin. Cocok untuk developer tools."
+    }
+  ]
+}

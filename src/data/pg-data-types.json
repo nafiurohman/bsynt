@@ -1,0 +1,114 @@
+{
+  "id": "pg-data-types",
+  "title": "Data Types",
+  "description": "Tipe data yang tersedia di PostgreSQL termasuk tipe unik seperti JSONB, ARRAY, dan UUID.",
+  "badge": "PostgreSQL",
+  "commands": [
+    {
+      "name": "Numeric Types",
+      "title": "Tipe Data Numerik",
+      "description": "Tipe data untuk menyimpan angka integer, decimal, dan floating point.",
+      "syntax": "SMALLINT | INTEGER | BIGINT | DECIMAL(p,s) | NUMERIC(p,s) | REAL | DOUBLE PRECISION | SERIAL | BIGSERIAL",
+      "options": [
+        { "option": "SMALLINT", "description": "2 bytes, -32768 sampai 32767" },
+        { "option": "INTEGER / INT", "description": "4 bytes, -2.1 miliar sampai 2.1 miliar" },
+        { "option": "BIGINT", "description": "8 bytes, angka sangat besar" },
+        { "option": "DECIMAL(p,s)", "description": "Presisi tepat, p=total digit, s=digit desimal" },
+        { "option": "REAL", "description": "4 bytes floating point" },
+        { "option": "DOUBLE PRECISION", "description": "8 bytes floating point" },
+        { "option": "SERIAL", "description": "Auto-increment integer (4 bytes)" },
+        { "option": "BIGSERIAL", "description": "Auto-increment bigint (8 bytes)" }
+      ],
+      "examples": "CREATE TABLE products (\n  id SERIAL PRIMARY KEY,\n  quantity INTEGER DEFAULT 0,\n  price DECIMAL(10,2) NOT NULL,\n  weight REAL,\n  rating DOUBLE PRECISION\n);",
+      "notes": "Gunakan NUMERIC/DECIMAL untuk data keuangan. Hindari REAL/DOUBLE untuk presisi tepat."
+    },
+    {
+      "name": "Text Types",
+      "title": "Tipe Data Teks",
+      "description": "Tipe data untuk menyimpan string/teks.",
+      "syntax": "CHAR(n) | VARCHAR(n) | TEXT",
+      "options": [
+        { "option": "CHAR(n)", "description": "String fixed-length, dipadding spasi" },
+        { "option": "VARCHAR(n)", "description": "String variable-length, max n karakter" },
+        { "option": "TEXT", "description": "String unlimited length" }
+      ],
+      "examples": "CREATE TABLE profiles (\n  code CHAR(5),\n  name VARCHAR(100) NOT NULL,\n  bio TEXT\n);",
+      "notes": "Di PostgreSQL, TEXT dan VARCHAR tanpa (n) performanya sama. TEXT lebih idiomatis."
+    },
+    {
+      "name": "Date/Time Types",
+      "title": "Tipe Data Tanggal & Waktu",
+      "description": "Tipe data untuk tanggal, waktu, dan interval.",
+      "syntax": "DATE | TIME | TIMESTAMP | TIMESTAMPTZ | INTERVAL",
+      "options": [
+        { "option": "DATE", "description": "Tanggal saja (YYYY-MM-DD)" },
+        { "option": "TIME", "description": "Waktu saja (HH:MI:SS)" },
+        { "option": "TIMESTAMP", "description": "Tanggal dan waktu tanpa timezone" },
+        { "option": "TIMESTAMPTZ", "description": "Tanggal dan waktu dengan timezone (direkomendasikan)" },
+        { "option": "INTERVAL", "description": "Jangka waktu (misal: '1 year 2 months')" }
+      ],
+      "examples": "CREATE TABLE events (\n  id SERIAL PRIMARY KEY,\n  event_date DATE,\n  start_time TIME,\n  created_at TIMESTAMPTZ DEFAULT NOW(),\n  duration INTERVAL DEFAULT '1 hour'\n);\n\nSELECT NOW() + INTERVAL '30 days';\nSELECT age(CURRENT_DATE, '1990-01-15');",
+      "notes": "Selalu gunakan TIMESTAMPTZ kecuali ada alasan khusus."
+    },
+    {
+      "name": "JSON / JSONB",
+      "title": "Tipe Data JSON",
+      "description": "Menyimpan data JSON. JSONB adalah binary JSON yang mendukung indexing.",
+      "syntax": "JSON | JSONB",
+      "options": [
+        { "option": "JSON", "description": "Disimpan sebagai text, presisi input dijaga" },
+        { "option": "JSONB", "description": "Binary JSON, mendukung indexing dan operasi cepat" },
+        { "option": "->", "description": "Mengambil elemen JSON (return JSON)" },
+        { "option": "->>", "description": "Mengambil elemen JSON (return text)" },
+        { "option": "@>", "description": "Contains operator" },
+        { "option": "?", "description": "Key exists operator" }
+      ],
+      "examples": "CREATE TABLE configs (\n  id SERIAL PRIMARY KEY,\n  data JSONB NOT NULL DEFAULT '{}'\n);\n\nINSERT INTO configs (data) VALUES ('{\"theme\": \"dark\", \"lang\": \"id\"}');\n\n-- Query JSONB\nSELECT data->>'theme' FROM configs;\nSELECT * FROM configs WHERE data @> '{\"lang\": \"id\"}';\nSELECT * FROM configs WHERE data ? 'theme';\n\n-- GIN Index untuk JSONB\nCREATE INDEX idx_configs_data ON configs USING GIN (data);",
+      "notes": "Selalu pilih JSONB kecuali perlu menjaga format JSON asli."
+    },
+    {
+      "name": "ARRAY",
+      "title": "Tipe Data Array",
+      "description": "PostgreSQL mendukung kolom bertipe array dari tipe data apapun.",
+      "syntax": "tipe_data[] | ARRAY[nilai1, nilai2]",
+      "options": [
+        { "option": "ANY(array)", "description": "Cek apakah nilai ada dalam array" },
+        { "option": "@>", "description": "Array contains" },
+        { "option": "<@", "description": "Array contained by" },
+        { "option": "&&", "description": "Array overlap (ada irisan)" },
+        { "option": "array_length()", "description": "Panjang array" },
+        { "option": "unnest()", "description": "Expand array ke baris" }
+      ],
+      "examples": "CREATE TABLE articles (\n  id SERIAL PRIMARY KEY,\n  title TEXT,\n  tags TEXT[] DEFAULT '{}'\n);\n\nINSERT INTO articles (title, tags) VALUES ('Intro PG', ARRAY['postgresql','tutorial']);\nSELECT * FROM articles WHERE 'tutorial' = ANY(tags);\nSELECT * FROM articles WHERE tags @> ARRAY['postgresql'];\nSELECT unnest(tags) FROM articles;",
+      "notes": "Index GIN mendukung pencarian cepat pada array."
+    },
+    {
+      "name": "UUID",
+      "title": "Universally Unique Identifier",
+      "description": "Tipe data UUID untuk identifier unik global.",
+      "syntax": "UUID",
+      "options": [
+        { "option": "gen_random_uuid()", "description": "Generate UUID v4 (PG 13+)" },
+        { "option": "uuid_generate_v4()", "description": "Dari extension uuid-ossp" }
+      ],
+      "examples": "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";\n\nCREATE TABLE sessions (\n  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n  user_id INT REFERENCES users(id),\n  token TEXT UNIQUE NOT NULL\n);",
+      "notes": "UUID cocok untuk distributed systems dan menghindari sequential ID guessing."
+    },
+    {
+      "name": "Special Types",
+      "title": "Tipe Data Spesial",
+      "description": "Tipe data unik PostgreSQL: ENUM, HSTORE, CIDR, BYTEA, dll.",
+      "syntax": "CREATE TYPE mood AS ENUM ('happy', 'sad', 'neutral');\nBOOLEAN | BYTEA | INET | CIDR | MACADDR | TSVECTOR",
+      "options": [
+        { "option": "BOOLEAN", "description": "true / false / null" },
+        { "option": "ENUM", "description": "Custom enumerated type" },
+        { "option": "BYTEA", "description": "Binary data" },
+        { "option": "INET", "description": "IPv4 atau IPv6 address" },
+        { "option": "CIDR", "description": "IPv4/IPv6 network" },
+        { "option": "TSVECTOR", "description": "Full-text search document" }
+      ],
+      "examples": "CREATE TYPE status AS ENUM ('active', 'inactive', 'banned');\n\nCREATE TABLE accounts (\n  id SERIAL PRIMARY KEY,\n  is_active BOOLEAN DEFAULT true,\n  status status DEFAULT 'active',\n  ip_address INET,\n  avatar BYTEA\n);",
+      "notes": "ENUM values tidak bisa dihapus, hanya ditambah dengan ALTER TYPE ... ADD VALUE."
+    }
+  ]
+}

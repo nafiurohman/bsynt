@@ -1,0 +1,77 @@
+{
+  "id": "mac-compression",
+  "title": "Compression",
+  "description": "Perintah untuk mengompres dan mengekstrak file di macOS.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "tar",
+      "title": "Tar Archive",
+      "description": "Membuat dan mengekstrak archive tar.",
+      "syntax": "tar [opsi] [file...]",
+      "options": [
+        { "option": "-c", "description": "Create archive" },
+        { "option": "-x", "description": "Extract archive" },
+        { "option": "-z", "description": "Kompres/decompres dengan gzip" },
+        { "option": "-j", "description": "Kompres/decompres dengan bzip2" },
+        { "option": "-v", "description": "Verbose" },
+        { "option": "-f [file]", "description": "Nama file archive" },
+        { "option": "-t", "description": "List isi archive" }
+      ],
+      "examples": "tar -czf archive.tar.gz folder/\ntar -xzf archive.tar.gz\ntar -xzf archive.tar.gz -C ~/extract/\ntar -tvf archive.tar.gz"
+    },
+    {
+      "name": "zip",
+      "title": "Zip",
+      "description": "Membuat file ZIP.",
+      "syntax": "zip [opsi] archive.zip file...",
+      "options": [
+        { "option": "-r", "description": "Rekursif (untuk direktori)" },
+        { "option": "-e", "description": "Encrypt dengan password" },
+        { "option": "-9", "description": "Kompresi maksimum" },
+        { "option": "-x [pattern]", "description": "Exclude file" }
+      ],
+      "examples": "zip -r project.zip project/\nzip -re secure.zip sensitive/\nzip -r backup.zip . -x '*.git*' -x 'node_modules/*'"
+    },
+    {
+      "name": "unzip",
+      "title": "Unzip",
+      "description": "Mengekstrak file ZIP.",
+      "syntax": "unzip [opsi] archive.zip",
+      "options": [
+        { "option": "-d [dir]", "description": "Extract ke direktori tertentu" },
+        { "option": "-l", "description": "List isi tanpa extract" },
+        { "option": "-o", "description": "Overwrite tanpa konfirmasi" }
+      ],
+      "examples": "unzip file.zip\nunzip file.zip -d ~/extracted/\nunzip -l file.zip"
+    },
+    {
+      "name": "gzip",
+      "title": "Gzip",
+      "description": "Mengompres file dengan gzip.",
+      "syntax": "gzip [opsi] file",
+      "options": [
+        { "option": "-d", "description": "Decompress" },
+        { "option": "-k", "description": "Keep file asli" },
+        { "option": "-9", "description": "Kompresi maksimum" },
+        { "option": "-l", "description": "List info kompresi" }
+      ],
+      "examples": "gzip file.txt\ngzip -k large.log\ngzip -d file.txt.gz\ngzip -l file.txt.gz"
+    },
+    {
+      "name": "hdiutil",
+      "title": "Disk Image (macOS)",
+      "description": "Membuat dan mengelola disk image (.dmg) di macOS.",
+      "syntax": "hdiutil [verb] [opsi]",
+      "options": [
+        { "option": "create", "description": "Buat disk image baru" },
+        { "option": "attach", "description": "Mount disk image" },
+        { "option": "detach", "description": "Unmount disk image" },
+        { "option": "convert", "description": "Konversi format disk image" },
+        { "option": "info", "description": "Info disk image" }
+      ],
+      "examples": "hdiutil create -size 100m -volname \"MyDisk\" -fs HFS+ mydisk.dmg\nhdiutil attach installer.dmg\nhdiutil detach /Volumes/MyDisk\nhdiutil convert input.dmg -format UDZO -o compressed.dmg",
+      "notes": "Fitur khas macOS untuk mengelola file .dmg."
+    }
+  ]
+}

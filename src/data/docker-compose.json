@@ -1,0 +1,85 @@
+{
+  "id": "docker-compose",
+  "title": "Docker Compose",
+  "description": "Mengelola aplikasi multi-container menggunakan file docker-compose.yml.",
+  "badge": "Docker",
+  "commands": [
+    {
+      "name": "docker compose up",
+      "title": "Menjalankan Semua Service",
+      "description": "Membuat dan menjalankan semua container yang didefinisikan di compose file.",
+      "syntax": "docker compose up [opsi] [service...]",
+      "options": [
+        { "option": "-d / --detach", "description": "Jalankan di background" },
+        { "option": "--build", "description": "Build image sebelum start" },
+        { "option": "--force-recreate", "description": "Recreate container meskipun tidak ada perubahan" },
+        { "option": "--scale service=n", "description": "Jalankan n instance dari service" },
+        { "option": "--wait", "description": "Tunggu sampai semua service healthy" },
+        { "option": "-f file.yml", "description": "Tentukan compose file" }
+      ],
+      "examples": "docker compose up\ndocker compose up -d\ndocker compose up --build\ndocker compose up -d web db\ndocker compose up --scale worker=3\ndocker compose -f docker-compose.prod.yml up -d",
+      "notes": "docker compose (V2) menggantikan docker-compose (V1 dengan tanda hubung)."
+    },
+    {
+      "name": "docker compose down",
+      "title": "Menghentikan dan Menghapus",
+      "description": "Menghentikan container dan menghapus container, network, dan resource.",
+      "syntax": "docker compose down [opsi]",
+      "options": [
+        { "option": "-v / --volumes", "description": "Hapus juga volumes" },
+        { "option": "--rmi all", "description": "Hapus semua image yang dipakai" },
+        { "option": "--rmi local", "description": "Hapus image yang dibangun lokal saja" },
+        { "option": "--remove-orphans", "description": "Hapus container yang tidak ada di compose file" }
+      ],
+      "examples": "docker compose down\ndocker compose down -v\ndocker compose down --rmi all -v",
+      "warning": "docker compose down -v menghapus SEMUA data di volumes!"
+    },
+    {
+      "name": "docker compose ps / logs",
+      "title": "Status dan Log Service",
+      "description": "Melihat status container dan log dari compose services.",
+      "syntax": "docker compose ps\ndocker compose logs [opsi] [service]",
+      "options": [
+        { "option": "ps", "description": "Status semua service" },
+        { "option": "logs -f", "description": "Follow log real-time" },
+        { "option": "logs --tail N", "description": "N baris terakhir" },
+        { "option": "logs service", "description": "Log service tertentu" }
+      ],
+      "examples": "docker compose ps\ndocker compose logs\ndocker compose logs -f web\ndocker compose logs --tail 50 db",
+      "notes": "docker compose logs menggabungkan log dari semua service."
+    },
+    {
+      "name": "docker compose exec / run",
+      "title": "Menjalankan Command di Service",
+      "description": "Menjalankan perintah di dalam container service yang berjalan atau membuat container baru.",
+      "syntax": "docker compose exec <service> <command>\ndocker compose run <service> <command>",
+      "options": [
+        { "option": "exec", "description": "Jalankan di container yang sudah running" },
+        { "option": "run", "description": "Buat container baru untuk menjalankan command" },
+        { "option": "run --rm", "description": "Hapus setelah selesai" }
+      ],
+      "examples": "docker compose exec web bash\ndocker compose exec db psql -U postgres\ndocker compose run --rm web npm test\ndocker compose run --rm web npm run migrate",
+      "notes": "exec untuk container yang sudah berjalan, run untuk membuat container baru."
+    },
+    {
+      "name": "Compose File",
+      "title": "Struktur docker-compose.yml",
+      "description": "Format dan instruksi utama file docker-compose.yml.",
+      "syntax": "services:\n  web:\n    image: nginx\n    ports:\n      - \"80:80\"",
+      "options": [
+        { "option": "image", "description": "Image yang digunakan" },
+        { "option": "build", "description": "Build dari Dockerfile" },
+        { "option": "ports", "description": "Port mapping" },
+        { "option": "volumes", "description": "Mount volumes" },
+        { "option": "environment", "description": "Environment variables" },
+        { "option": "depends_on", "description": "Dependensi antar service" },
+        { "option": "restart", "description": "Restart policy" },
+        { "option": "networks", "description": "Network yang digunakan" },
+        { "option": "healthcheck", "description": "Health check configuration" },
+        { "option": "deploy", "description": "Deploy configuration" }
+      ],
+      "examples": "services:\n  web:\n    build: .\n    ports:\n      - \"3000:3000\"\n    environment:\n      - NODE_ENV=production\n      - DATABASE_URL=postgres://db:5432/app\n    depends_on:\n      db:\n        condition: service_healthy\n    restart: unless-stopped\n\n  db:\n    image: postgres:16\n    volumes:\n      - pgdata:/var/lib/postgresql/data\n    environment:\n      POSTGRES_PASSWORD: secret\n    healthcheck:\n      test: pg_isready -U postgres\n      interval: 10s\n      timeout: 5s\n      retries: 5\n\nvolumes:\n  pgdata:",
+      "notes": "depends_on dengan condition: service_healthy memastikan service siap sebelum start."
+    }
+  ]
+}

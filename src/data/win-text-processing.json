@@ -1,0 +1,75 @@
+{
+  "id": "win-text-processing",
+  "title": "Text Processing (Windows)",
+  "badge": "Windows",
+  "description": "Perintah untuk memproses dan memanipulasi teks di CMD dan PowerShell.",
+  "commands": [
+    {
+      "name": "findstr-text",
+      "title": "findstr — Pencarian Teks dengan Regex",
+      "description": "Tool pencarian teks utama di CMD, mendukung regex dan multi-file.",
+      "syntax": "findstr [opsi] \"pola\" [file]",
+      "options": [
+        {"option": "/i", "description": "Case insensitive"},
+        {"option": "/r", "description": "Regular expression"},
+        {"option": "/s", "description": "Cari di subdirektori"},
+        {"option": "/n", "description": "Tampilkan nomor baris"},
+        {"option": "/m", "description": "Nama file saja"},
+        {"option": "/v", "description": "Baris yang tidak cocok"},
+        {"option": "/b", "description": "Cocokkan di awal baris"},
+        {"option": "/e", "description": "Cocokkan di akhir baris"},
+        {"option": "/g:file", "description": "Ambil pola dari file"},
+        {"option": "/x", "description": "Baris harus sama persis"}
+      ],
+      "examples": "# Cari teks\nfindstr \"error\" *.log\n\n# Case insensitive + nomor baris\nfindstr /i /n \"warning\" app.log\n\n# Regex: cari IP address\nfindstr /r \"[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*\" access.log\n\n# Cari di semua subdirektori\nfindstr /s /i \"password\" *.txt *.cfg\n\n# Baris yang tidak mengandung\nfindstr /v \"DEBUG\" app.log"
+    },
+    {
+      "name": "sort-win",
+      "title": "sort — Mengurutkan Teks",
+      "description": "Mengurutkan baris teks dari file atau input.",
+      "syntax": "sort [opsi] [file]",
+      "options": [
+        {"option": "/r", "description": "Urutan terbalik (descending)"},
+        {"option": "/+n", "description": "Mulai sort dari kolom ke-n"},
+        {"option": "/o file", "description": "Simpan output ke file"},
+        {"option": "/unique", "description": "Hapus duplikat (PowerShell: Sort-Object -Unique)"}
+      ],
+      "examples": "# Urutkan file\nsort data.txt\n\n# Urutan terbalik\nsort /r data.txt\n\n# Simpan ke file\nsort data.txt /o sorted.txt\n\n# Pipe dari perintah\ntype names.txt | sort\n\n# PowerShell: Sort-Object\nGet-Content data.txt | Sort-Object\nGet-Content data.txt | Sort-Object -Descending\nGet-Content data.txt | Sort-Object -Unique"
+    },
+    {
+      "name": "select-string-ps",
+      "title": "Select-String — Grep PowerShell",
+      "description": "Cmdlet PowerShell untuk pencarian teks yang sangat powerful. Setara dengan grep di Linux.",
+      "syntax": "Select-String -Path file -Pattern pola [opsi]",
+      "options": [
+        {"option": "-Pattern", "description": "Pola regex yang dicari"},
+        {"option": "-Path", "description": "File yang dicari"},
+        {"option": "-Recurse", "description": "Cari rekursif (dari Get-ChildItem)"},
+        {"option": "-CaseSensitive", "description": "Pencarian case sensitive"},
+        {"option": "-NotMatch", "description": "Baris yang tidak cocok"},
+        {"option": "-Context n,n", "description": "Tampilkan n baris sebelum dan sesudah"},
+        {"option": "-SimpleMatch", "description": "Cocokkan literal (bukan regex)"},
+        {"option": "-AllMatches", "description": "Temukan semua kecocokan per baris"},
+        {"option": "-List", "description": "Satu hasil per file saja"}
+      ],
+      "examples": "# Cari teks\nSelect-String -Path *.log -Pattern \"error\"\n\n# Dengan konteks\nSelect-String -Path app.log -Pattern \"exception\" -Context 3,3\n\n# Rekursif\nGet-ChildItem -Recurse -Filter *.txt | Select-String \"TODO\"\n\n# Case sensitive\nSelect-String -Path *.cs -Pattern \"className\" -CaseSensitive\n\n# Multiple patterns\nSelect-String -Path *.log -Pattern \"error|warning|critical\"\n\n# Hitung kemunculan\n(Select-String -Path *.log -Pattern \"error\").Count"
+    },
+    {
+      "name": "powershell-text",
+      "title": "PowerShell Text Cmdlets",
+      "description": "Berbagai cmdlet PowerShell untuk manipulasi teks tingkat lanjut.",
+      "syntax": "cmdlet [opsi]",
+      "options": [
+        {"option": "-replace", "description": "Operator regex replace"},
+        {"option": "-split", "description": "Operator split string"},
+        {"option": "-join", "description": "Operator join array"},
+        {"option": "-match", "description": "Operator regex match"},
+        {"option": ".Trim()", "description": "Hapus whitespace di awal/akhir"},
+        {"option": ".ToUpper()", "description": "Konversi ke huruf besar"},
+        {"option": ".ToLower()", "description": "Konversi ke huruf kecil"},
+        {"option": ".Substring()", "description": "Ambil bagian string"}
+      ],
+      "examples": "# Replace teks\n(Get-Content file.txt) -replace 'lama', 'baru' | Set-Content file.txt\n\n# Split dan proses\nGet-Content csv.txt | ForEach-Object { ($_ -split ',')[0] }\n\n# Filter unik\nGet-Content names.txt | Sort-Object -Unique\n\n# Hitung baris / kata / karakter\n(Get-Content file.txt | Measure-Object -Line -Word -Character)\n\n# Konversi case\n\"hello world\".ToUpper()\n\"HELLO\".ToLower()\n\n# Format output\nGet-Process | Format-Table Name, CPU -AutoSize\nGet-Process | Select-Object Name, CPU | Export-Csv proses.csv"
+    }
+  ]
+}

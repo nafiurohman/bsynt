@@ -1,0 +1,69 @@
+{
+  "id": "redis-keys",
+  "title": "Key Management",
+  "description": "Mengelola key: expiry, rename, pattern search, dan operasi umum lainnya.",
+  "badge": "Redis",
+  "commands": [
+    {
+      "name": "KEYS / SCAN",
+      "title": "Mencari Key",
+      "description": "Mencari key berdasarkan pattern.",
+      "syntax": "KEYS pattern\nSCAN cursor [MATCH pattern] [COUNT count] [TYPE type]",
+      "options": [
+        { "option": "KEYS *", "description": "Semua key (JANGAN di production!)" },
+        { "option": "KEYS user:*", "description": "Key yang dimulai dengan user:" },
+        { "option": "SCAN 0", "description": "Iterasi cursor-based (aman untuk production)" },
+        { "option": "MATCH", "description": "Filter pattern" },
+        { "option": "COUNT", "description": "Hint jumlah per iterasi" },
+        { "option": "TYPE", "description": "Filter berdasarkan tipe data" }
+      ],
+      "examples": "KEYS *\nKEYS user:*\nKEYS session:*\n\n# SCAN (production-safe)\nSCAN 0 MATCH user:* COUNT 100\nSCAN 0 TYPE string\n\n# Pattern: ? = satu karakter, * = banyak\nKEYS h?llo  # hello, hallo, hxllo\nKEYS h*llo  # hllo, heeello",
+      "warning": "KEYS blocking dan lambat pada dataset besar! Gunakan SCAN di production."
+    },
+    {
+      "name": "EXPIRE / TTL / PERSIST",
+      "title": "Key Expiry (TTL)",
+      "description": "Mengatur, melihat, dan menghapus waktu kedaluwarsa key.",
+      "syntax": "EXPIRE key seconds\nPEXPIRE key milliseconds\nEXPIREAT key unix-timestamp\nTTL key\nPTTL key\nPERSIST key",
+      "options": [
+        { "option": "EXPIRE", "description": "Set TTL dalam detik" },
+        { "option": "PEXPIRE", "description": "Set TTL dalam milidetik" },
+        { "option": "EXPIREAT", "description": "Set expiry pada timestamp tertentu" },
+        { "option": "TTL", "description": "Sisa waktu dalam detik (-1 = no expiry, -2 = not exists)" },
+        { "option": "PTTL", "description": "Sisa waktu dalam milidetik" },
+        { "option": "PERSIST", "description": "Hapus expiry (jadikan permanent)" }
+      ],
+      "examples": "SET session \"data\"\nEXPIRE session 3600      # 1 jam\nTTL session              # sisa detik\nPTTL session             # sisa milidetik\nPERSIST session          # hapus expiry\n\nEXPIREAT session 1735689600  # expire di timestamp tertentu",
+      "notes": "TTL return -1 jika key ada tapi tanpa expiry, -2 jika key tidak ada."
+    },
+    {
+      "name": "DEL / UNLINK / EXISTS",
+      "title": "Menghapus dan Mengecek Key",
+      "description": "Menghapus key dan mengecek keberadaan key.",
+      "syntax": "DEL key [key ...]\nUNLINK key [key ...]\nEXISTS key [key ...]\nTYPE key",
+      "options": [
+        { "option": "DEL", "description": "Hapus key (blocking)" },
+        { "option": "UNLINK", "description": "Hapus key (non-blocking, async)" },
+        { "option": "EXISTS", "description": "Cek apakah key ada (return jumlah)" },
+        { "option": "TYPE", "description": "Tipe data key (string, list, set, zset, hash)" }
+      ],
+      "examples": "DEL user:1\nDEL key1 key2 key3\nUNLINK big_key         # hapus async\nEXISTS user:1          # 1 atau 0\nEXISTS key1 key2 key3  # return jumlah yang ada\nTYPE user:1            # \"hash\"",
+      "notes": "Gunakan UNLINK untuk key besar agar tidak blocking Redis."
+    },
+    {
+      "name": "RENAME / COPY / DUMP",
+      "title": "Rename, Copy, dan Serialisasi Key",
+      "description": "Mengganti nama, menyalin, dan serialisasi key.",
+      "syntax": "RENAME key newkey\nRENAMENX key newkey\nCOPY source destination [REPLACE]\nDUMP key\nRESTORE key ttl serialized-value",
+      "options": [
+        { "option": "RENAME", "description": "Ganti nama key (timpa jika ada)" },
+        { "option": "RENAMENX", "description": "Ganti nama hanya jika newkey belum ada" },
+        { "option": "COPY", "description": "Salin key (Redis 6.2+)" },
+        { "option": "DUMP", "description": "Serialisasi value" },
+        { "option": "RESTORE", "description": "Deserialisasi value" }
+      ],
+      "examples": "RENAME old_key new_key\nRENAMENX temp_key final_key\nCOPY user:1 user:1:backup\nCOPY user:1 user:1:clone REPLACE\n\nDUMP user:1\nRESTORE user:1:copy 0 \"\\x00\\x03...\"",
+      "notes": "RENAME adalah atomic. Jika newkey sudah ada, akan ditimpa."
+    }
+  ]
+}

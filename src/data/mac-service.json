@@ -1,0 +1,53 @@
+{
+  "id": "mac-service",
+  "title": "Service (launchctl)",
+  "description": "Perintah untuk mengelola service dan daemon di macOS menggunakan launchctl.",
+  "badge": "macOS",
+  "commands": [
+    {
+      "name": "launchctl",
+      "title": "Launch Control",
+      "description": "Mengelola service (LaunchAgents/LaunchDaemons) di macOS.",
+      "syntax": "launchctl [subcommand]",
+      "options": [
+        { "option": "list", "description": "List semua service" },
+        { "option": "load [plist]", "description": "Load service" },
+        { "option": "unload [plist]", "description": "Unload service" },
+        { "option": "start [label]", "description": "Start service" },
+        { "option": "stop [label]", "description": "Stop service" },
+        { "option": "print [domain/label]", "description": "Info detail service" }
+      ],
+      "examples": "launchctl list\nlaunchctl list | grep apache\nlaunchctl load ~/Library/LaunchAgents/com.example.plist\nlaunchctl unload ~/Library/LaunchAgents/com.example.plist\nlaunchctl start com.example.service\nlaunchctl stop com.example.service",
+      "notes": "LaunchAgents (~/Library/LaunchAgents) untuk user, LaunchDaemons (/Library/LaunchDaemons) untuk system."
+    },
+    {
+      "name": "launchctl-bootstrap",
+      "title": "Bootstrap (Modern)",
+      "description": "Cara modern untuk mengelola service di macOS.",
+      "syntax": "launchctl bootstrap/bootout domain path",
+      "options": [
+        { "option": "bootstrap gui/$(id -u) [plist]", "description": "Register service (menggantikan load)" },
+        { "option": "bootout gui/$(id -u) [plist]", "description": "Unregister service (menggantikan unload)" },
+        { "option": "enable/disable", "description": "Enable/disable service" },
+        { "option": "kickstart", "description": "Force start service" }
+      ],
+      "examples": "sudo launchctl bootstrap system /Library/LaunchDaemons/com.example.plist\nsudo launchctl bootout system /Library/LaunchDaemons/com.example.plist\nlaunchctl kickstart -k gui/$(id -u)/com.example.agent",
+      "notes": "bootstrap/bootout adalah pengganti load/unload di macOS modern."
+    },
+    {
+      "name": "brew-services",
+      "title": "Homebrew Services",
+      "description": "Mengelola service yang diinstall via Homebrew.",
+      "syntax": "brew services [command] [service]",
+      "options": [
+        { "option": "list", "description": "List semua service" },
+        { "option": "start [service]", "description": "Start service" },
+        { "option": "stop [service]", "description": "Stop service" },
+        { "option": "restart [service]", "description": "Restart service" },
+        { "option": "run [service]", "description": "Run tanpa register (foreground)" }
+      ],
+      "examples": "brew services list\nbrew services start mysql\nbrew services stop postgresql\nbrew services restart nginx\nbrew services run redis",
+      "notes": "Cara paling mudah mengelola service di macOS jika diinstall via Homebrew."
+    }
+  ]
+}

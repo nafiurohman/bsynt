@@ -1,0 +1,52 @@
+{
+  "id": "git-merge-rebase",
+  "title": "Merge & Rebase",
+  "description": "Menggabungkan branch menggunakan merge atau rebase.",
+  "badge": "Git",
+  "commands": [
+    {
+      "name": "git merge",
+      "title": "Menggabungkan Branch",
+      "description": "Menggabungkan perubahan dari branch lain ke branch saat ini.",
+      "syntax": "git merge <branch> [opsi]",
+      "options": [
+        { "option": "--no-ff", "description": "Selalu buat merge commit (tidak fast-forward)" },
+        { "option": "--ff-only", "description": "Hanya fast-forward, gagal jika tidak bisa" },
+        { "option": "--squash", "description": "Gabung semua commit jadi satu" },
+        { "option": "--abort", "description": "Batalkan merge yang sedang konflik" },
+        { "option": "--continue", "description": "Lanjutkan setelah resolve konflik" },
+        { "option": "-m \"pesan\"", "description": "Custom merge commit message" }
+      ],
+      "examples": "# Merge feature ke main\ngit switch main\ngit merge feature/login\n\n# Merge tanpa fast-forward\ngit merge --no-ff feature/login\n\n# Squash merge\ngit merge --squash feature/small-fix\ngit commit -m \"squash: small fixes\"\n\n# Resolve conflict\n# 1. Edit file konflik\n# 2. git add .\n# 3. git merge --continue",
+      "notes": "--no-ff direkomendasikan agar history branch tetap terlihat."
+    },
+    {
+      "name": "git rebase",
+      "title": "Rebase Branch",
+      "description": "Memindahkan basis branch ke commit terbaru branch target — history lebih linear.",
+      "syntax": "git rebase <branch> [opsi]",
+      "options": [
+        { "option": "-i / --interactive", "description": "Rebase interaktif (pick, squash, edit, drop)" },
+        { "option": "HEAD~n", "description": "Rebase n commit terakhir" },
+        { "option": "--onto target", "description": "Rebase ke branch tertentu" },
+        { "option": "--continue", "description": "Lanjut setelah resolve konflik" },
+        { "option": "--abort", "description": "Batalkan rebase" },
+        { "option": "--skip", "description": "Skip commit yang konflik" }
+      ],
+      "examples": "# Rebase feature ke main terbaru\ngit switch feature/login\ngit rebase main\n\n# Interactive rebase (edit history)\ngit rebase -i HEAD~5\n# Di editor: pick, squash, fixup, reword, drop\n\n# Rebase --onto\ngit rebase --onto main server client",
+      "warning": "JANGAN rebase commit yang sudah di-push ke remote bersama! Bisa merusak history orang lain."
+    },
+    {
+      "name": "Resolve Conflict",
+      "title": "Menyelesaikan Konflik",
+      "description": "Cara menyelesaikan konflik saat merge atau rebase.",
+      "syntax": "# Edit file yang konflik\n# Hapus marker <<<<<<< ======= >>>>>>>\ngit add <file>\ngit merge --continue  # atau git rebase --continue",
+      "options": [
+        { "option": "--ours", "description": "Gunakan versi kita (current branch)" },
+        { "option": "--theirs", "description": "Gunakan versi mereka (incoming branch)" }
+      ],
+      "examples": "# Saat merge conflict:\ngit merge feature\n# CONFLICT in file.txt\n# Edit file.txt — hapus conflict markers\ngit add file.txt\ngit merge --continue\n\n# Auto resolve\ngit checkout --ours file.txt    # ambil versi kita\ngit checkout --theirs file.txt  # ambil versi mereka\ngit add file.txt\n\n# Batalkan\ngit merge --abort",
+      "notes": "Conflict markers: <<<<<<< HEAD (milik kita), ======= (pemisah), >>>>>>> branch (milik mereka)."
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "mysql-constraints",
+  "title": "Constraints",
+  "description": "Constraint untuk menjaga integritas data di MySQL.",
+  "badge": "MySQL",
+  "commands": [
+    {
+      "name": "PRIMARY KEY",
+      "title": "Primary Key",
+      "description": "Identifikasi unik untuk setiap baris dalam tabel.",
+      "syntax": "kolom tipe PRIMARY KEY / PRIMARY KEY (kolom1, kolom2)",
+      "options": [
+        { "option": "AUTO_INCREMENT", "description": "Nilai otomatis bertambah" }
+      ],
+      "examples": "CREATE TABLE users (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  username VARCHAR(50)\n);\n\n-- Composite primary key\nCREATE TABLE order_items (\n  order_id INT,\n  product_id INT,\n  quantity INT,\n  PRIMARY KEY (order_id, product_id)\n);\n\n-- Tambah PK ke tabel yang ada\nALTER TABLE users ADD PRIMARY KEY (id);"
+    },
+    {
+      "name": "FOREIGN KEY",
+      "title": "Foreign Key",
+      "description": "Relasi antar tabel, menjaga referential integrity.",
+      "syntax": "FOREIGN KEY (kolom) REFERENCES tabel_ref(kolom_ref) [ON DELETE action] [ON UPDATE action]",
+      "options": [
+        { "option": "CASCADE", "description": "Ikut hapus/update" },
+        { "option": "SET NULL", "description": "Set NULL saat parent dihapus" },
+        { "option": "RESTRICT", "description": "Tolak jika ada child (default)" },
+        { "option": "NO ACTION", "description": "Sama dengan RESTRICT" },
+        { "option": "SET DEFAULT", "description": "Set ke default (tidak didukung InnoDB)" }
+      ],
+      "examples": "CREATE TABLE orders (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  user_id INT NOT NULL,\n  total DECIMAL(10,2),\n  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE\n);\n\n-- FK dengan SET NULL\nCREATE TABLE posts (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  author_id INT,\n  title VARCHAR(200),\n  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL\n);\n\n-- Tambah FK ke tabel yang ada\nALTER TABLE orders ADD FOREIGN KEY (user_id) REFERENCES users(id);",
+      "notes": "CASCADE: hapus parent → hapus semua child. Hati-hati dengan cascading deletes!"
+    },
+    {
+      "name": "UNIQUE",
+      "title": "Unique Constraint",
+      "description": "Memastikan nilai kolom unik (tidak ada duplikat).",
+      "syntax": "kolom tipe UNIQUE / UNIQUE KEY (kolom1, kolom2)",
+      "options": [],
+      "examples": "CREATE TABLE users (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  email VARCHAR(100) NOT NULL UNIQUE,\n  username VARCHAR(50) NOT NULL UNIQUE\n);\n\n-- Composite unique\nCREATE TABLE enrollments (\n  student_id INT,\n  course_id INT,\n  UNIQUE KEY uk_enrollment (student_id, course_id)\n);\n\nALTER TABLE users ADD UNIQUE (phone);"
+    },
+    {
+      "name": "CHECK",
+      "title": "Check Constraint",
+      "description": "Validasi nilai kolom berdasarkan kondisi (MySQL 8.0.16+).",
+      "syntax": "CHECK (kondisi)",
+      "options": [],
+      "examples": "CREATE TABLE products (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  name VARCHAR(100) NOT NULL,\n  price DECIMAL(10,2) CHECK (price >= 0),\n  stock INT DEFAULT 0 CHECK (stock >= 0),\n  discount_pct DECIMAL(5,2) CHECK (discount_pct BETWEEN 0 AND 100)\n);\n\nALTER TABLE products ADD CHECK (price > 0);",
+      "notes": "CHECK constraint tersedia di MySQL 8.0.16+. Versi sebelumnya mengabaikan CHECK."
+    },
+    {
+      "name": "NOT NULL-DEFAULT",
+      "title": "NOT NULL / DEFAULT",
+      "description": "Constraint untuk nilai wajib dan nilai default.",
+      "syntax": "kolom tipe NOT NULL [DEFAULT nilai]",
+      "options": [],
+      "examples": "CREATE TABLE users (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  username VARCHAR(50) NOT NULL,\n  role VARCHAR(20) NOT NULL DEFAULT 'user',\n  is_active BOOLEAN NOT NULL DEFAULT TRUE,\n  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP\n);\n\nALTER TABLE users MODIFY COLUMN email VARCHAR(100) NOT NULL;"
+    }
+  ]
+}
